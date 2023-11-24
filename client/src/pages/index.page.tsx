@@ -1,17 +1,20 @@
-import { useAtom } from 'jotai';
-import { Loading } from 'src/components/Loading/Loading';
-import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
-import { userAtom } from '../atoms/user';
+import dynamic from 'next/dynamic';
+import { useMemo } from 'react';
 
 const Home = () => {
-  const [user] = useAtom(userAtom);
-
-  if (!user) return <Loading visible />;
+  const Map = useMemo(
+    () =>
+      dynamic(() => import('../components/Map/Map/map.page'), {
+        loading: () => <p>A map is loading</p>,
+        ssr: false,
+      }),
+    []
+  );
 
   return (
-    <>
-      <BasicHeader user={user} />
-    </>
+    <div>
+      <Map />
+    </div>
   );
 };
 
