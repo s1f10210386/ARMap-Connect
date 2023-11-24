@@ -7,6 +7,7 @@ import styles from './index.module.css';
 const Login = () => {
   const { loadingElm, addLoading, removeLoading } = useLoading();
 
+  // const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -32,6 +33,13 @@ const Login = () => {
             <span>Login with GitHub</span>
           </div>
         </div> */}
+
+        {/* <input
+          type="text"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          placeholder="User Name"
+        /> */}
         <input
           type="email"
           value={email}

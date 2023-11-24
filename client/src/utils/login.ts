@@ -34,6 +34,8 @@ export const authWithEmail = async (email: string, password: string) => {
     const signInResult = await signInWithEmailAndPassword(auth, email, password);
     const user = signInResult.user.uid;
     await checkIfNewUser(user);
+    // setUser();
+
     console.log('ログイン成功');
   } catch (error) {
     const firebaseError = error as FirebaseError;

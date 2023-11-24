@@ -41,6 +41,7 @@ const Map: FC = () => {
   const [user] = useAtom(userAtom);
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 
+  // console.log(user?.id);
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
       navigator.geolocation.watchPosition((posithon) => {
@@ -122,13 +123,6 @@ const Map: FC = () => {
                 color="red"
                 fillOpacity={0.1}
               />
-              <Marker position={[35.779319195031604, 139.7251102426778]}>
-                <Popup>
-                  オフィス
-                  <br />
-                  posithon:[35.779319195031604, 139.7251102426778]
-                </Popup>
-              </Marker>
 
               {posts?.map((post) => (
                 <Marker key={post.id} position={[post.latitude, post.longitude]}>
