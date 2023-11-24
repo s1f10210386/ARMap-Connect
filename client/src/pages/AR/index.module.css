@@ -3,6 +3,10 @@
   height: 100vh;
 }
 
+.headerContainer {
+  height: 7vh;
+}
+
 .ar {
   width: 100vw;
   height: 93vh;
