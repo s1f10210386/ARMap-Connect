@@ -26,7 +26,7 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
           )}
           <span className={styles.userName}>{user.displayName}</span>
         </div>
-        <p>ユーザーID: {user.id}</p>
+        {/* <p>ユーザーID: {user.id}</p> */}
       </div>
     </div>
   );
