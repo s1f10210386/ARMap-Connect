@@ -17,7 +17,7 @@ model Task {
 
 model User {
   id    String @id
-  user  String
+  // user  String
   posts Post[]
 }
 
