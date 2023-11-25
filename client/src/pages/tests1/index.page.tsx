@@ -27,10 +27,15 @@ const Test1 = () => {
       .catch((err) => {
         console.error('カメラへのアクセスに失敗しました: ', err);
       });
-    console.log(canvasRef);
+    console.log('a', canvasRef);
 
-    if (canvasRef.current) {
+    if (canvasRef.current !== null) {
+      console.log('1', canvasRef);
       const scene = new THREE.Scene();
+
+      // フォントローダーを使用してテキストメッシュを作成
+
+      const loader = new FontLoader();
       const containerWidth = canvasRef.current.clientWidth;
       const containerHeight = canvasRef.current.clientHeight;
       const aspectRatio = containerWidth / containerHeight;
@@ -40,11 +45,9 @@ const Test1 = () => {
 
       const renderer = new THREE.WebGLRenderer({ alpha: true });
       renderer.setSize(containerWidth, containerHeight);
-      canvasRef.current.appendChild(renderer.domElement);
-      console.log('2', canvasRef);
-      // フォントローダーを使用してテキストメッシュを作成
 
-      const loader = new FontLoader();
+      const currentContainer = canvasRef.current;
+      currentContainer.appendChild(renderer.domElement);
       console.log('3');
       loader.load('/fonts/Noto Sans JP Thin_Regular.json', function (fonts) {
         console.log('loader');
@@ -65,7 +68,7 @@ const Test1 = () => {
         const fontSize = 0.2;
         const averageCharWidth = fontSize * 0.68;
         const textLength = text.length * averageCharWidth;
-        textMesh.position.set(-textLength / 2, 0, 0);
+        textMesh.position.set(-textLength, 0, 0);
 
         scene.add(textMesh);
 
@@ -82,15 +85,21 @@ const Test1 = () => {
         };
         animate();
       });
+
+      return () => {
+        if (currentContainer !== null) {
+          currentContainer.removeChild(renderer.domElement);
+        }
+      };
     }
   }, []);
 
   if (!user) return <Loading visible />;
 
   return (
-    <div>
-      <video ref={videoRef} autoPlay className={styles.videoFull} />
-      <div ref={canvasRef} className={styles.canvas} />
+    <div className={styles.container}>
+      <video className={styles.videoFull} ref={videoRef} autoPlay />
+      <div className={styles.canvas} ref={canvasRef} />
     </div>
   );
 };
