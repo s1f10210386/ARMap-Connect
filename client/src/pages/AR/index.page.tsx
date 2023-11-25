@@ -73,6 +73,34 @@ export default function AR() {
       //作成したレンダラーのDOM要素をンテナに追加します。
       currentContainer.appendChild(renderer.domElement);
 
+      // カメラフィードの取得
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const video = document.createElement('video');
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then((stream) => {
+            video.srcObject = stream;
+            video.play();
+          })
+          .catch(console.error);
+
+        // ビデオテクスチャの作成
+        const videoTexture = new THREE.VideoTexture(video);
+        videoTexture.minFilter = THREE.LinearFilter;
+        videoTexture.magFilter = THREE.LinearFilter;
+        videoTexture.format = THREE.RGBAFormat;
+
+        // シーンにビデオテクスチャを追加
+        const backgroundMesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(containerWidth, containerHeight, 1, 1),
+          new THREE.MeshBasicMaterial({ map: videoTexture })
+        );
+
+        backgroundMesh.position.set(0, 0, -1); // カメラから少し後ろに設定
+        scene.add(backgroundMesh);
+      }
+
       // コンポーネントのアンマウント時にレンダラーを削除するクリーンアップ関数
       return () => {
         if (currentContainer !== null) {
