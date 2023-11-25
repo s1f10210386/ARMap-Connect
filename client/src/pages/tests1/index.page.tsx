@@ -13,7 +13,7 @@ const Test1 = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const text = 'testテストtest';
+  const text = '!!!!!!!!!!!!';
 
   useEffect(() => {
     // カメラフィードの取得
@@ -27,6 +27,7 @@ const Test1 = () => {
       .catch((err) => {
         console.error('カメラへのアクセスに失敗しました: ', err);
       });
+    console.log(canvasRef);
 
     if (canvasRef.current) {
       const scene = new THREE.Scene();
@@ -40,10 +41,13 @@ const Test1 = () => {
       const renderer = new THREE.WebGLRenderer({ alpha: true });
       renderer.setSize(containerWidth, containerHeight);
       canvasRef.current.appendChild(renderer.domElement);
-
+      console.log('2', canvasRef);
       // フォントローダーを使用してテキストメッシュを作成
+
       const loader = new FontLoader();
+      console.log('3');
       loader.load('/fonts/Noto Sans JP Thin_Regular.json', function (fonts) {
+        console.log('loader');
         const textGeometry = new TextGeometry(text, {
           font: fonts,
           size: 0.2,
@@ -56,7 +60,6 @@ const Test1 = () => {
         });
         const textMaterial = new THREE.MeshBasicMaterial({ color: 0xfff8f0 });
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        // console.log(textMesh);
 
         // テキストメッシュの位置設定
         const fontSize = 0.2;
