@@ -12,38 +12,46 @@ export default function AR() {
   const [user] = useAtom(userAtom);
   const containerRef = useRef<HTMLDivElement>(null); // コンテナへの参照を作成
 
-  const text = 'text';
+  const text = 'お疲れ様ですああああ！';
   useEffect(() => {
     // コンテナが空であることを確認
     if (containerRef.current && containerRef.current.children.length === 0) {
       //新しいシーンを作成
       const scene = new THREE.Scene();
-      // //立方体のジオメトリ（形状）を作成
-      // const geometry = new THREE.BoxGeometry();
-      // //緑色のマテリアル（表面の素材）
-      // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-      // //メッシュ(立方体の実態)を作成しシーンに追加
-      // const cube = new THREE.Mesh(geometry, material);
-      // scene.add(cube);
 
       const loader = new FontLoader();
-
-      loader.load('/fonts/helvetiker_regular.typeface.json', function (fonts) {
+      loader.load('/fonts/Noto Sans JP Thin_Regular.json', function (fonts) {
         const textGeometry = new TextGeometry(text, {
           font: fonts,
-          size: 0.5,
-          height: 0.2,
-          curveSegments: 12,
-          // bevelEnabled: true,
-          bevelThickness: 0.1,
-          bevelSize: 0.1,
-          bevelSegments: 2,
+          size: 0.2,
+          height: 0.02,
+          curveSegments: 10,
+          bevelEnabled: true,
+          bevelThickness: 0.01,
+          bevelSize: 0.01,
+          bevelSegments: 1,
         });
-        const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const textMaterial = new THREE.MeshBasicMaterial({ color: 0xfff8f0 });
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(-0.5, 0, 0);
+
+        const fontSize = 0.2; // フォントサイズ
+        const averageCharWidth = fontSize * 0.68; // 一文字あたりの平均幅（推定）
+        const textLength = text.length * averageCharWidth;
+        textMesh.position.set(-textLength, 0, 0);
 
         scene.add(textMesh);
+
+        let scaleDelta = 0.005;
+        const animate = () => {
+          requestAnimationFrame(animate);
+          // Z軸のスケールを変更
+          textMesh.scale.z += scaleDelta;
+          if (textMesh.scale.z > 1 || textMesh.scale.z < 0.1) {
+            scaleDelta *= -1; // スケールの増減方向を反転
+          }
+          renderer.render(scene, camera);
+        };
+        animate();
       });
 
       const containerWidth = containerRef.current.clientWidth;
@@ -64,23 +72,6 @@ export default function AR() {
       const currentContainer = containerRef.current;
       //作成したレンダラーのDOM要素をンテナに追加します。
       currentContainer.appendChild(renderer.domElement);
-
-      // //アニメーションループの実装
-      // const animate = () => {
-      //   //繰り返し呼び出す
-      //   requestAnimationFrame(animate);
-      //   cube.rotation.x += 0.01;
-      //   cube.rotation.y += 0.01;
-      //   renderer.render(scene, camera);
-      // };
-
-      // animate();
-
-      const animate = () => {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-      };
-      animate();
 
       // コンポーネントのアンマウント時にレンダラーを削除するクリーンアップ関数
       return () => {
