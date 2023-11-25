@@ -10,7 +10,7 @@ export const init = (serverFactory?: FastifyServerFactory) => {
   const app = Fastify({ serverFactory });
   app.register(helmet);
   app.register(cors, {
-    origin: [CORS_ORIGIN, `http://192.168.11.20:3000`],
+    origin: [CORS_ORIGIN],
     credentials: true,
   });
   app.register(cookie);
