@@ -62,11 +62,19 @@ const Home = () => {
     | null
   >(null);
 
+  //useEffectで呼出し、半径1km以内のものをgetしてくる
   const getPosts = useCallback(async () => {
-    const data = await apiClient.posts.$get().catch(returnNull);
+    if (coordinates.latitude === null || coordinates.longitude === null) return;
+    const latitude = coordinates.latitude;
+    const longitude = coordinates.longitude;
+    // const data = await apiClient.posts.$get().catch(returnNull);
+    const data = await apiClient.nearRecord
+      .$get({ query: { latitude, longitude } })
+      .catch(returnNull);
     setPosts(data);
   }, []);
 
+  //現在位置情報を付けてPOSTする
   const postPostContent = async () => {
     if (user?.id === undefined || postContent === '') return;
     if (coordinates.latitude === null || coordinates.longitude === null) return;
@@ -78,6 +86,7 @@ const Home = () => {
     const result = await apiClient.myPost.$post({
       body: { username: postUserName, content: postContent, latitude, longitude, userID: user.id },
     });
+
     setPostContent('');
     await getMyPostContent();
     console.log('result', result);
@@ -92,20 +101,6 @@ const Home = () => {
     await apiClient.posts.$patch({ body: { postID, increment: true } });
     await getPosts();
   };
-
-  const [scope, setScope] = useState<
-    | {
-        id: string;
-        userName: string;
-        postTime: string;
-        content: string;
-        latitude: number;
-        longitude: number;
-        likes: number;
-        userID: string;
-      }[]
-    | null
-  >(null);
 
   useEffect(() => {
     getMyPostContent();
@@ -151,35 +146,15 @@ const Home = () => {
               ))}
           </Box>
         </Box>
+
         <Box sx={{ padding: 2, paddingLeft: 10 }}>
-          <h1>24時間以内内容</h1>
+          <h1>24時間⋀半径1km以内内容</h1>
           <Box sx={{ paddingTop: 2 }}>
             {posts &&
               posts.map((post) => (
                 <div key={post.id}>
                   <Button onClick={() => handleLike(post.id)}>いいね</Button>
                   <h3>user: {post.userName}</h3>
-                  <p>Content: {post.content}</p>
-                  <p>Time: {post.postTime}</p>
-                  {/* <p>latitude: {post.latitude}</p>
-                  <p>longitude: {post.longitude}</p> */}
-                  <p>likes: {post.likes}</p>
-                  <br />
-                </div>
-              ))}
-          </Box>
-        </Box>
-
-        <Box sx={{ padding: 2, paddingLeft: 10 }}>
-          <h1>半径1km以内の内容</h1>
-          <Box sx={{ paddingTop: 2 }}>
-            {posts &&
-              posts.map((post) => (
-                <div key={post.id}>
-                  <Button onClick={() => handleLike(post.id)}>いいね</Button>
-                  <h3>userName: {post.userName}</h3>
-                  <p>id:{post.id}</p>
-                  <p>userID:{post.userID}</p>
                   <p>Content: {post.content}</p>
                   <p>Time: {post.postTime}</p>
                   <p>latitude: {post.latitude}</p>

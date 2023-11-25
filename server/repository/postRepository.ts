@@ -62,6 +62,34 @@ export const getRecentPosts = async () => {
   }));
 };
 
+//半径1km以内を引っ張ってくる
+export const nearbyRecords = async (currentLatitude: number, currentLongitude: number) => {
+  console.log('kita');
+  const latitudeRange = 0.009; // 約1kmの緯度範囲
+  const longitudeRange = 0.0118; // 約1kmの経度範囲
+  console.log('currentLatitude', currentLatitude);
+  const records = await prismaClient.post.findMany({
+    where: {
+      latitude: {
+        // gte: currentLatitude - latitudeRange,
+        lte: currentLatitude + latitudeRange,
+      },
+      longitude: {
+        // gte: currentLongitude - longitudeRange,
+        lte: currentLongitude + longitudeRange,
+      },
+    },
+  });
+
+  //posttimeをDate->String型に(定義した型に合わせるため)
+  const transformedRecords = records.map((record) => ({
+    ...record,
+    postTime: record.postTime.toISOString(),
+  }));
+
+  return transformedRecords;
+};
+
 //likesは未完成・修正必要
 export const updateLikes = async (postId: string, increment: boolean) => {
   const post = await prismaClient.post.findUnique({

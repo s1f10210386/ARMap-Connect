@@ -76,6 +76,7 @@ const Map: FC = () => {
   const getPosts = useCallback(async () => {
     const data = await apiClient.posts.$get().catch(returnNull);
     setPosts(data);
+    console.log('getPosts');
   }, []);
 
   const [postContent, setPostContent] = useState('');
