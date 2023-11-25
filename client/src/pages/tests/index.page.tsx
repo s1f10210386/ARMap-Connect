@@ -43,6 +43,7 @@ const Home = () => {
   const [postContent, setPostContent] = useState('');
 
   const getMyPostContent = useCallback(async () => {
+    // console.log('getMyPostContent関数呼び出し');
     if (user?.id === undefined) return;
     const data = await apiClient.myPost.$get({ query: { userID: user?.id } }).catch(returnNull);
     setMyPostData(data);
@@ -64,6 +65,7 @@ const Home = () => {
 
   //useEffectで呼出し、半径1km以内のものをgetしてくる
   const getPosts = useCallback(async () => {
+    // console.log('getPosts関数呼び出し');
     if (coordinates.latitude === null || coordinates.longitude === null) return;
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
@@ -148,7 +150,7 @@ const Home = () => {
         </Box>
 
         <Box sx={{ padding: 2, paddingLeft: 10 }}>
-          <h1>24時間⋀半径1km以内内容</h1>
+          <h1>近くに{posts ? posts.length : 0}件の投稿があります</h1>
           <Box sx={{ paddingTop: 2 }}>
             {posts &&
               posts.map((post) => (

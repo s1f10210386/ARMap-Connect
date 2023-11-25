@@ -19,6 +19,7 @@ model User {
   id    String @id
   // user  String
   posts Post[]
+  likes Like[]
 }
 
 model Post {
@@ -28,7 +29,18 @@ model Post {
   content   String
   latitude  Float
   longitude Float
-  likes     Int      @default(0)
   userID    String
   user      User     @relation(fields: [userID], references: [id])
+  likes Like[]
+
+}
+
+model Like{
+  id String @id
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@unique([postId, userId]) // 同じユーザーが同じ投稿に複数回「いいね」しないようにする
 }
