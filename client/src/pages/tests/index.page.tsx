@@ -72,7 +72,7 @@ const Home = () => {
       .$get({ query: { latitude, longitude } })
       .catch(returnNull);
     setPosts(data);
-  }, []);
+  }, [coordinates.latitude, coordinates.longitude]);
 
   //現在位置情報を付けてPOSTする
   const postPostContent = async () => {
