@@ -1,10 +1,16 @@
 import { useAtom } from 'jotai';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
+import styles from './ar.module.css';
 
 const ARComponent = () => {
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 
+  const router = useRouter();
+  const handleMAP = async () => {
+    await router.push('/');
+  };
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
       navigator.geolocation.watchPosition((posithon) => {
@@ -28,6 +34,9 @@ const ARComponent = () => {
 
   return (
     <div>
+      <button onClick={handleMAP} className={styles.mapButton}>
+        MAP
+      </button>
       <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
