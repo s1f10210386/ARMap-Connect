@@ -23,6 +23,15 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <script src="https://aframe.io/releases/1.3.0/aframe.min.js" />
+      <script
+        type="text/javascript"
+        src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js"
+      />
+      <script
+        type="text/javascript"
+        src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"
+      />
       <SafeHydrate>
         <Component {...pageProps} />
       </SafeHydrate>
