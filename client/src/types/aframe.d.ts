@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // aframe.d.ts
 declare namespace JSX {
   interface IntrinsicElements {
@@ -6,6 +7,8 @@ declare namespace JSX {
     'a-marker-camera': any;
     'a-sphere': any;
     'a-cylinder': any;
+    'a-camera': any;
+    'a-entity': any;
     // 他のA-FrameまたはAR.jsの要素に必要な型定義をここに追加
   }
 }
