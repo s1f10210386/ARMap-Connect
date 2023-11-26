@@ -1,4 +1,26 @@
 const ARComponent = () => {
+  // const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
+
+  // useEffect(() => {
+  //   if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
+  //     navigator.geolocation.watchPosition((posithon) => {
+  //       setCoordinates({
+  //         latitude: posithon.coords.latitude,
+  //         longitude: posithon.coords.longitude,
+  //       });
+  //     });
+  //   }
+  // }, [setCoordinates]);
+
+  // const [posts, setPosts] = useState(null);
+
+  const posts = [
+    { latitude: 35.6895, longitude: 139.6917, content: '東京タワー' },
+    { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'aaaa' },
+    // { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'bdddd' },
+    { latitude: 35.7780781399212, longitude: 139.72516114049802, content: 'bbbbb' },
+  ];
+
   return (
     <div>
       <a-scene
@@ -7,13 +29,24 @@ const ARComponent = () => {
         renderer="antialias: true; alpha: true"
       >
         <a-camera gps-new-camera="gpsMinDistance: 5" />
-        <a-entity
-          material="color: red"
+        {/* <a-entity
+          material="color: #e0aeae"
           geometry="primitive: box"
           gps-new-entity-place="latitude:  35.779373072610795; longitude:139.72486851576315"
           scale="10 10 10"
-        />
-        {/* 35.77794586770196, 139.72510855214577 */}
+        /> */}
+        {posts.map((post, index) => (
+          <a-text
+            key={index}
+            value={post.content}
+            gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+            scale="20 20 20"
+            color="#606042"
+            font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
+            // look-at="#camera"
+            // material="emissive: #3d3d33"
+          />
+        ))}
       </a-scene>
     </div>
   );
