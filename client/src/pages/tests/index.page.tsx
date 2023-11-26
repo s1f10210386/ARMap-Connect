@@ -70,9 +70,7 @@ const Home = () => {
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
     // const data = await apiClient.posts.$get().catch(returnNull);
-    const data = await apiClient.nearRecord
-      .$get({ query: { latitude, longitude } })
-      .catch(returnNull);
+    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
     setPosts(data);
   }, [coordinates.latitude, coordinates.longitude]);
 

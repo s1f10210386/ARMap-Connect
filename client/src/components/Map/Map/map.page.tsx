@@ -68,15 +68,20 @@ const Map: FC = () => {
         latitude: number;
         longitude: number;
         userID: string;
+        likeCount: number;
       }[]
     | null
   >(null);
 
+  //24時間以内かつ半径10km以内のものをget! useEffectで呼び出される。
   const getPosts = useCallback(async () => {
-    const data = await apiClient.posts.$get().catch(returnNull);
+    if (coordinates.latitude === null || coordinates.longitude === null) return;
+    const latitude = coordinates.latitude;
+    const longitude = coordinates.longitude;
+    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
     setPosts(data);
     console.log('getPosts');
-  }, []);
+  }, [coordinates.latitude, coordinates.longitude]);
 
   const [postContent, setPostContent] = useState('');
   const postPostContent = async () => {
