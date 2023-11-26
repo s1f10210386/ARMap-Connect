@@ -1,16 +1,21 @@
-const ARComponent = () => {
-  // const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
+import { coordinatesAtom } from 'src/atoms/user';
 
-  // useEffect(() => {
-  //   if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
-  //     navigator.geolocation.watchPosition((posithon) => {
-  //       setCoordinates({
-  //         latitude: posithon.coords.latitude,
-  //         longitude: posithon.coords.longitude,
-  //       });
-  //     });
-  //   }
-  // }, [setCoordinates]);
+const ARComponent = () => {
+  const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
+
+  useEffect(() => {
+    if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
+      navigator.geolocation.watchPosition((posithon) => {
+        setCoordinates({
+          latitude: posithon.coords.latitude,
+          longitude: posithon.coords.longitude,
+        });
+      });
+    }
+  }, [setCoordinates]);
+  console.log('coodinates', coordinates);
 
   // const [posts, setPosts] = useState(null);
 
@@ -28,6 +33,7 @@ const ARComponent = () => {
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
       >
+        {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-new-camera="gpsMinDistance: 5" />
         {/* <a-entity
           material="color: #e0aeae"
@@ -42,11 +48,19 @@ const ARComponent = () => {
             gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
             scale="20 20 20"
             color="#606042"
-            font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
+            // font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
             // look-at="#camera"
             // material="emissive: #3d3d33"
           />
         ))}
+        {coordinates.latitude !== null && coordinates.longitude !== null && (
+          <a-text
+            value={`Latitude: ${coordinates.latitude}, Longitude:${coordinates.longitude}`}
+            position="0 0 -5"
+            scale="10 10 10"
+            color="#000000"
+          />
+        )}
       </a-scene>
     </div>
   );
