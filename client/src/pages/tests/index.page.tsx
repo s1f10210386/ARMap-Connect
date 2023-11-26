@@ -161,7 +161,7 @@ const Home = () => {
             {posts &&
               posts.map((post) => (
                 <div key={post.id}>
-                  <Button onClick={() => handleLike(post.id, user.id)}>いいね</Button>
+                  <Button onClick={() => handleLike(post.id)}>いいね</Button>
                   <p>{likecount}いいね</p>
                   <h3>user: {post.userName}</h3>
                   <p>Content: {post.content}</p>
