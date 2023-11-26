@@ -1,10 +1,16 @@
 import { useAtom } from 'jotai';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
+import styles from './ar.module.css';
 
 const ARComponent = () => {
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 
+  const router = useRouter();
+  const handleMAP = async () => {
+    await router.push('/');
+  };
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
       navigator.geolocation.watchPosition((posithon) => {
@@ -21,13 +27,16 @@ const ARComponent = () => {
 
   const posts = [
     { latitude: 35.6895, longitude: 139.6917, content: '東京タワー' },
-    { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'aaaa' },
+    { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'ひろき' },
     // { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'bdddd' },
     { latitude: 35.7780781399212, longitude: 139.72516114049802, content: 'bbbbb' },
   ];
 
   return (
     <div>
+      <button onClick={handleMAP} className={styles.mapButton}>
+        MAP
+      </button>
       <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
@@ -46,19 +55,24 @@ const ARComponent = () => {
             key={index}
             value={post.content}
             gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-            scale="20 20 20"
-            color="#606042"
-            // font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
-            // look-at="#camera"
-            // material="emissive: #3d3d33"
+            scale="10 10 10"
+            position="5 5 5"
+            align="center"
+            look-at="#camera"
+            font="/fonts/noto-sans-cjk-jp-msdf.json"
+            font-image="/png/noto-sans-cjk-jp-msdf.png"
           />
         ))}
         {coordinates.latitude !== null && coordinates.longitude !== null && (
           <a-text
             value={`Latitude: ${coordinates.latitude}, Longitude:${coordinates.longitude}`}
-            position="0 0 -5"
-            scale="10 10 10"
-            color="#000000"
+            position="5 -2 -5"
+            scale="1 1 0"
+            color="#f9f7f7"
+            look-at="#camera"
+            align="right"
+            // font="/fonts/noto-sans-cjk-jp-msdf.json"
+            // font-image="/png/noto-sans-cjk-jp-msdf.png"
           />
         )}
       </a-scene>
