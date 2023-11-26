@@ -46,19 +46,25 @@ const ARComponent = () => {
             key={index}
             value={post.content}
             gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-            scale="20 20 20"
+            scale="10 10 10"
             color="#606042"
-            // font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
-            // look-at="#camera"
+            align="center"
+            look-at="#camera"
+            // font="/fonts/noto-sans-cjk-jp-msdf.json"
+            // font-image="/png/noto-sans-cjk-jp-msdf.png"
             // material="emissive: #3d3d33"
           />
         ))}
         {coordinates.latitude !== null && coordinates.longitude !== null && (
           <a-text
             value={`Latitude: ${coordinates.latitude}, Longitude:${coordinates.longitude}`}
-            position="0 0 -5"
-            scale="10 10 10"
-            color="#000000"
+            position="5 -2 -5"
+            scale="1 1 0"
+            color="#f9f7f7"
+            look-at="#camera"
+            align="center"
+            // font="/fonts/noto-sans-cjk-jp-msdf.json"
+            // font-image="/png/noto-sans-cjk-jp-msdf.png"
           />
         )}
       </a-scene>
