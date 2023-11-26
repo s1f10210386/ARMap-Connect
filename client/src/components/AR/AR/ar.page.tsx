@@ -21,7 +21,7 @@ const ARComponent = () => {
 
   const posts = [
     { latitude: 35.6895, longitude: 139.6917, content: '東京タワー' },
-    { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'aaaa' },
+    { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'ひろき' },
     // { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'bdddd' },
     { latitude: 35.7780781399212, longitude: 139.72516114049802, content: 'bbbbb' },
   ];
@@ -47,12 +47,11 @@ const ARComponent = () => {
             value={post.content}
             gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
             scale="10 10 10"
-            color="#606042"
+            position="5 5 5"
             align="center"
             look-at="#camera"
-            // font="/fonts/noto-sans-cjk-jp-msdf.json"
-            // font-image="/png/noto-sans-cjk-jp-msdf.png"
-            // material="emissive: #3d3d33"
+            font="/fonts/noto-sans-cjk-jp-msdf.json"
+            font-image="/png/noto-sans-cjk-jp-msdf.png"
           />
         ))}
         {coordinates.latitude !== null && coordinates.longitude !== null && (
@@ -62,7 +61,7 @@ const ARComponent = () => {
             scale="1 1 0"
             color="#f9f7f7"
             look-at="#camera"
-            align="center"
+            align="right"
             // font="/fonts/noto-sans-cjk-jp-msdf.json"
             // font-image="/png/noto-sans-cjk-jp-msdf.png"
           />
