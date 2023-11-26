@@ -2,7 +2,7 @@ import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {
-    query: { userID: string };
+    query: { latitude: number; longitude: number };
     resBody: {
       id: string;
       userName: string;
@@ -12,19 +12,5 @@ export type Methods = DefineMethods<{
       longitude: number;
       userID: string;
     }[];
-  };
-
-  post: {
-    reqBody: {
-      username: string;
-      content: string;
-      latitude: number;
-      longitude: number;
-      userID: string;
-    };
-  };
-
-  delete: {
-    query: { postID: string };
   };
 }>;

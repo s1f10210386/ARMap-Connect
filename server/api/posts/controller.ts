@@ -1,4 +1,4 @@
-import { getRecentPosts, updateLikes } from '$/repository/postRepository';
+import { getRecentPosts, togglelike } from '$/repository/postRepository';
 import { defineController } from './$relay';
 
 export default defineController(() => ({
@@ -7,10 +7,8 @@ export default defineController(() => ({
     return { status: 200, body: result };
   },
 
-  //↓これは未完成いいねきのうをやろうとした
-  patch: async ({ body }) => {
-    const { postID, increment } = body;
-    await updateLikes(postID, increment);
-    return { status: 203 };
+  post: async ({ body }) => {
+    const results = await togglelike(body.postId, body.userId);
+    return { status: 201, body: results };
   },
 }));

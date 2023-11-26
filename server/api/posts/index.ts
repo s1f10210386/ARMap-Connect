@@ -9,14 +9,13 @@ export type Methods = DefineMethods<{
       content: string;
       latitude: number;
       longitude: number;
-      likes: number;
       userID: string;
     }[];
   };
-  patch: {
+  post: {
     reqBody: {
-      postID: string;
-      increment: boolean;
+      postId: string;
+      userId: string;
     };
   };
 }>;
