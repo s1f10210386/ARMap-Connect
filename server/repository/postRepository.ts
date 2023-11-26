@@ -96,8 +96,8 @@ export const togglelike = async (postId: string, userId: string) => {
   const like = await prismaClient.like.findUnique({
     where: {
       postId_userId: {
-        postId: postId,
-        userId: userId,
+        postId,
+        userId,
       },
     },
   });
@@ -118,7 +118,7 @@ export const togglelike = async (postId: string, userId: string) => {
 
   const likeCount = await prismaClient.like.count({
     where: {
-      postId: postId,
+      postId,
     },
   });
   console.log('likeCount', likeCount);

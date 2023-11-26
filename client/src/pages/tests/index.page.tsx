@@ -103,7 +103,7 @@ const Home = () => {
     if (user?.id === undefined || postId === undefined) return;
 
     const result = (await apiClient.posts.$post({
-      body: { postId: postId, userId: user.id },
+      body: { postId, userId: user.id },
     })) as unknown as number;
     setLikecount(result);
     await getPosts();
