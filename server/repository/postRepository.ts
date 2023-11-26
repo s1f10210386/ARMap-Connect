@@ -100,7 +100,7 @@ export const nearbyRecords = async (currentLatitude: number, currentLongitude: n
 //とあるuserが投稿をイイネしたときにレコードの存在をチェック(イイネを追加、削除する関数)
 //最後にlikeテーブルに含まれる投稿IDを数える(その投稿のイイネ数を更新)
 export const togglelike = async (postId: string, userId: string) => {
-  //postIdとuserIdが一致するレコードをlikeテーブルから探索
+  //イイネを押された投稿(postId)と押したユーザー(userId)が一致するレコードをlikeテーブルから探索
   const like = await prismaClient.like.findUnique({
     where: {
       postId_userId: {

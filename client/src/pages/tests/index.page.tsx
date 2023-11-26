@@ -99,6 +99,7 @@ const Home = () => {
     await getMyPostContent();
   };
 
+  //いいね押したら動くイイネ追加削除する関数
   const [likecount, setLikecount] = useState(0);
 
   const handleLike = async (postId: string) => {
@@ -111,6 +112,7 @@ const Home = () => {
     await getPosts();
 
     console.log('result', result);
+    console.log('likecount', likecount);
   };
 
   useEffect(() => {
