@@ -35,6 +35,7 @@ const Home = () => {
         latitude: number;
         longitude: number;
         userID: string;
+        likeCount: number;
       }[]
     | null
   >(null);
@@ -57,6 +58,7 @@ const Home = () => {
         latitude: number;
         longitude: number;
         userID: string;
+        likeCount: number;
       }[]
     | null
   >(null);
@@ -79,7 +81,7 @@ const Home = () => {
     if (user?.id === undefined || postContent === '') return;
     if (coordinates.latitude === null || coordinates.longitude === null) return;
 
-    const postUserName = 'Hotaka';
+    const postUserName = 'Hiroki';
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
 
@@ -97,6 +99,7 @@ const Home = () => {
     await getMyPostContent();
   };
 
+  //いいね押したら動くイイネ追加削除する関数
   const [likecount, setLikecount] = useState(0);
 
   const handleLike = async (postId: string) => {
@@ -109,6 +112,7 @@ const Home = () => {
     await getPosts();
 
     console.log('result', result);
+    console.log('likecount', likecount);
   };
 
   useEffect(() => {
@@ -162,7 +166,7 @@ const Home = () => {
               posts.map((post) => (
                 <div key={post.id}>
                   <Button onClick={() => handleLike(post.id)}>いいね</Button>
-                  <p>{likecount}いいね</p>
+                  <p>{post.likeCount}いいね</p>
                   <h3>user: {post.userName}</h3>
                   <p>Content: {post.content}</p>
                   <p>Time: {post.postTime}</p>
