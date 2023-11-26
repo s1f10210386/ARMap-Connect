@@ -49,42 +49,31 @@ export const deletePost = async (postID: string) => {
   });
 };
 
-//24時間以内の投稿を見ることができる。これに１ｋｍ範囲内を見るなどを加える
-export const getRecentPosts = async () => {
-  const twentyFourHoursAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+//２４時間以内の投稿かつ半径1km以内を引っ張ってくる
+export const NearAndRecentRecords = async (currentLatitude: number, currentLongitude: number) => {
+  console.log('kita');
 
-  const posts = await prismaClient.post.findMany({
+  const twentyFourHoursAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+  const latitudeRange = 0.09; // 約10kmの緯度範囲
+  const longitudeRange = 0.118; // 約10kmの経度範囲
+
+  console.log({ currentLatitude, currentLongitude });
+  const records = await prismaClient.post.findMany({
     where: {
       postTime: {
         gte: twentyFourHoursAgo,
       },
+      latitude: {
+        gte: currentLatitude - latitudeRange, //以上
+        lte: currentLatitude + latitudeRange, //以下
+      },
+      longitude: {
+        gte: currentLongitude - longitudeRange,
+        lte: currentLongitude + longitudeRange,
+      },
     },
     orderBy: {
       postTime: 'desc',
-    },
-  });
-  return posts.map((post) => ({
-    ...post,
-    postTime: post.postTime.toISOString(),
-  }));
-};
-
-//半径1km以内を引っ張ってくる
-export const nearbyRecords = async (currentLatitude: number, currentLongitude: number) => {
-  console.log('kita');
-  const latitudeRange = 0.009; // 約1kmの緯度範囲
-  const longitudeRange = 0.0118; // 約1kmの経度範囲
-  console.log('currentLatitude', currentLatitude);
-  const records = await prismaClient.post.findMany({
-    where: {
-      latitude: {
-        // gte: currentLatitude - latitudeRange,
-        lte: currentLatitude + latitudeRange,
-      },
-      longitude: {
-        // gte: currentLongitude - longitudeRange,
-        lte: currentLongitude + longitudeRange,
-      },
     },
   });
 

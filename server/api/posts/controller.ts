@@ -1,9 +1,9 @@
-import { getRecentPosts, togglelike } from '$/repository/postRepository';
+import { NearAndRecentRecords, togglelike } from '$/repository/postRepository';
 import { defineController } from './$relay';
 
 export default defineController(() => ({
-  get: async () => {
-    const result = await getRecentPosts();
+  get: async ({ query }) => {
+    const result = await NearAndRecentRecords(query.latitude, query.longitude);
     return { status: 200, body: result };
   },
 
