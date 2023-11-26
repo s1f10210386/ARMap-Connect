@@ -90,20 +90,37 @@ export const nearbyRecords = async (currentLatitude: number, currentLongitude: n
   return transformedRecords;
 };
 
-//likesは未完成・修正必要
-export const updateLikes = async (postId: string, increment: boolean) => {
-  const post = await prismaClient.post.findUnique({
-    where: { id: postId },
+//とあるuserが投稿をイイネしたときにレコードの存在をチェック(イイネを追加、削除する関数)
+//最後にlikeテーブルに含まれる投稿IDを数える(その投稿のイイネ数を更新)
+export const togglelike = async (postId: string, userId: string) => {
+  const like = await prismaClient.like.findUnique({
+    where: {
+      postId_userId: {
+        postId: postId,
+        userId: userId,
+      },
+    },
   });
 
-  if (!post) {
-    throw new Error('Post not found');
+  if (like) {
+    await prismaClient.like.delete({
+      where: { id: like.id },
+    });
+  } else {
+    await prismaClient.like.create({
+      data: {
+        id: randomUUID(),
+        post: { connect: { id: postId } },
+        user: { connect: { id: userId } },
+      },
+    });
   }
 
-  const newLikes = increment ? post.likes + 1 : post.likes - 1;
-
-  await prismaClient.post.update({
-    where: { id: postId },
-    data: { likes: newLikes },
+  const likeCount = await prismaClient.like.count({
+    where: {
+      postId: postId,
+    },
   });
+  console.log('likeCount', likeCount);
+  return likeCount;
 };

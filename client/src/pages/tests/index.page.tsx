@@ -34,7 +34,6 @@ const Home = () => {
         content: string;
         latitude: number;
         longitude: number;
-        likes: number;
         userID: string;
       }[]
     | null
@@ -57,7 +56,6 @@ const Home = () => {
         content: string;
         latitude: number;
         longitude: number;
-        likes: number;
         userID: string;
       }[]
     | null
@@ -99,9 +97,18 @@ const Home = () => {
     await getMyPostContent();
   };
 
-  const handleLike = async (postID: string) => {
-    await apiClient.posts.$patch({ body: { postID, increment: true } });
+  const [likecount, setLikecount] = useState(0);
+
+  const handleLike = async (postId: string, userId: string) => {
+    if (user?.id === undefined || postId === undefined) return;
+
+    const result = (await apiClient.posts.$post({
+      body: { postId: postId, userId: user.id },
+    })) as unknown as number;
+    setLikecount(result);
     await getPosts();
+
+    console.log('result', result);
   };
 
   useEffect(() => {
@@ -142,7 +149,6 @@ const Home = () => {
 
                   <p>latitude: {post.latitude}</p>
                   <p>longitude: {post.longitude}</p>
-                  <p>likes: {post.likes}</p>
                   <br />
                 </div>
               ))}
@@ -155,13 +161,13 @@ const Home = () => {
             {posts &&
               posts.map((post) => (
                 <div key={post.id}>
-                  <Button onClick={() => handleLike(post.id)}>いいね</Button>
+                  <Button onClick={() => handleLike(post.id, user.id)}>いいね</Button>
+                  <p>{likecount}いいね</p>
                   <h3>user: {post.userName}</h3>
                   <p>Content: {post.content}</p>
                   <p>Time: {post.postTime}</p>
                   <p>latitude: {post.latitude}</p>
                   <p>longitude: {post.longitude}</p>
-                  <p>likes: {post.likes}</p>
                   <br />
                 </div>
               ))}
