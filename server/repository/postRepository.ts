@@ -135,7 +135,7 @@ export const togglelike = async (postId: string, userId: string) => {
   //likeCountカラム更新
   await prismaClient.post.update({
     where: { id: postId },
-    data: { likeCount: likeCount },
+    data: { likeCount },
   });
 
   //likeCountカラムを返す
@@ -143,6 +143,7 @@ export const togglelike = async (postId: string, userId: string) => {
     where: { id: postId },
     select: { likeCount: true },
   });
+  console.log('updatePost', updatedPost);
   if (updatedPost === null) return console.log('ほげげですよ');
   else {
     return updatedPost.likeCount;
