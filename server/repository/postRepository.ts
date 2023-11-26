@@ -19,21 +19,28 @@ export const postPost = async (
   postlongitude: number,
   userID: string
 ) => {
+  console.log('userID', userID);
   const jstOffset = 9 * 60; // 日本はUTC+9
   const now = new Date();
   const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000);
-  const post = await prismaClient.post.create({
-    data: {
-      id: randomUUID(),
-      userName: postUserName,
-      postTime: jstNow,
-      content: postcontent,
-      latitude: postlatitude,
-      longitude: postlongitude,
-      userID,
-    },
-  });
-  return post;
+  try {
+    const post = await prismaClient.post.create({
+      data: {
+        id: randomUUID(),
+        userName: postUserName,
+        postTime: jstNow,
+        content: postcontent,
+        latitude: postlatitude,
+        longitude: postlongitude,
+        userID,
+        likeCount: 0,
+      },
+    });
+    console.log('post', post);
+    return post;
+  } catch (error) {
+    console.error('Error creating post:', error);
+  }
 };
 
 export const deletePost = async (postID: string) => {
@@ -93,6 +100,7 @@ export const nearbyRecords = async (currentLatitude: number, currentLongitude: n
 //とあるuserが投稿をイイネしたときにレコードの存在をチェック(イイネを追加、削除する関数)
 //最後にlikeテーブルに含まれる投稿IDを数える(その投稿のイイネ数を更新)
 export const togglelike = async (postId: string, userId: string) => {
+  //postIdとuserIdが一致するレコードをlikeテーブルから探索
   const like = await prismaClient.like.findUnique({
     where: {
       postId_userId: {
@@ -102,6 +110,7 @@ export const togglelike = async (postId: string, userId: string) => {
     },
   });
 
+  //あるなら削除(イイネを取り消す)、ないなら追加(イイネをする)
   if (like) {
     await prismaClient.like.delete({
       where: { id: like.id },
@@ -116,11 +125,26 @@ export const togglelike = async (postId: string, userId: string) => {
     });
   }
 
+  //この投稿のイイネ数を数える
   const likeCount = await prismaClient.like.count({
     where: {
       postId,
     },
   });
-  console.log('likeCount', likeCount);
-  return likeCount;
+
+  //likeCountカラム更新
+  await prismaClient.post.update({
+    where: { id: postId },
+    data: { likeCount: likeCount },
+  });
+
+  //likeCountカラムを返す
+  const updatedPost = await prismaClient.post.findUnique({
+    where: { id: postId },
+    select: { likeCount: true },
+  });
+  if (updatedPost === null) return console.log('ほげげですよ');
+  else {
+    return updatedPost.likeCount;
+  }
 };

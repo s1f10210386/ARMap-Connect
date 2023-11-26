@@ -11,6 +11,7 @@ export type Methods = DefineMethods<{
       latitude: number;
       longitude: number;
       userID: string;
+      likeCount: number;
     }[];
   };
 }>;
