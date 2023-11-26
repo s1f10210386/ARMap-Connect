@@ -9,6 +9,7 @@ declare namespace JSX {
     'a-cylinder': any;
     'a-camera': any;
     'a-entity': any;
+    'a-text': a;
     // 他のA-FrameまたはAR.jsの要素に必要な型定義をここに追加
   }
 }
