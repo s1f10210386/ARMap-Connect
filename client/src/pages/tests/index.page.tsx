@@ -99,7 +99,7 @@ const Home = () => {
 
   const [likecount, setLikecount] = useState(0);
 
-  const handleLike = async (postId: string, userId: string) => {
+  const handleLike = async (postId: string) => {
     if (user?.id === undefined || postId === undefined) return;
 
     const result = (await apiClient.posts.$post({
