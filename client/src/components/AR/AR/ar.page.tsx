@@ -10,11 +10,11 @@ const ARComponent = () => {
         <a-entity
           material="color: red"
           geometry="primitive: box"
-          gps-new-entity-place="latitude: 35.77939265843798; longitude: 139.72483812291327"
+          gps-new-entity-place="latitude:  35.779373072610795; longitude:139.72486851576315"
           scale="10 10 10"
         />
+        {/* 35.77794586770196, 139.72510855214577 */}
       </a-scene>
-      {/* 35.77939265843798, 139.72483812291327 */}
     </div>
   );
 };
