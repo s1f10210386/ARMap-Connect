@@ -23,7 +23,7 @@ const ARComponent = () => {
       });
     }
   }, [setCoordinates]);
-  console.log('coodinates', coordinates);
+
   const [posts, setPosts] = useState<
     | {
         id: string;
@@ -51,14 +51,15 @@ const ARComponent = () => {
     getPosts();
   }, [getPosts]);
 
+  // console.log('posts', posts);
   // const [posts, setPosts] = useState(null);
 
-  // const posts = [
-  //   { latitude: 35.6895, longitude: 139.6917, content: '東京タワー' },
-  //   { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'ひろき' },
-  //   // { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'bdddd' },
-  //   { latitude: 35.7780781399212, longitude: 139.72516114049802, content: 'bbbbb' },
-  // ];
+  const constPosts = [
+    { latitude: 35.6895, longitude: 139.6917, content: '東京タワー' },
+    { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'ひろき' },
+    // { latitude: 35.779373072610795, longitude: 139.72486851576315, content: 'bdddd' },
+    { latitude: 35.7780781399212, longitude: 139.72516114049802, content: 'bbbbb' },
+  ];
 
   return (
     <div>
@@ -72,13 +73,7 @@ const ARComponent = () => {
       >
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-new-camera="gpsMinDistance: 5" />
-        {/* <a-entity
-          material="color: #e0aeae"
-          geometry="primitive: box"
-          gps-new-entity-place="latitude:  35.779373072610795; longitude:139.72486851576315"
-          scale="10 10 10"
-        /> */}
-        {/* {posts.map((post, index) => (
+        {constPosts.map((post, index) => (
           <a-text
             key={index}
             value={post.content}
@@ -90,7 +85,7 @@ const ARComponent = () => {
             font="/fonts/noto-sans-cjk-jp-msdf.json"
             font-image="/png/noto-sans-cjk-jp-msdf.png"
           />
-        ))} */}
+        ))}
 
         {posts?.map((post, index) => (
           <a-text
@@ -98,19 +93,15 @@ const ARComponent = () => {
             value={post.content}
             gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
             scale="10 10 10"
+            looc-at="#camera"
+            align="center"
           />
         ))}
+
         {coordinates.latitude !== null && coordinates.longitude !== null && (
-          <a-text
-            value={`Latitude: ${coordinates.latitude}, Longitude:${coordinates.longitude}`}
-            position="5 -2 -5"
-            scale="1 1 0"
-            color="#000000"
-            look-at="#camera"
-            align="right"
-            // font="/fonts/noto-sans-cjk-jp-msdf.json"
-            // font-image="/png/noto-sans-cjk-jp-msdf.png"
-          />
+          <div className={styles.coordinatesInfo}>
+            Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
+          </div>
         )}
       </a-scene>
     </div>
