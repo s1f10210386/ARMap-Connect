@@ -79,7 +79,7 @@ const Home = () => {
     if (user?.id === undefined || postContent === '') return;
     if (coordinates.latitude === null || coordinates.longitude === null) return;
 
-    const postUserName = 'Hiroki';
+    const postUserName = 'Hirokiの投稿です';
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
 
