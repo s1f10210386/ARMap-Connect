@@ -1,10 +1,8 @@
 import { Button, TextField } from '@mui/material';
 import { useAtom } from 'jotai';
 import L from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
+import myIconURL from 'public/images/me.png';
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
@@ -15,11 +13,17 @@ import { apiClient } from 'src/utils/apiClient';
 import type { GeolocationCoordinates } from 'src/utils/coordinates';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
+// import markerIcon from 'leaflet/dist/images/marker-icon.png';
+// import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: markerIcon2x.src,
-  shadowUrl: markerShadow.src,
+  // iconUrl: myIconURL.src,
+
+  // iconUrl: markerIcon.src,
+  iconRetinaUrl: myIconURL.src,
+  iconSize: [48, 48],
+  // iconRetinaUrl: markerIcon2x.src,
+  // shadowUrl: markerShadow.src,
 });
 
 interface LocationMarkerProps {
