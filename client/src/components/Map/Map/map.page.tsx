@@ -3,6 +3,7 @@ import { useAtom } from 'jotai';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import myIconURL from 'public/images/me.png';
+import otherIconURL from 'public/images/other.png';
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
@@ -24,6 +25,15 @@ L.Icon.Default.mergeOptions({
   iconSize: [48, 48],
   // iconRetinaUrl: markerIcon2x.src,
   // shadowUrl: markerShadow.src,
+});
+
+const myIcon = L.icon({
+  iconUrl: myIconURL.src,
+  iconSize: [48, 48],
+});
+const otherIcon = L.icon({
+  iconUrl: otherIconURL.src,
+  iconSize: [48, 48],
 });
 
 interface LocationMarkerProps {
@@ -134,8 +144,13 @@ const Map: FC = () => {
                 fillOpacity={0.1}
               />
 
+              {/*ユーザーIDと"誰が投稿したか"という情報のpostのuserIDが一致するなら本人*/}
               {posts?.map((post) => (
-                <Marker key={post.id} position={[post.latitude, post.longitude]}>
+                <Marker
+                  key={post.id}
+                  icon={user.id === post.userID ? myIcon : otherIcon}
+                  position={[post.latitude, post.longitude]}
+                >
                   <Popup>
                     {post.postTime}
                     <br />
