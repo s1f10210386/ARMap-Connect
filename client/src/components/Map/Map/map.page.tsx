@@ -73,7 +73,7 @@ const Map: FC = () => {
     | null
   >(null);
 
-  //24時間以内かつ半径10km以内のものをget! useEffectで呼び出される。
+  //24時間以内かつ半径10km以内のものをget! useEffectで呼び出される、、
   const getPosts = useCallback(async () => {
     if (coordinates.latitude === null || coordinates.longitude === null) return;
     const latitude = coordinates.latitude;
