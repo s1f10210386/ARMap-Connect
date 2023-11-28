@@ -1,10 +1,7 @@
-import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
-import { apiClient } from 'src/utils/apiClient';
-import { returnNull } from 'src/utils/returnNull';
 import styles from './ar.module.css';
 
 const ARComponent = () => {
@@ -25,20 +22,20 @@ const ARComponent = () => {
     }
   }, [setCoordinates]);
 
-  const [posts, setPosts] = useState<PostModel[] | null>(null);
+  // const [posts, setPosts] = useState<PostModel[] | null>(null);
 
-  const getPosts = useCallback(async () => {
-    if (coordinates.latitude === null || coordinates.longitude === null) return;
-    const latitude = coordinates.latitude;
-    const longitude = coordinates.longitude;
-    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
-    setPosts(data);
-    console.log('getPosts');
-  }, [coordinates.latitude, coordinates.longitude]);
+  // const getPosts = useCallback(async () => {
+  //   if (coordinates.latitude === null || coordinates.longitude === null) return;
+  //   const latitude = coordinates.latitude;
+  //   const longitude = coordinates.longitude;
+  //   const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
+  //   setPosts(data);
+  //   console.log('getPosts');
+  // }, [coordinates.latitude, coordinates.longitude]);
 
-  useEffect(() => {
-    getPosts();
-  }, [getPosts]);
+  // useEffect(() => {
+  //   getPosts();
+  // }, [getPosts]);
 
   const textRef = useRef<HTMLElement | null>(null);
   const debugRef = useRef<HTMLDivElement | null>(null);
