@@ -51,11 +51,11 @@
   left: 38vw;
   z-index: 1000;
   width: 50vw;
-  font-weight: bold;
   font-size: 25px;
+  font-weight: bold;
 }
 
-.InfoNumber {
+.infoNumber {
   font-size: 35px;
   color: red;
 }
