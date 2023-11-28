@@ -4,9 +4,10 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import myIconURL from 'public/images/me.png';
 import otherIconURL from 'public/images/other.png';
+import pingIconURL from 'public/images/pingu.png';
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { coordinatesAtom, userAtom } from 'src/atoms/user';
 import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
@@ -33,6 +34,10 @@ const myIcon = L.icon({
 });
 const otherIcon = L.icon({
   iconUrl: otherIconURL.src,
+  iconSize: [48, 48],
+});
+const pingIcon = L.icon({
+  iconUrl: pingIconURL.src,
   iconSize: [48, 48],
 });
 
@@ -113,6 +118,23 @@ const Map: FC = () => {
     handleClosePopup();
     getPosts();
   };
+
+  //いいね押したら動くイイネ追加削除する関数
+  const [likecount, setLikecount] = useState(0);
+
+  const handleLike = async (postId: string) => {
+    if (user?.id === undefined || postId === undefined) return;
+
+    const result = (await apiClient.posts.$post({
+      body: { postId, userId: user.id },
+    })) as unknown as number;
+    setLikecount(result);
+    await getPosts();
+
+    console.log('result', result);
+    console.log('likecount', likecount);
+  };
+
   useEffect(() => {
     getPosts();
   }, [getPosts]);
@@ -136,12 +158,8 @@ const Map: FC = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <LocationMarker coordinates={coordinates} />
-              <CircleMarker
-                center={[coordinates.latitude, coordinates.longitude]}
-                radius={8}
-                color="red"
-                fillOpacity={0.1}
-              />
+
+              <Marker position={[coordinates.latitude, coordinates.longitude]} icon={pingIcon} />
 
               {/*ユーザーIDと"誰が投稿したか"という情報のpostのuserIDが一致するなら本人*/}
               {posts?.map((post) => (
@@ -153,7 +171,10 @@ const Map: FC = () => {
                   <Popup>
                     {post.postTime}
                     <br />
-                    {post.content}
+                    <div style={{ fontSize: '16px' }}>{post.content}</div>
+                    <button onClick={() => handleLike(post.id)}>いいね！</button>
+                    <br />
+                    {post.likeCount}いいね
                   </Popup>
                 </Marker>
               ))}
@@ -161,10 +182,17 @@ const Map: FC = () => {
           </div>
         )}
       </div>
+
       {!isPopupVisible && (
         <button onClick={handleButtonClick} className={styles.postButton}>
           POST
         </button>
+      )}
+      {!isPopupVisible && (
+        <div className={styles.nearInfo}>
+          近くに<span className={styles.InfoNumber}>{posts ? posts.length : 0}</span>
+          件の投稿があります
+        </div>
       )}
       {isPopupVisible && (
         <div className={styles.popup}>

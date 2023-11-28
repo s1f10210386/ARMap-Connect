@@ -1,3 +1,7 @@
+.leaflet-popup-content-wrapper {
+  background-color: red;
+}
+
 .container {
   width: 100vw;
   height: 100vh;
@@ -43,4 +47,19 @@
 
 .popupContent {
   color: rgb(173 187 230);
+}
+
+.nearInfo {
+  position: absolute;
+  top: 78vh;
+  left: 38vw;
+  z-index: 1000;
+  width: 50vw;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.InfoNumber {
+  font-size: 35px;
+  color: red;
 }
