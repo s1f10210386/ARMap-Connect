@@ -11,6 +11,8 @@ declare namespace JSX {
     'a-entity': any;
     'a-text': any;
     'a-light': any;
+    'a-animation': any;
+    'a-cursor': any;
     // 他のA-FrameまたはAR.jsの要素に必要な型定義をここに追加
   }
 }

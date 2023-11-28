@@ -1,9 +1,7 @@
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
-import { apiClient } from 'src/utils/apiClient';
-import { returnNull } from 'src/utils/returnNull';
 import styles from './ar.module.css';
 
 // import {} from 'aframe';
@@ -27,32 +25,32 @@ const ARComponent = () => {
   }, [setCoordinates]);
   // console.log(coordinates);
 
-  const [posts, setPosts] = useState<
-    | {
-        id: string;
-        userName: string;
-        postTime: string;
-        content: string;
-        latitude: number;
-        longitude: number;
-        userID: string;
-        likeCount: number;
-      }[]
-    | null
-  >(null);
+  // const [posts, setPosts] = useState<
+  //   | {
+  //       id: string;
+  //       userName: string;
+  //       postTime: string;
+  //       content: string;
+  //       latitude: number;
+  //       longitude: number;
+  //       userID: string;
+  //       likeCount: number;
+  //     }[]
+  //   | null
+  // >(null);
 
-  const getPosts = useCallback(async () => {
-    if (coordinates.latitude === null || coordinates.longitude === null) return;
-    const latitude = coordinates.latitude;
-    const longitude = coordinates.longitude;
-    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
-    setPosts(data);
-    console.log('getPosts');
-  }, [coordinates.latitude, coordinates.longitude]);
+  // const getPosts = useCallback(async () => {
+  //   if (coordinates.latitude === null || coordinates.longitude === null) return;
+  //   const latitude = coordinates.latitude;
+  //   const longitude = coordinates.longitude;
+  //   const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
+  //   setPosts(data);
+  //   console.log('getPosts');
+  // }, [coordinates.latitude, coordinates.longitude]);
 
-  useEffect(() => {
-    getPosts();
-  }, [getPosts]);
+  // useEffect(() => {
+  //   getPosts();
+  // }, [getPosts]);
 
   useEffect(() => {
     console.log('a');
@@ -60,21 +58,35 @@ const ARComponent = () => {
       AFRAME.registerComponent('click-handler', {
         init() {
           // console.log('c');
-          this.el.addEventListener('click', () => {
+          this.el.addEventListener('mouseup', () => {
             console.log('オブジェクトがクリックされました');
           });
         },
       });
     }
 
-    // if (typeof AFRAME.components['click-handler'] !== undefined) return;
-    // AFRAME.registerComponent('click-handler', {
-    //   events: {
-    //     click(evt: MouseEvent) {
-    //       console.log('This entity was ckicked!');
-    //     },
-    //   },
-    // });
+    let i = -1;
+    const colors = ['red', 'green', 'blue'];
+    if (typeof AFRAME.components['camera-listener'] === 'undefined') {
+      AFRAME.registerComponent('camera-listener', {
+        init() {
+          this.el.addEventListener('click', () => {
+            i = (i + 1) % colors.length;
+            this.setAttribute('material', 'color', colors[i]);
+          });
+        },
+      });
+    }
+    if (typeof AFRAME.components['log'] === 'undefined') {
+      AFRAME.registerComponent('log', {
+        schema: { type: 'string' },
+
+        init() {
+          const stringToLog = this.data;
+          console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', stringToLog);
+        },
+      });
+    }
   }, []);
   // const constPosts = [
   //   { latitude: 35.6895, longitude: 139.6917, content: '東京タワー' },
@@ -93,14 +105,19 @@ const ARComponent = () => {
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
         </div>
       )}
-      <a-scene
+      {/* <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
-      >
-        {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-new-camera="gpsMinDistance: 5" rotation-reader />
-        {/* {constPosts.map((post, index) => (
+      > */}
+      <a-scene log="Hello, Scene!">
+        <a-box log="Hello, Box!" />
+      </a-scene>
+      {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
+      {/* <a-camera gps-new-camera="gpsMinDistance: 5" rotation-reader>
+          <a-cursor />
+        </a-camera> */}
+      {/* {constPosts.map((post, index) => (
           <a-text
             key={index}
             value={post.content}
@@ -114,7 +131,7 @@ const ARComponent = () => {
           />
         ))} */}
 
-        {posts?.map((post, index) => (
+      {/* {posts?.map((post, index) => (
           <a-text
             key={index}
             value={post.content}
@@ -123,15 +140,25 @@ const ARComponent = () => {
             looc-at="#camera"
             align="center"
           />
-        ))}
+        ))} */}
 
-        <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" click-handler />
-        <a-box foo position="-2 1 -6" rotation="0 45 0" color="#4CC3D9" click-handler />
+      {/* <a-box click-handler id="1" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" />
+        <a-box click-handler id="2" position="-2 1 -6" rotation="0 45 0" color="#4CC3D9" />
+        <a-box click-handler id="3" position="-3 2 -9" rotation="0 45 0" color="#35474a" /> */}
+      {/* <a-entity ball-spawner /> */}
+      {/* <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" foo /> */}
 
-        <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" click-handler />
-        <a-light type="ambient" color="#445451" />
-        <a-light type="point" intensity="2" position="2 4 4" />
-      </a-scene>
+      {/* <a-box camera-listener position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" shadow />
+        <a-sphere camera-listener position="0 1.25 -5" radius="1.25" color="#EF2D5E" shadow />
+        <a-cylinder
+          camera-listener
+          position="1 0.75 -3"
+          radius="0.5"
+          height="1.5"
+          color="#FFC65D"
+          shadow
+        /> */}
+      {/* </a-scene> */}
     </div>
   );
 };
