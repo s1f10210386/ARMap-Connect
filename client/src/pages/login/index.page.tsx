@@ -28,7 +28,7 @@ const Login = () => {
     <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.title}>{APP_TITLE}</div>
-        {/* <div style={{ marginTop: '16px' }} onClick={login}>
+        {/* <div style={{ marginTop: '16px' }} onClick={loginGithub}>
           <div className={styles.btn}>
             <GithubIcon size={18} fill="#fff" />
             <span>Login with GitHub</span>
