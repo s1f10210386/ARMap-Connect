@@ -18,6 +18,7 @@
   position: absolute;
   top: 20px; /* 例えば画面の上部から20pxの位置 */
   right: 20px; /* 右側から20pxの位置 */
+  z-index: 1000;
   padding: 10px;
   color: #000;
   background-color: rgb(255 255 255 / 80%);
