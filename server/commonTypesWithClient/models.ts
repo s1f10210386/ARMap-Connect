@@ -8,6 +8,16 @@ export type UserModel = {
   displayName: string | undefined;
   photoURL: string | undefined;
 };
+export type PostModel = {
+  id: string;
+  userName: string;
+  postTime: string;
+  content: string;
+  latitude: number;
+  longitude: number;
+  likes: number;
+  userID: string;
+};
 
 export const taskParser = z.object({
   id: taskIdParser,
