@@ -142,7 +142,7 @@ const Map: FC = () => {
 
   if (!user) return <Loading visible />;
 
-  /* eslint-disable */
+  // eslint-disable-next-line
   return (
     <div>
       <div className={styles.container}>
@@ -220,5 +220,4 @@ const Map: FC = () => {
   );
 };
 
-/* eslint-enable */
 export default Map;
