@@ -17,6 +17,7 @@ import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
 // import markerIcon from 'leaflet/dist/images/marker-icon.png';
 // import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+// eslint-disable-next-line
 
 L.Icon.Default.mergeOptions({
   // iconUrl: myIconURL.src,
@@ -142,7 +143,6 @@ const Map: FC = () => {
 
   if (!user) return <Loading visible />;
 
-  // eslint-disable-next-line
   return (
     <div>
       <div className={styles.container}>
