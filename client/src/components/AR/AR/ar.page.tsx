@@ -54,25 +54,13 @@ const ARComponent = () => {
 
   useEffect(() => {
     console.log('a');
-    if (typeof AFRAME.components['click-handler'] === 'undefined') {
-      AFRAME.registerComponent('click-handler', {
+    if (typeof AFRAME.components['hit-box'] === 'undefined') {
+      AFRAME.registerComponent('hit-box', {
         init() {
           // console.log('c');
-          this.el.addEventListener('mouseup', () => {
-            console.log('オブジェクトがクリックされました');
-          });
-        },
-      });
-    }
-
-    let i = -1;
-    const colors = ['red', 'green', 'blue'];
-    if (typeof AFRAME.components['camera-listener'] === 'undefined') {
-      AFRAME.registerComponent('camera-listener', {
-        init() {
           this.el.addEventListener('click', () => {
-            i = (i + 1) % colors.length;
-            this.setAttribute('material', 'color', colors[i]);
+            alert('click');
+            console.log('オブジェクトがクリックされました');
           });
         },
       });
@@ -84,6 +72,15 @@ const ARComponent = () => {
         init() {
           const stringToLog = this.data;
           console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', stringToLog);
+        },
+      });
+    }
+
+    if (typeof AFRAME.components['hello-world'] === 'undefined') {
+      AFRAME.registerComponent('hello-world', {
+        init() {
+          console.log('hello, world!');
+          alert('hello');
         },
       });
     }
@@ -105,18 +102,43 @@ const ARComponent = () => {
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
         </div>
       )}
-      {/* <a-scene
+      <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
-      > */}
-      <a-scene log="Hello, Scene!">
-        <a-box log="Hello, Box!" />
-      </a-scene>
-      {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-      {/* <a-camera gps-new-camera="gpsMinDistance: 5" rotation-reader>
+      >
+        {/* <a-scene log="Hello, Scene!"> */}
+        {/* <a-box log="Hello, Box!" />
+        <a-entity hello-world /> */}
+        {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
+        {/* <a-camera gps-new-camera="gpsMinDistance: 5">
           <a-cursor />
         </a-camera> */}
+        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
+        <a-entity position="0 1.6 -1">
+          {/* 3Dモデル */}
+          <a-box color="#4CC3D9" scale="0.2 0.2 0.2" />
+          <a-entity position="0 -0.05 0" hit-box>
+            <a-entity
+              class="raycastable"
+              geometry="primitive:cylinder"
+              material="color:red; opacity: 0.5"
+              scale="0.2 0.2 0.2"
+              position="0 0.1 0"
+              visible="true"
+            />
+            <a-entity
+              class="raycastable"
+              geometry="primitive:box"
+              material="color:blue; opacity: 0.5"
+              scale="0.2 0.25 0.1"
+              position="0 0 0.1"
+              visible="true"
+            />
+          </a-entity>
+        </a-entity>
+      </a-scene>
+
       {/* {constPosts.map((post, index) => (
           <a-text
             key={index}
