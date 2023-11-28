@@ -1,3 +1,4 @@
+import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -24,19 +25,7 @@ const ARComponent = () => {
     }
   }, [setCoordinates]);
 
-  const [posts, setPosts] = useState<
-    | {
-        id: string;
-        userName: string;
-        postTime: string;
-        content: string;
-        latitude: number;
-        longitude: number;
-        userID: string;
-        likeCount: number;
-      }[]
-    | null
-  >(null);
+  const [posts, setPosts] = useState<PostModel[] | null>(null);
 
   const getPosts = useCallback(async () => {
     if (coordinates.latitude === null || coordinates.longitude === null) return;
