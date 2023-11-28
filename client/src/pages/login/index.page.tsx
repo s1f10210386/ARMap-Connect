@@ -20,6 +20,7 @@ const Login = () => {
   const loginEmail = async () => {
     addLoading();
     await authWithEmail(email, password);
+    // console.log('aaaaa');
     removeLoading();
   };
 
