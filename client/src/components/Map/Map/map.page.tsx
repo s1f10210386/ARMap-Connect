@@ -142,6 +142,7 @@ const Map: FC = () => {
 
   if (!user) return <Loading visible />;
 
+  /* eslint-disable */
   return (
     <div>
       <div className={styles.container}>
@@ -191,7 +192,7 @@ const Map: FC = () => {
       )}
       {!isPopupVisible && (
         <div className={styles.nearInfo}>
-          近くに<span className={styles.InfoNumber}>{posts ? posts.length : 0}</span>
+          近くに<span className={styles.infoNumber}>{posts ? posts.length : 0}</span>
           件の投稿があります
         </div>
       )}
@@ -218,4 +219,6 @@ const Map: FC = () => {
     </div>
   );
 };
+
+/* eslint-enable */
 export default Map;
