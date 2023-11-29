@@ -1,3 +1,9 @@
+// datasource db {
+//   provider = "postgresql"
+//   url = env("POSTGRES_PRISMA_URL")
+//   directUrl = env("POSTGRES_URL_NONPOOLING")
+// }
+
 datasource db {
   provider = "postgresql"
   url      = env("API_DATABASE_URL")
@@ -31,13 +37,12 @@ model Post {
   longitude Float
   userID    String
   user      User     @relation(fields: [userID], references: [id])
-  likeCount Int @default(0)
-  likes Like[]
-
+  likeCount Int      @default(0)
+  likes     Like[]
 }
 
-model Like{
-  id String @id
+model Like {
+  id     String @id
   post   Post   @relation(fields: [postId], references: [id])
   postId String
   user   User   @relation(fields: [userId], references: [id])
