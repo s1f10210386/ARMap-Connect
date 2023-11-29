@@ -46,6 +46,7 @@ export const authWithEmail = async (email: string, password: string) => {
         const signUpResult = await createUserWithEmailAndPassword(auth, email, password);
         const newUser = signUpResult.user.uid;
         await checkIfNewUser(newUser);
+
         console.log('新規登録成功');
       } catch (signUpError) {
         console.log('新規登録失敗', signUpError);
