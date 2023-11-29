@@ -19,7 +19,7 @@ const Login = () => {
   const loginGithub = async () => {
     addLoading();
     await loginWithGitHub();
-    await router.push("/")
+    await router.push('/');
     removeLoading();
   };
 
