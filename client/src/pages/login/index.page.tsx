@@ -1,13 +1,19 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { APP_TITLE } from 'commonConstantsWithClient';
+import type { UserId } from 'commonTypesWithClient/ids';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { userAtom } from 'src/atoms/user';
 import { GithubIcon } from 'src/components/icons/GithubIcon';
-import { authWithEmail, loginWithGitHub } from 'src/utils/login';
+import { createAuth } from 'src/utils/firebase';
+import { loginWithGitHub } from 'src/utils/login';
 import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
 
 const Login = () => {
+  const [, setUser] = useAtom(userAtom);
   const { loadingElm, addLoading, removeLoading } = useLoading();
 
   const [email, setEmail] = useState('');
@@ -23,11 +29,33 @@ const Login = () => {
     removeLoading();
   };
 
+  const signInWithEmail1 = async (email1: string, password: string) => {
+    const auth = createAuth();
+    try {
+      const signInResult = await signInWithEmailAndPassword(auth, email1, password);
+      const userFib = signInResult.user.uid;
+      setUser((prevUser) => ({
+        ...prevUser,
+        id: userFib as UserId,
+        email: email1,
+        displayName: prevUser?.displayName,
+        photoURL: prevUser?.photoURL, // 既存の photoURL を保持
+      }));
+
+      console.log('ログイン成功');
+    } catch (error) {
+      console.error('ログイン失敗', error);
+      throw error; // エラーを再スローして、呼び出し元でハンドリングできるようにする
+    }
+  };
+
   const loginEmail = async () => {
     addLoading();
 
     try {
-      await authWithEmail(email, password);
+      // await authWithEmail(email, password);
+      await signInWithEmail1(email, password);
+
       setLoginError(''); // ログインが成功したらエラーメッセージをクリア
       await router.push('/');
     } catch (error) {

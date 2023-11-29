@@ -1,23 +1,32 @@
+import { Typography } from '@mui/material';
 import { APP_TITLE } from 'commonConstantsWithClient';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { signUpWithEmail } from 'src/utils/login';
+import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
 
 const Register = () => {
-  // const { loadingElm, addLoading, removeLoading } = useLoading();
+  const { loadingElm, addLoading, removeLoading } = useLoading();
 
-  // const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const [loginError, setLoginError] = useState('');
 
   const createAccount = async () => {
-    // addLoading();
+    addLoading();
 
-    // await authWithEmail(email, password);
+    try {
+      // await authWithEmail(email, password);
+      await signUpWithEmail(email, password);
+      setLoginError(''); // アカウント作成
+      await router.push('/');
+    } catch (error) {
+      setLoginError('サインアップに失敗しました'); // ログイン失敗時のメッセージを設定
+    }
 
-    // removeLoading();
-    console.log('新規アカウント作成');
+    removeLoading();
   };
 
   const handleChange = async () => {
@@ -45,12 +54,17 @@ const Register = () => {
             <span>新規登録</span>
           </div>
         </div>
+        {loginError && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {loginError}
+          </Typography>
+        )}
 
         <button style={{ marginTop: '16px' }} onClick={handleChange}>
           戻る
         </button>
       </div>
-      {/* {loadingElm} */}
+      {loadingElm}
     </div>
   );
 };

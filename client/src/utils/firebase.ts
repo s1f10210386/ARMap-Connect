@@ -22,7 +22,7 @@ export const createAuth = () => {
     );
     const auth = getAuth(initializeApp(firebaseConfig));
     cachedAuth = auth;
-    console.log(auth);
+    // console.log(auth);
     return auth;
   }
 };
