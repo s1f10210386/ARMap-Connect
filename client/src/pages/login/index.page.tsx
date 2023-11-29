@@ -14,16 +14,25 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
+  const [loginError, setLoginError] = useState('');
+
   const loginGithub = async () => {
     addLoading();
     await loginWithGitHub();
+    await router.push("/")
     removeLoading();
   };
 
   const loginEmail = async () => {
     addLoading();
 
-    await authWithEmail(email, password);
+    try {
+      await authWithEmail(email, password);
+      setLoginError(''); // ログインが成功したらエラーメッセージをクリア
+      await router.push('/');
+    } catch (error) {
+      setLoginError('ログインに失敗しました'); // ログイン失敗時のメッセージを設定
+    }
 
     removeLoading();
   };
@@ -39,15 +48,6 @@ const Login = () => {
           <Typography variant="h4" gutterBottom>
             {APP_TITLE}
           </Typography>
-
-          <Button
-            variant="contained"
-            startIcon={<GithubIcon size={18} fill="#fff" />}
-            sx={{ mt: 2, mb: 2 }}
-            onClick={loginGithub}
-          >
-            Login with GitHub
-          </Button>
 
           <TextField
             label="Email"
@@ -71,6 +71,11 @@ const Login = () => {
             Login with Email
           </Button>
         </Box>
+        {loginError && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {loginError}
+          </Typography>
+        )}
 
         <div style={{ marginTop: '16px' }} onClick={loginGithub}>
           <div className={styles.btn}>
@@ -86,43 +91,6 @@ const Login = () => {
 
       {loadingElm}
     </div>
-
-    // <div className={styles.container}>
-    //   <div className={styles.main}>
-    //     <div className={styles.title}>{APP_TITLE}</div>
-    //     <div style={{ marginTop: '16px' }} onClick={loginGithub}>
-    //       <div className={styles.btn}>
-    //         <GithubIcon size={18} fill="#fff" />
-    //         <span>Login with GitHub</span>
-    //       </div>
-    //     </div>
-
-    //     {/* <input
-    //       type="text"
-    //       value={userName}
-    //       onChange={(e) => setUserName(e.target.value)}
-    //       placeholder="User Name"
-    //     /> */}
-    //     <input
-    //       type="email"
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //       placeholder="Email"
-    //     />
-    //     <input
-    //       type="password"
-    //       value={password}
-    //       onChange={(e) => setPassword(e.target.value)}
-    //       placeholder="Password"
-    //     />
-    //     <div style={{ marginTop: '16px' }} onClick={loginEmail}>
-    //       <div className={styles.btn}>
-    //         <span>Login with Email</span>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   {loadingElm}
-    // </div>
   );
 };
 

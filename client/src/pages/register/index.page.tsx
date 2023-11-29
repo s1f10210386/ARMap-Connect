@@ -13,7 +13,12 @@ const Register = () => {
   const router = useRouter();
 
   const createAccount = async () => {
-    console.log('新規登録');
+    // addLoading();
+
+    // await authWithEmail(email, password);
+
+    // removeLoading();
+    console.log('新規アカウント作成');
   };
 
   const handleChange = async () => {
@@ -24,19 +29,6 @@ const Register = () => {
     <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.title}>{APP_TITLE}</div>
-        {/* <div style={{ marginTop: '16px' }} onClick={login}>
-          <div className={styles.btn}>
-            <GithubIcon size={18} fill="#fff" />
-            <span>Login with GitHub</span>
-          </div>
-        </div> */}
-
-        {/* <input
-          type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder="User Name"
-        /> */}
         <input
           type="email"
           value={email}
