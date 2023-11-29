@@ -1,4 +1,6 @@
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Button, TextField } from '@mui/material';
+import Fab from '@mui/material/Fab';
 import { useAtom } from 'jotai';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -17,7 +19,6 @@ import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
 // import markerIcon from 'leaflet/dist/images/marker-icon.png';
 // import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-// eslint-disable-next-line
 
 L.Icon.Default.mergeOptions({
   // iconUrl: myIconURL.src,
@@ -141,6 +142,19 @@ const Map: FC = () => {
     getPosts();
   }, [getPosts]);
 
+  const formatTime = (isoString: string): string => {
+    const date = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('ja-JP', options).format(date);
+  };
+
   if (!user) return <Loading visible />;
 
   return (
@@ -171,10 +185,16 @@ const Map: FC = () => {
                   position={[post.latitude, post.longitude]}
                 >
                   <Popup>
-                    {post.postTime}
-                    <br />
-                    <div style={{ fontSize: '16px' }}>{post.content}</div>
-                    <button onClick={() => handleLike(post.id)}>いいね！</button>
+                    <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
+                    <div style={{ fontSize: '18px' }}>{post.content}</div>
+                    <Fab
+                      size="small"
+                      color="secondary"
+                      aria-label="like"
+                      onClick={() => handleLike(post.id)}
+                    >
+                      <FavoriteIcon />
+                    </Fab>
                     <br />
                     {post.likeCount}いいね
                   </Popup>
@@ -200,19 +220,20 @@ const Map: FC = () => {
         <div className={styles.popup}>
           <div className={styles.popupContent}>
             <TextField
-              label="投稿内容"
+              label="いまなにしてる？"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <Button onClick={postPostContent} disabled={!postContent.trim()}>
-                    投稿する
-                  </Button>
+                  <div className={styles.sendButton}>
+                    <Button onClick={postPostContent} disabled={!postContent.trim()}>
+                      投稿する
+                    </Button>
+                  </div>
                 ),
               }}
             />
-
-            <button onClick={handleClosePopup}>閉じる</button>
+            <button onClick={handleClosePopup}>戻る</button>
           </div>
         </div>
       )}

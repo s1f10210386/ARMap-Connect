@@ -1,12 +1,10 @@
 import { APP_TITLE } from 'commonConstantsWithClient';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { GithubIcon } from 'src/components/icons/GithubIcon';
-import { authWithEmail, loginWithGitHub } from 'src/utils/login';
 import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
 
-const Login = () => {
+const Register = () => {
   const { loadingElm, addLoading, removeLoading } = useLoading();
 
   // const [userName, setUserName] = useState('');
@@ -14,21 +12,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const loginGithub = async () => {
-    addLoading();
-    await loginWithGitHub();
-    removeLoading();
-  };
-
-  const loginEmail = async () => {
-    addLoading();
-    await authWithEmail(email, password);
-    // console.log('aaaaa');
-    removeLoading();
+  const createAccount = async () => {
+    console.log('新規登録');
   };
 
   const handleChange = async () => {
-    await router.push('/register');
+    await router.push('/login');
   };
 
   return (
@@ -60,21 +49,14 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
-        <div style={{ marginTop: '16px' }} onClick={loginEmail}>
+        <div style={{ marginTop: '16px' }} onClick={createAccount}>
           <div className={styles.btn}>
-            <span>Login with Email</span>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '16px' }} onClick={loginGithub}>
-          <div className={styles.btn}>
-            <GithubIcon size={18} fill="#fff" />
-            <span>GitHubでのログインはこちら</span>
+            <span>新規登録</span>
           </div>
         </div>
 
         <button style={{ marginTop: '16px' }} onClick={handleChange}>
-          新規登録
+          戻る
         </button>
       </div>
       {loadingElm}
@@ -82,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
