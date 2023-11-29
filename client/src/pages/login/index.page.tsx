@@ -1,6 +1,7 @@
 import { APP_TITLE } from 'commonConstantsWithClient';
+import { useState } from 'react';
 import { GithubIcon } from 'src/components/icons/GithubIcon';
-import { loginWithGitHub } from 'src/utils/login';
+import { authWithEmail, loginWithGitHub } from 'src/utils/login';
 import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
 
@@ -8,8 +9,8 @@ const Login = () => {
   const { loadingElm, addLoading, removeLoading } = useLoading();
 
   // const [userName, setUserName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const loginGithub = async () => {
     addLoading();
@@ -17,12 +18,13 @@ const Login = () => {
     removeLoading();
   };
 
-  // const loginEmail = async () => {
-  //   addLoading();
-  //   await authWithEmail(email, password);
-  //   // console.log('aaaaa');
-  //   removeLoading();
-  // };
+  const loginEmail = async () => {
+    addLoading();
+
+    await authWithEmail(email, password);
+
+    removeLoading();
+  };
 
   return (
     <div className={styles.container}>
@@ -41,7 +43,7 @@ const Login = () => {
           onChange={(e) => setUserName(e.target.value)}
           placeholder="User Name"
         /> */}
-        {/* <input
+        <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -57,7 +59,7 @@ const Login = () => {
           <div className={styles.btn}>
             <span>Login with Email</span>
           </div>
-        </div> */}
+        </div>
       </div>
       {loadingElm}
     </div>

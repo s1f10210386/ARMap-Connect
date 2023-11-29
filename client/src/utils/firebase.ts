@@ -16,12 +16,13 @@ export const createAuth = () => {
 
     return auth;
   } else {
+    console.log('本番環境');
     const firebaseConfig: FirebaseOptions = JSON.parse(
       process.env.NEXT_PUBLIC_FIREBASE_CONFIG ?? '{}'
     );
     const auth = getAuth(initializeApp(firebaseConfig));
     cachedAuth = auth;
-
+    console.log(auth);
     return auth;
   }
 };
