@@ -20,11 +20,6 @@ const Login = () => {
     await loginWithGitHub();
     removeLoading();
   };
-  const loginGithub = async () => {
-    addLoading();
-    await loginWithGitHub();
-    removeLoading();
-  };
 
   const loginEmail = async () => {
     addLoading();
