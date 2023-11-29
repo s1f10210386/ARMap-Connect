@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Button, TextField } from '@mui/material';
 import Fab from '@mui/material/Fab';
