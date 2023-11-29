@@ -50,10 +50,10 @@
 }
 
 .sendButton {
-  position: absolute;
-  align-self: flex-end; /* 投稿ボタンを右に */
   right: 20px; /* 右から20pxの位置 */
   bottom: 2px; /* 下から20pxの位置 */
+  position: absolute;
+  align-self: flex-end; /* 投稿ボタンを右に */
 }
 
 .nearInfo {
