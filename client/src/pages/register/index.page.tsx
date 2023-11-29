@@ -1,11 +1,10 @@
 import { APP_TITLE } from 'commonConstantsWithClient';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
 
 const Register = () => {
-  const { loadingElm, addLoading, removeLoading } = useLoading();
+  // const { loadingElm, addLoading, removeLoading } = useLoading();
 
   // const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -51,7 +50,7 @@ const Register = () => {
           戻る
         </button>
       </div>
-      {loadingElm}
+      {/* {loadingElm} */}
     </div>
   );
 };
