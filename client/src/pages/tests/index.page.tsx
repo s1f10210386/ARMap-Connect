@@ -4,12 +4,12 @@ import TextField from '@mui/material/TextField';
 import { useAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 // import { Loading } from 'src/components/Loading/Loading';
+import CloseIcon from '@mui/icons-material/Close';
 import { coordinatesAtom, userAtom } from 'src/atoms/user';
 import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
 import { apiClient } from 'src/utils/apiClient';
 import { returnNull } from 'src/utils/returnNull';
-
 const Home = () => {
   const [user] = useAtom(userAtom);
 
@@ -118,6 +118,19 @@ const Home = () => {
     getPosts();
   }, [getMyPostContent, getPosts, user]);
 
+  const formatTime = (isoString: string): string => {
+    const date = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('ja-JP', options).format(date);
+  };
+
   if (!user) return <Loading visible />;
   // if (!user) return;
   return (
@@ -151,6 +164,7 @@ const Home = () => {
 
                   <p>latitude: {post.latitude}</p>
                   <p>longitude: {post.longitude}</p>
+                  <CloseIcon />
                   <br />
                 </div>
               ))}
@@ -167,7 +181,7 @@ const Home = () => {
                   <p>{post.likeCount}いいね</p>
                   <h3>user: {post.userName}</h3>
                   <p>Content: {post.content}</p>
-                  <p>Time: {post.postTime}</p>
+                  <p>Time: {formatTime(post.postTime)}</p>
                   <p>latitude: {post.latitude}</p>
                   <p>longitude: {post.longitude}</p>
                   <br />

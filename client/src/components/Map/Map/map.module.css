@@ -42,5 +42,31 @@
 }
 
 .popupContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 要素を縦方向に均等に配置 */
+  height: 100%; /* ポップアップの高さを100%に設定して、ボタンが下に来るようにする */
   color: rgb(173 187 230);
+}
+
+.sendButton {
+  position: absolute;
+  right: 20px; /* 右から20pxの位置 */
+  bottom: 2px; /* 下から20pxの位置 */
+  align-self: flex-end; /* 投稿ボタンを右に */
+}
+
+.nearInfo {
+  position: absolute;
+  top: 78vh;
+  left: 38vw;
+  z-index: 1000;
+  width: 50vw;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.infoNumber {
+  font-size: 35px;
+  color: red;
 }

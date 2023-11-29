@@ -1,5 +1,6 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { APP_TITLE } from 'commonConstantsWithClient';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { GithubIcon } from 'src/components/icons/GithubIcon';
 import { authWithEmail, loginWithGitHub } from 'src/utils/login';
@@ -12,6 +13,7 @@ const Login = () => {
   // const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const loginGithub = async () => {
     addLoading();
@@ -25,6 +27,10 @@ const Login = () => {
     await authWithEmail(email, password);
 
     removeLoading();
+  };
+
+  const handleChange = async () => {
+    await router.push('/register');
   };
 
   return (
@@ -66,6 +72,17 @@ const Login = () => {
             Login with Email
           </Button>
         </Box>
+
+        <div style={{ marginTop: '16px' }} onClick={loginGithub}>
+          <div className={styles.btn}>
+            <GithubIcon size={18} fill="#fff" />
+            <span>GitHubでのログインはこちら</span>
+          </div>
+        </div>
+
+        <button style={{ marginTop: '16px' }} onClick={handleChange}>
+          新規登録
+        </button>
       </div>
 
       {loadingElm}

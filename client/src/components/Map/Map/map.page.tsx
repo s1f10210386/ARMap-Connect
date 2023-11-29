@@ -1,12 +1,16 @@
+/* eslint-disable complexity */
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Button, TextField } from '@mui/material';
+import Fab from '@mui/material/Fab';
 import { useAtom } from 'jotai';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import myIconURL from 'public/images/me.png';
 import otherIconURL from 'public/images/other.png';
+import pingIconURL from 'public/images/pingu.png';
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { coordinatesAtom, userAtom } from 'src/atoms/user';
 import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
@@ -33,6 +37,10 @@ const myIcon = L.icon({
 });
 const otherIcon = L.icon({
   iconUrl: otherIconURL.src,
+  iconSize: [48, 48],
+});
+const pingIcon = L.icon({
+  iconUrl: pingIconURL.src,
   iconSize: [48, 48],
 });
 
@@ -114,9 +122,39 @@ const Map: FC = () => {
     handleClosePopup();
     getPosts();
   };
+
+  //いいね押したら動くイイネ追加削除する関数
+  const [likecount, setLikecount] = useState(0);
+
+  const handleLike = async (postId: string) => {
+    if (user?.id === undefined || postId === undefined) return;
+
+    const result = (await apiClient.posts.$post({
+      body: { postId, userId: user.id },
+    })) as unknown as number;
+    setLikecount(result);
+    await getPosts();
+
+    console.log('result', result);
+    console.log('likecount', likecount);
+  };
+
   useEffect(() => {
     getPosts();
   }, [getPosts]);
+
+  const formatTime = (isoString: string): string => {
+    const date = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('ja-JP', options).format(date);
+  };
 
   if (!user) return <Loading visible />;
 
@@ -137,12 +175,8 @@ const Map: FC = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <LocationMarker coordinates={coordinates} />
-              <CircleMarker
-                center={[coordinates.latitude, coordinates.longitude]}
-                radius={8}
-                color="red"
-                fillOpacity={0.1}
-              />
+
+              <Marker position={[coordinates.latitude, coordinates.longitude]} icon={pingIcon} />
 
               {/*ユーザーIDと"誰が投稿したか"という情報のpostのuserIDが一致するなら本人*/}
               {posts?.map((post) => (
@@ -152,9 +186,18 @@ const Map: FC = () => {
                   position={[post.latitude, post.longitude]}
                 >
                   <Popup>
-                    {post.postTime}
+                    <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
+                    <div style={{ fontSize: '18px' }}>{post.content}</div>
+                    <Fab
+                      size="small"
+                      color="secondary"
+                      aria-label="like"
+                      onClick={() => handleLike(post.id)}
+                    >
+                      <FavoriteIcon />
+                    </Fab>
                     <br />
-                    {post.content}
+                    {post.likeCount}いいね
                   </Popup>
                 </Marker>
               ))}
@@ -162,32 +205,41 @@ const Map: FC = () => {
           </div>
         )}
       </div>
+
       {!isPopupVisible && (
         <button onClick={handleButtonClick} className={styles.postButton}>
           POST
         </button>
       )}
+      {!isPopupVisible && (
+        <div className={styles.nearInfo}>
+          近くに<span className={styles.infoNumber}>{posts ? posts.length : 0}</span>
+          件の投稿があります
+        </div>
+      )}
       {isPopupVisible && (
         <div className={styles.popup}>
           <div className={styles.popupContent}>
             <TextField
-              label="投稿内容"
+              label="いまなにしてる？"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <Button onClick={postPostContent} disabled={!postContent.trim()}>
-                    投稿する
-                  </Button>
+                  <div className={styles.sendButton}>
+                    <Button onClick={postPostContent} disabled={!postContent.trim()}>
+                      投稿する
+                    </Button>
+                  </div>
                 ),
               }}
             />
-
-            <button onClick={handleClosePopup}>閉じる</button>
+            <button onClick={handleClosePopup}>戻る</button>
           </div>
         </div>
       )}
     </div>
   );
 };
+
 export default Map;
