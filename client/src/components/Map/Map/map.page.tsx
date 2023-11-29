@@ -59,7 +59,7 @@ const LocationMarker: FC<LocationMarkerProps> = ({ coordinates }) => {
   return null; // このコンポーネントはビジュアルをレンダリングしません。
 };
 const Map: FC = () => {
-  console.log('my', myIconURL);
+  // console.log('my', myIconURL);
   const [user] = useAtom(userAtom);
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 

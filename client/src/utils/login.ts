@@ -13,7 +13,11 @@ export const loginWithGitHub = async () => {
   const ghProvider = new GithubAuthProvider();
   ghProvider.addScope('read:user');
 
-  await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
+  // await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
+  await signInWithPopup(createAuth(), ghProvider).catch((error) => {
+    console.error('Error during sign-in:', error);
+    return null;
+  });
 };
 
 export const logout = async () => {
@@ -34,8 +38,6 @@ export const authWithEmail = async (email: string, password: string) => {
     const signInResult = await signInWithEmailAndPassword(auth, email, password);
     const user = signInResult.user.uid;
     await checkIfNewUser(user);
-    // setUser();
-
     console.log('ログイン成功');
   } catch (error) {
     const firebaseError = error as FirebaseError;
@@ -44,6 +46,7 @@ export const authWithEmail = async (email: string, password: string) => {
         const signUpResult = await createUserWithEmailAndPassword(auth, email, password);
         const newUser = signUpResult.user.uid;
         await checkIfNewUser(newUser);
+
         console.log('新規登録成功');
       } catch (signUpError) {
         console.log('新規登録失敗', signUpError);

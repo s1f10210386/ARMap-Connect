@@ -1,3 +1,4 @@
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { APP_TITLE } from 'commonConstantsWithClient';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -19,11 +20,17 @@ const Login = () => {
     await loginWithGitHub();
     removeLoading();
   };
+  const loginGithub = async () => {
+    addLoading();
+    await loginWithGitHub();
+    removeLoading();
+  };
 
   const loginEmail = async () => {
     addLoading();
+
     await authWithEmail(email, password);
-    // console.log('aaaaa');
+
     removeLoading();
   };
 
@@ -34,37 +41,42 @@ const Login = () => {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
-        <div className={styles.title}>{APP_TITLE}</div>
-        {/* <div style={{ marginTop: '16px' }} onClick={login}>
-          <div className={styles.btn}>
-            <GithubIcon size={18} fill="#fff" />
-            <span>Login with GitHub</span>
-          </div>
-        </div> */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3 }}>
+          <Typography variant="h4" gutterBottom>
+            {APP_TITLE}
+          </Typography>
 
-        {/* <input
-          type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder="User Name"
-        /> */}
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <div style={{ marginTop: '16px' }} onClick={loginEmail}>
-          <div className={styles.btn}>
-            <span>Login with Email</span>
-          </div>
-        </div>
+          <Button
+            variant="contained"
+            startIcon={<GithubIcon size={18} fill="#fff" />}
+            sx={{ mt: 2, mb: 2 }}
+            onClick={loginGithub}
+          >
+            Login with GitHub
+          </Button>
+
+          <TextField
+            label="Email"
+            type="email"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            sx={{ mt: 2 }}
+          />
+          <Button variant="contained" sx={{ mt: 2 }} onClick={loginEmail}>
+            Login with Email
+          </Button>
+        </Box>
 
         <div style={{ marginTop: '16px' }} onClick={loginGithub}>
           <div className={styles.btn}>
@@ -77,8 +89,46 @@ const Login = () => {
           新規登録
         </button>
       </div>
+
       {loadingElm}
     </div>
+
+    // <div className={styles.container}>
+    //   <div className={styles.main}>
+    //     <div className={styles.title}>{APP_TITLE}</div>
+    //     <div style={{ marginTop: '16px' }} onClick={loginGithub}>
+    //       <div className={styles.btn}>
+    //         <GithubIcon size={18} fill="#fff" />
+    //         <span>Login with GitHub</span>
+    //       </div>
+    //     </div>
+
+    //     {/* <input
+    //       type="text"
+    //       value={userName}
+    //       onChange={(e) => setUserName(e.target.value)}
+    //       placeholder="User Name"
+    //     /> */}
+    //     <input
+    //       type="email"
+    //       value={email}
+    //       onChange={(e) => setEmail(e.target.value)}
+    //       placeholder="Email"
+    //     />
+    //     <input
+    //       type="password"
+    //       value={password}
+    //       onChange={(e) => setPassword(e.target.value)}
+    //       placeholder="Password"
+    //     />
+    //     <div style={{ marginTop: '16px' }} onClick={loginEmail}>
+    //       <div className={styles.btn}>
+    //         <span>Login with Email</span>
+    //       </div>
+    //     </div>
+    //   </div>
+    //   {loadingElm}
+    // </div>
   );
 };
 
