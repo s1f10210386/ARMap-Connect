@@ -1,11 +1,10 @@
 import { APP_TITLE } from 'commonConstantsWithClient';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
 
 const Register = () => {
-  const { loadingElm, addLoading, removeLoading } = useLoading();
+  // const { loadingElm, addLoading, removeLoading } = useLoading();
 
   // const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,7 +12,12 @@ const Register = () => {
   const router = useRouter();
 
   const createAccount = async () => {
-    console.log('新規登録');
+    // addLoading();
+
+    // await authWithEmail(email, password);
+
+    // removeLoading();
+    console.log('新規アカウント作成');
   };
 
   const handleChange = async () => {
@@ -24,19 +28,6 @@ const Register = () => {
     <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.title}>{APP_TITLE}</div>
-        {/* <div style={{ marginTop: '16px' }} onClick={login}>
-          <div className={styles.btn}>
-            <GithubIcon size={18} fill="#fff" />
-            <span>Login with GitHub</span>
-          </div>
-        </div> */}
-
-        {/* <input
-          type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder="User Name"
-        /> */}
         <input
           type="email"
           value={email}
@@ -59,7 +50,7 @@ const Register = () => {
           戻る
         </button>
       </div>
-      {loadingElm}
+      {/* {loadingElm} */}
     </div>
   );
 };
