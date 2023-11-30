@@ -162,6 +162,14 @@ const Map: FC = () => {
     return new Intl.DateTimeFormat('ja-JP', options).format(date);
   };
 
+  const setViewportHeight = (): void => {
+    const vh: number = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+
+  window.addEventListener('resize', setViewportHeight);
+  setViewportHeight();
+
   if (!user) return <Loading visible />;
 
   return (
@@ -231,12 +239,12 @@ const Map: FC = () => {
         )}
       </div>
 
-      {!isPopupVisible && (
+      {/* {!isPopupVisible && (
         <div className={styles.nearInfo}>
           近くに<span className={styles.infoNumber}>{posts ? posts.length : 0}</span>
           件の投稿があります
         </div>
-      )}
+      )} */}
       {!isPopupVisible && (
         <Fab
           className={styles.postButton}
@@ -246,7 +254,7 @@ const Map: FC = () => {
             width: '80px',
             height: '80px',
             position: 'absolute',
-            top: '90vh',
+            top: '80vh',
             left: '50vw',
             transform: 'translate(-50%, -50%)',
           }}
