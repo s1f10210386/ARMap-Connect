@@ -1,6 +1,8 @@
 /* eslint-disable complexity */
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import SendIcon from '@mui/icons-material/Send';
 import { Button, TextField } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import { useAtom } from 'jotai';
@@ -160,6 +162,14 @@ const Map: FC = () => {
     return new Intl.DateTimeFormat('ja-JP', options).format(date);
   };
 
+  const setViewportHeight = (): void => {
+    const vh: number = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+
+  window.addEventListener('resize', setViewportHeight);
+  setViewportHeight();
+
   if (!user) return <Loading visible />;
 
   return (
@@ -190,18 +200,37 @@ const Map: FC = () => {
                   position={[post.latitude, post.longitude]}
                 >
                   <Popup>
-                    <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
-                    <div style={{ fontSize: '18px' }}>{post.content}</div>
-                    <Fab
-                      size="small"
-                      color="secondary"
-                      aria-label="like"
-                      onClick={() => handleLike(post.id)}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '200px',
+                        width: '300px',
+                      }}
                     >
-                      <FavoriteIcon />
-                    </Fab>
-                    <br />
-                    {post.likeCount}いいね
+                      <div style={{ fontSize: '18px', marginBottom: 'auto', overflow: 'auto' }}>
+                        {post.content}
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'end',
+                        }}
+                      >
+                        <Fab
+                          size="small"
+                          color="secondary"
+                          aria-label="like"
+                          onClick={() => handleLike(post.id)}
+                          style={{ flexGrow: 0 }}
+                        >
+                          <FavoriteIcon />
+                        </Fab>
+                        <span>{post.likeCount}いいね</span>
+                        <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
+                      </div>
+                    </div>
                   </Popup>
                 </Marker>
               ))}
@@ -210,12 +239,12 @@ const Map: FC = () => {
         )}
       </div>
 
-      {!isPopupVisible && (
+      {/* {!isPopupVisible && (
         <div className={styles.nearInfo}>
           近くに<span className={styles.infoNumber}>{posts ? posts.length : 0}</span>
           件の投稿があります
         </div>
-      )}
+      )} */}
       {!isPopupVisible && (
         <Fab
           className={styles.postButton}
@@ -225,7 +254,7 @@ const Map: FC = () => {
             width: '80px',
             height: '80px',
             position: 'absolute',
-            top: '90vh',
+            top: '80vh',
             left: '50vw',
             transform: 'translate(-50%, -50%)',
           }}
@@ -237,21 +266,59 @@ const Map: FC = () => {
       {isPopupVisible && (
         <div className={styles.popup}>
           <div className={styles.popupContent}>
+            <div
+              style={{
+                padding: '10px 0',
+                textAlign: 'left',
+                marginBottom: '20px',
+                fontSize: '14px',
+                color: 'black',
+              }}
+            >
+              今、あなたの周りで何が起こってる？
+            </div>
             <TextField
-              label="いまなにしてる？"
+              label="なにがおきてる？"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
+              multiline
+              rows={5}
+              variant="outlined"
+              style={{ marginBottom: 'auto' }}
               InputProps={{
-                endAdornment: (
-                  <div className={styles.sendButton}>
-                    <Button onClick={postPostContent} disabled={!postContent.trim()}>
-                      投稿する
-                    </Button>
-                  </div>
-                ),
+                sx: {
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#90caf9',
+                  },
+                },
               }}
             />
-            <button onClick={handleClosePopup}>戻る</button>
+            <div
+              style={{
+                alignSelf: 'flex-end',
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Button
+                variant="contained"
+                startIcon={<KeyboardReturnIcon />}
+                onClick={handleClosePopup}
+                sx={{ backgroundColor: '#FFCC80' }}
+              >
+                戻る
+              </Button>
+              <Button
+                variant="contained"
+                onClick={postPostContent}
+                disabled={!postContent.trim()}
+                sx={{ backgroundColor: '#90caf9' }}
+                endIcon={<SendIcon />}
+              >
+                POST
+              </Button>
+            </div>
           </div>
         </div>
       )}
