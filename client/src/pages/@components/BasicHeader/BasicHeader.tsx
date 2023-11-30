@@ -1,3 +1,4 @@
+import ThreeDRotationTwoToneIcon from '@mui/icons-material/ThreeDRotationTwoTone';
 import type { UserModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
@@ -42,7 +43,7 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
           <span className={styles.userName}>{user.displayName}</span>
         </div>
 
-        <button onClick={handleChenge}>MAP or AR</button>
+        <ThreeDRotationTwoToneIcon onClick={handleChenge} />
       </div>
     </div>
   );
