@@ -63,43 +63,6 @@ const ARComponent = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   document.querySelectorAll(`[gps-entity-place]`).forEach((entity) => {
-  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //     entity.addEventListener('gps-entity-place-update-position', (event: any) => {
-  //       const distance = event.detail.distance;
-  //       console.log(`Distance to ${entity.id}: ${distance} meters`);
-  //       // 距離に応じてテキストを更新（例）
-
-  //       if (distance < 100) {
-  //         entity.setAttribute('text', 'value: 近いです; color: black');
-  //       } else {
-  //         entity.setAttribute('text', `value: 遠いです; color: black`);
-  //       }
-  //     });
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log('111');
-  //   document.querySelectorAll('[gps-entity-place]').forEach((entity) => {
-  //     console.log('222');
-  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //     entity.addEventListener('gps-entity-place-update-position', (event: any) => {
-  //       console.log('333');
-  //       const distance = event.detail.distance;
-  //       console.log(`Distance to ${entity.id}: ${distance} meters`);
-
-  //       // 距離に応じてテキストを更新（例）
-  //       if (distance < 100) {
-  //         entity.setAttribute('text', 'value: 近いです; color: black');
-  //       } else {
-  //         entity.setAttribute('text', `value: 遠いです; color: black`);
-  //       }
-  //     });
-  //   });
-  // }, []);
-
   return (
     <div>
       <Link href="/">
@@ -148,37 +111,6 @@ const ARComponent = () => {
           </a-entity>
         </a-entity> */}
 
-        {/* {posts?.map((post, index) => (
-          <a-entity
-            key={index}
-            id={`post${index}`}
-            position={`0 ${1.6 + index * 0.5} -1`}
-            rotation="0 0 0"
-          >
-            <a-text
-              value={post.content}
-              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-              scale="0.5 0.5 0.5"
-              looc-at="camera"
-              color="black"
-              // align="center"
-            />
-            <a-entity
-              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-              position={`0.5 0 0`}
-              scale="0.0005 0.0005 0.0005"
-              gltf-model="/models/love_heart.gltf"
-            />
-            <a-text
-              value={`Likes: ${post.likeCount}`}
-              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-              position={`1 0 0`}
-              scale="0.2 0.2 0.2"
-              look-at="[gps-camra]"
-              color="black"
-            />
-          </a-entity>
-        ))} */}
         {posts?.map((post, index) => (
           <a-entity
             key={index}
@@ -188,7 +120,7 @@ const ARComponent = () => {
             rotation="0 0 0"
           >
             {/* 投稿内容の外枠 */}
-            <a-box color="#a4bbe5" height="1" width="1.5" position="0 0 -0.7" />
+            <a-plane color="#a4bbe5" height="1" width="1.5" position="0 0 -0.1" />
 
             {/* 投稿内容 */}
             <a-text
@@ -206,6 +138,17 @@ const ARComponent = () => {
               scale="0.0005 0.0005 0.0005"
             />
 
+            <a-entity position="-0.4, -0.15 0" hit-box>
+              <a-entity
+                class="raycastable"
+                geometry="primitive:box"
+                material="color:blue; opacity: 0.5"
+                scale="0.1 0.2 0.1"
+                position="0 0 0"
+                visible="false"
+              />
+            </a-entity>
+
             {/* いいね数 */}
             <a-text
               value={`Likes: ${post.likeCount}`}
@@ -219,7 +162,7 @@ const ARComponent = () => {
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-camera rotation-reader />
 
-        {/* <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" /> */}
+        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
     </div>
   );
