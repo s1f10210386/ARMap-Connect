@@ -84,18 +84,24 @@ const ARComponent = () => {
 
   useEffect(() => {
     posts?.forEach((post, index) => {
-      const entity = document.querySelector(`#posts${index}`);
+      const entity = document.querySelector(`#post${index}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       entity?.addEventListener('gps-entity-place-update-distance', (event: any) => {
         updateDistance(index, event.detail.distance);
       });
     });
   }, [posts]);
+
+  useEffect(() => {
+    console.log('Updated postWithDistance', postWithDistance);
+  }, [postWithDistance]);
+
   useEffect(() => {
     if (posts) {
       setPostsWithDistance(posts.map((post) => ({ ...post, distance: 0 })));
     }
   }, [posts]);
+
   return (
     <div>
       {/* <button onClick={handleReload} className={styles.mapButton}>
@@ -113,7 +119,7 @@ const ARComponent = () => {
       <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
-        renderer="antialias: true; alpha: true"
+        // renderer="antialias: true; alpha: true"
       >
         {/* <a-scene log="Hello, Scene!"> */}
 
@@ -197,9 +203,9 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-new-camera="gpsMinDistance: 5" />
+        <a-camera gps-camera="gpsMinDistance: 5" />
 
-        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
+        {/* <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" /> */}
       </a-scene>
     </div>
   );

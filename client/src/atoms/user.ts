@@ -8,3 +8,5 @@ export const coordinatesAtom = atom<GeolocationCoordinates>({
   latitude: null,
   longitude: null,
 });
+
+export const isMapViewAtomAtom = atom(true);
