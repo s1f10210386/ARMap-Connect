@@ -1,7 +1,6 @@
 import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
-import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
 import { apiClient } from 'src/utils/apiClient';
 import { returnNull } from 'src/utils/returnNull';
@@ -10,10 +9,6 @@ import styles from './ar.module.css';
 const ARComponent = () => {
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 
-  const router = useRouter();
-  const handleMAP = async () => {
-    await router.push('/');
-  };
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
       navigator.geolocation.watchPosition((posithon) => {
@@ -54,8 +49,8 @@ const ARComponent = () => {
     }
   }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
 
-  const textRef = useRef<HTMLElement | null>(null);
-  const debugRef = useRef<HTMLDivElement | null>(null);
+  // const textRef = useRef<HTMLElement | null>(null);
+  // const debugRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (typeof AFRAME.components['hit-box'] === 'undefined') {
@@ -80,21 +75,25 @@ const ARComponent = () => {
       });
     }
 
-    const textElement = textRef.current;
-    console.log('textElement', textElement);
-    if (textElement) {
-      textElement.addEventListener('gps-entity-place-update-positon', (event: Event) => {
-        const customEvent = event as CustomEvent;
-        const debugElement = debugRef.current;
-        console.log('debugElement', debugElement);
-        if (debugElement) {
-          debugElement.textContent = `${customEvent.detail.distance}m`;
-          console.log(debugElement);
-          textElement.setAttribute('value', `${textElement.getAttribute('distanceMsg')}left`);
-        }
-      });
-    }
+    // const textElement = textRef.current;
+    // console.log('textElement', textElement);
+    // if (textElement) {
+    //   textElement.addEventListener('gps-entity-place-update-positon', (event: Event) => {
+    //     const customEvent = event as CustomEvent;
+    //     const debugElement = debugRef.current;
+    //     console.log('debugElement', debugElement);
+    //     if (debugElement) {
+    //       debugElement.textContent = `${customEvent.detail.distance}m`;
+    //       console.log(debugElement);
+    //       textElement.setAttribute('value', `${textElement.getAttribute('distanceMsg')}left`);
+    //     }
+    //   });
+    // }
   }, []);
+
+  const handleReload = () => {
+    window.location.href = '/'; // ページのリロード
+  };
 
   return (
     <div>
@@ -111,9 +110,11 @@ const ARComponent = () => {
           display: 'block',
         }}
       /> */}
-      <button onClick={handleMAP} className={styles.mapButton}>
+
+      <button onClick={handleReload} className={styles.mapButton}>
         MAP
       </button>
+
       {coordinates.latitude !== null && coordinates.longitude !== null && (
         <div className={styles.coordinatesInfo}>
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
@@ -187,9 +188,10 @@ const ARComponent = () => {
             <a-entity
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               position={`0.5 0 0`}
-              scale="0.0005 0.0005 0.0005"
+              // scale="0.0005 0.0005 0.0005"
+              scale="1 1 1"
               gltf-model="/models/love_heart.gltf"
-              material="color: #c63131"
+              // material="color: #c63131"
             />
             <a-text
               value={`Likes: ${post.likeCount}`}
