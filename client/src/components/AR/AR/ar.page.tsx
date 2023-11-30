@@ -1,7 +1,7 @@
 import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
 import { apiClient } from 'src/utils/apiClient';
 import { returnNull } from 'src/utils/returnNull';
@@ -27,19 +27,32 @@ const ARComponent = () => {
 
   const [posts, setPosts] = useState<PostModel[] | null>(null);
 
-  const getPosts = useCallback(async () => {
-    if (coordinates.latitude === null || coordinates.longitude === null) return;
-    const latitude = coordinates.latitude;
-    const longitude = coordinates.longitude;
-    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
-    setPosts(data);
-    console.log('getPosts');
-  }, [coordinates.latitude, coordinates.longitude]);
+  // const getPosts = useCallback(async () => {
+  //   if (coordinates.latitude === null || coordinates.longitude === null) return;
+  //   const latitude = coordinates.latitude;
+  //   const longitude = coordinates.longitude;
+  //   const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
+  //   setPosts(data);
+  //   console.log('getPosts');
+  // }, [coordinates.latitude, coordinates.longitude]);
+
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   useEffect(() => {
-    getPosts();
-  }, [getPosts]);
-  console.log(posts);
+    if (isFirstLoad && coordinates.latitude !== null && coordinates.longitude !== null) {
+      const oneRendaringGetPosts = async () => {
+        const latitude = coordinates.latitude as number;
+        const longitude = coordinates.longitude as number;
+        const data = await apiClient.posts
+          .$get({ query: { latitude, longitude } })
+          .catch(returnNull);
+        setPosts(data);
+      };
+
+      oneRendaringGetPosts();
+      setIsFirstLoad(false); // 最初のロードが完了したらフラグを更新
+    }
+  }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
 
   const textRef = useRef<HTMLElement | null>(null);
   const debugRef = useRef<HTMLDivElement | null>(null);
@@ -85,7 +98,7 @@ const ARComponent = () => {
 
   return (
     <div>
-      <div
+      {/* <div
         id="debug"
         ref={debugRef}
         style={{
@@ -97,7 +110,7 @@ const ARComponent = () => {
           left: 0,
           display: 'block',
         }}
-      />
+      /> */}
       <button onClick={handleMAP} className={styles.mapButton}>
         MAP
       </button>
@@ -114,16 +127,15 @@ const ARComponent = () => {
         {/* <a-scene log="Hello, Scene!"> */}
 
         {/* クリックしたいentityグループ */}
-        <a-entity
+        {/* <a-entity
           id="click"
           position="0 1.6 -1"
           rotation="0 0 0"
           animation="property: position; to:0.3, 1.6 -1; loop: true; dur: 2000"
           animation__2="property: rotation; to: 360 360 0; loop: true; dur: 2000"
         >
-          {/* 3Dモデル */}
           <a-box color="#4CC3D9" scale="0.2 0.2 0.2" />
-          {/* 当たり判定 */}
+
           <a-entity position="0 -0.05 0" hit-box visible="true">
             <a-entity
               class="raycastable"
@@ -142,16 +154,9 @@ const ARComponent = () => {
               visible="true"
             />
           </a-entity>
-        </a-entity>
+        </a-entity> */}
 
-        <a-box
-          // id="haiti"
-          material="color: #00fa0c"
-          gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
-          scale="15 15 15"
-        />
-
-        <a-text
+        {/* <a-text
           ref={textRef}
           id="text"
           value=""
@@ -159,29 +164,34 @@ const ARComponent = () => {
           scale="30 30 30"
           position="0 55 0"
           gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
-        />
+        /> */}
+
+        {posts?.map((post, index) => (
+          <a-entity
+            key={index}
+            id={`post${index}`}
+            position={`0 ${1.6 + index * 0.5} -1`}
+            rotation="0 0 0"
+          >
+            <a-text
+              value={post.content}
+              // gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              scale="0.5 0.5 0.5"
+              looc-at="camera"
+              align="center"
+              animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000"
+              // animation__fadeout="property: material.opacity; from: 1; to: 0; startEvents: fadeout; dur: 1000"
+              animation__slide="property: position; from: 0 ${1.5 + index * 0.5} -1; to: 0 ${1.6 + index * 0.5} -1; dur: 2000; dir: alternate; repeat: indefinite"
+              animation__scale="property: scale; from: 0.5 0.5 0.5; to: 1 1 1; dur: 1500"
+            />
+          </a-entity>
+        ))}
+
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-new-camera="gpsMinDistance: 5" gps-camera="minDistance:30; maxDistance:100">
-          {/* <a-cursor /> */}
-        </a-camera>
+        <a-camera gps-new-camera="gpsMinDistance: 5" gps-camera="minDistance:30; maxDistance:100" />
+
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
-      {/* {posts?.map((post, index) => (
-        <a-text
-          key={index}
-          id={`text${index}`}
-          value={post.content}
-          gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-          scale="10 10 10"
-          looc-at="#camera"
-          align="center"
-        />
-      ))} */}
-      {/* <a-box click-handler id="1" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" />
-        <a-box click-handler id="2" position="-2 1 -6" rotation="0 45 0" color="#4CC3D9" />
-        <a-box click-handler id="3" position="-3 2 -9" rotation="0 45 0" color="#35474a" /> */}
-      {/* <a-entity ball-spawner /> */}
-      {/* <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" foo /> */}
     </div>
   );
 };
