@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import { useEffect } from 'react';
 import { gaPageview } from 'src/utils/gtag';
 import '../styles/globals.css';
@@ -23,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <script src="https://aframe.io/releases/1.3.0/aframe.min.js" />
+      {/* <script src="https://aframe.io/releases/1.3.0/aframe.min.js" />
       <script
         type="text/javascript"
         src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js"
@@ -31,7 +32,17 @@ function MyApp({ Component, pageProps }: AppProps) {
       <script
         type="text/javascript"
         src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"
+      /> */}
+      <Script src="https://aframe.io/releases/1.3.0/aframe.min.js" strategy="beforeInteractive" />
+      <Script
+        src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js"
+        strategy="beforeInteractive"
       />
+      <Script
+        src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"
+        strategy="beforeInteractive"
+      />
+
       <SafeHydrate>
         <Component {...pageProps} />
       </SafeHydrate>
