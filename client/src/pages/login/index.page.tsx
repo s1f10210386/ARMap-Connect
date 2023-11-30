@@ -71,10 +71,10 @@ const Login = () => {
 
   const [dev, setDev] = useState(true);
   const checkdev = useCallback(() => {
-    if (process.env.NEXT_PUBLIC_AUTH_EMULATOR === undefined) {
-      setDev(false);
-    } else {
+    if (process.env.NEXT_PUBLIC_AUTH_EMULATOR_URL !== undefined) {
       setDev(true);
+    } else {
+      setDev(false);
     }
   }, []);
 
