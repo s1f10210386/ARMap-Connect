@@ -13,11 +13,11 @@ export const loginWithGitHub = async () => {
   const ghProvider = new GithubAuthProvider();
   ghProvider.addScope('read:user');
 
-  // await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
-  await signInWithPopup(createAuth(), ghProvider).catch((error) => {
-    console.error('Error during sign-in:', error);
-    return null;
-  });
+  await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
+  // await signInWithPopup(createAuth(), ghProvider).catch((error) => {
+  //   console.error('Error during sign-in:', error);
+  //   return null;
+  // });
 };
 
 export const logout = async () => {

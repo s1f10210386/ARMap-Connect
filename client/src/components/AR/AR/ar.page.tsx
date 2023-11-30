@@ -1,7 +1,7 @@
 import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
 import { apiClient } from 'src/utils/apiClient';
 import { returnNull } from 'src/utils/returnNull';
@@ -27,19 +27,32 @@ const ARComponent = () => {
 
   const [posts, setPosts] = useState<PostModel[] | null>(null);
 
-  const getPosts = useCallback(async () => {
-    if (coordinates.latitude === null || coordinates.longitude === null) return;
-    const latitude = coordinates.latitude;
-    const longitude = coordinates.longitude;
-    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
-    setPosts(data);
-    console.log('getPosts');
-  }, [coordinates.latitude, coordinates.longitude]);
+  // const getPosts = useCallback(async () => {
+  //   if (coordinates.latitude === null || coordinates.longitude === null) return;
+  //   const latitude = coordinates.latitude;
+  //   const longitude = coordinates.longitude;
+  //   const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
+  //   setPosts(data);
+  //   console.log('getPosts');
+  // }, [coordinates.latitude, coordinates.longitude]);
+
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   useEffect(() => {
-    getPosts();
-  }, [getPosts]);
-  console.log(posts);
+    if (isFirstLoad && coordinates.latitude !== null && coordinates.longitude !== null) {
+      const oneRendaringGetPosts = async () => {
+        const latitude = coordinates.latitude as number;
+        const longitude = coordinates.longitude as number;
+        const data = await apiClient.posts
+          .$get({ query: { latitude, longitude } })
+          .catch(returnNull);
+        setPosts(data);
+      };
+
+      oneRendaringGetPosts();
+      setIsFirstLoad(false); // 最初のロードが完了したらフラグを更新
+    }
+  }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
 
   const textRef = useRef<HTMLElement | null>(null);
   const debugRef = useRef<HTMLDivElement | null>(null);
@@ -151,7 +164,7 @@ const ARComponent = () => {
           scale="15 15 15"
         /> */}
 
-        <a-text
+        {/* <a-text
           ref={textRef}
           id="text"
           value=""
@@ -159,7 +172,22 @@ const ARComponent = () => {
           scale="30 30 30"
           position="0 55 0"
           gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
-        />
+        /> */}
+
+        {posts?.map((post, index) => (
+          <a-entity key={index} id={'post${index}'} position="0 1.6 -1">
+            <a-text
+              value={post.content}
+              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              scale="10 10 10"
+              looc-at="camera"
+              align="center"
+              // rotation="0 0 0"
+              // animation="property: position; to:0.3, 1.6 -1; loop: true; dur: 2000"
+              // animation__2="property: rotation; to: 360 360 0; loop: true; dur: 2000"
+            />
+          </a-entity>
+        ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-new-camera="gpsMinDistance: 5" gps-camera="minDistance:30; maxDistance:100">
@@ -167,17 +195,6 @@ const ARComponent = () => {
         </a-camera>
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
-      {/* {posts?.map((post, index) => (
-        <a-text
-          key={index}
-          id={`text${index}`}
-          value={post.content}
-          gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-          scale="10 10 10"
-          looc-at="#camera"
-          align="center"
-        />
-      ))} */}
     </div>
   );
 };
