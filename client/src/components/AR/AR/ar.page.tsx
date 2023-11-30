@@ -203,7 +203,7 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-camera="gpsMinDistance: 5" />
+        <a-camera gps-camera rotation-render />
 
         {/* <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" /> */}
       </a-scene>
