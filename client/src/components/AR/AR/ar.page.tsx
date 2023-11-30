@@ -44,7 +44,6 @@ const ARComponent = () => {
     if (typeof AFRAME.components['hit-box'] === 'undefined') {
       AFRAME.registerComponent('hit-box', {
         init() {
-          // console.log('c');
           this.el.addEventListener('click', () => {
             alert('clickしました');
             console.log('オブジェクトがクリックされました');
@@ -64,49 +63,45 @@ const ARComponent = () => {
     }
   }, []);
 
-  // const handleReload = () => {
-  //   window.location.href = '/'; // ページのリロード
-  // };
+  // useEffect(() => {
+  //   document.querySelectorAll(`[gps-entity-place]`).forEach((entity) => {
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     entity.addEventListener('gps-entity-place-update-position', (event: any) => {
+  //       const distance = event.detail.distance;
+  //       console.log(`Distance to ${entity.id}: ${distance} meters`);
+  //       // 距離に応じてテキストを更新（例）
 
-  interface PostWithDistane extends PostModel {
-    distance: number;
-  }
-  const [postWithDistance, setPostsWithDistance] = useState<PostWithDistane[]>([]);
-  const updateDistance = (index: number, distance: number) => {
-    setPostsWithDistance((currentPosts) => {
-      const newPosts = [...currentPosts];
-      newPosts[index] = { ...newPosts[index], distance };
-      console.log('newPosts', newPosts);
-      return newPosts;
-    });
-  };
-  // console.log('postswithdistance', postWithDistance);
+  //       if (distance < 100) {
+  //         entity.setAttribute('text', 'value: 近いです; color: black');
+  //       } else {
+  //         entity.setAttribute('text', `value: 遠いです; color: black`);
+  //       }
+  //     });
+  //   });
+  // }, []);
 
   useEffect(() => {
-    posts?.forEach((post, index) => {
-      const entity = document.querySelector(`#post${index}`);
+    console.log('111');
+    document.querySelectorAll('[gps-entity-place]').forEach((entity) => {
+      console.log('222');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      entity?.addEventListener('gps-entity-place-update-distance', (event: any) => {
-        updateDistance(index, event.detail.distance);
+      entity.addEventListener('gps-entity-place-update-position', (event: any) => {
+        console.log('333');
+        const distance = event.detail.distance;
+        console.log(`Distance to ${entity.id}: ${distance} meters`);
+
+        // 距離に応じてテキストを更新（例）
+        if (distance < 100) {
+          entity.setAttribute('text', 'value: 近いです; color: black');
+        } else {
+          entity.setAttribute('text', `value: 遠いです; color: black`);
+        }
       });
     });
-  }, [posts]);
-
-  useEffect(() => {
-    console.log('Updated postWithDistance', postWithDistance);
-  }, [postWithDistance]);
-
-  useEffect(() => {
-    if (posts) {
-      setPostsWithDistance(posts.map((post) => ({ ...post, distance: 0 })));
-    }
-  }, [posts]);
+  }, []);
 
   return (
     <div>
-      {/* <button onClick={handleReload} className={styles.mapButton}>
-        MAP
-      </button> */}
       <Link href="/">
         <button className={styles.mapButton}>MAP</button>
       </Link>
@@ -167,15 +162,11 @@ const ARComponent = () => {
               looc-at="camera"
               color="black"
               // align="center"
-              // animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000"
-              // animation__slide="property: position; from: 0 ${1.5 + index * 0.5} -1; to: 0 ${1.6 + index * 0.5} -1; dur: 2000; dir: alternate; repeat: indefinite"
-              // animation__scale="property: scale; from: 0.5 0.5 0.5; to: 1 1 1; dur: 1500"
             />
             <a-entity
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               position={`0.5 0 0`}
               scale="0.0005 0.0005 0.0005"
-              // scale="1 1 1"
               gltf-model="/models/love_heart.gltf"
             />
             <a-text
@@ -183,29 +174,16 @@ const ARComponent = () => {
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               position={`1 0 0`}
               scale="0.2 0.2 0.2"
-              // scale="10 10 10"
               look-at="[gps-camra]"
               color="black"
             />
           </a-entity>
         ))}
 
-        {postWithDistance.map((post, index) => (
-          <a-entity key={index} id={`posts${index}`}>
-            <a-text
-              value={`Distance: ${post.distance.toFixed(2)} m`}
-              scale="1 1 1"
-              position="0 1.6 -1"
-              look-at="[gps-camera]"
-              align="center"
-            />
-          </a-entity>
-        ))}
-
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-camera rotation-render />
+        <a-camera gps-camera="maxDistance: 50; gpsMinDistance: 5" />
 
-        {/* <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" /> */}
+        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
     </div>
   );
