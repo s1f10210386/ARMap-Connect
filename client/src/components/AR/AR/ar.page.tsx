@@ -127,16 +127,15 @@ const ARComponent = () => {
         {/* <a-scene log="Hello, Scene!"> */}
 
         {/* クリックしたいentityグループ */}
-        <a-entity
+        {/* <a-entity
           id="click"
           position="0 1.6 -1"
           rotation="0 0 0"
           animation="property: position; to:0.3, 1.6 -1; loop: true; dur: 2000"
           animation__2="property: rotation; to: 360 360 0; loop: true; dur: 2000"
         >
-          {/* 3Dモデル */}
           <a-box color="#4CC3D9" scale="0.2 0.2 0.2" />
-          {/* 当たり判定 */}
+
           <a-entity position="0 -0.05 0" hit-box visible="true">
             <a-entity
               class="raycastable"
@@ -155,7 +154,7 @@ const ARComponent = () => {
               visible="true"
             />
           </a-entity>
-        </a-entity>
+        </a-entity> */}
 
         {/* <a-box
           // id="haiti"

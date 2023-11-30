@@ -1,14 +1,14 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { APP_TITLE } from 'commonConstantsWithClient';
 import type { UserId } from 'commonTypesWithClient/ids';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { userAtom } from 'src/atoms/user';
 import { GithubIcon } from 'src/components/icons/GithubIcon';
 import { createAuth } from 'src/utils/firebase';
-import { loginWithGitHub } from 'src/utils/login';
+import { returnNull } from 'src/utils/returnNull';
 import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
 
@@ -22,9 +22,37 @@ const Login = () => {
 
   const [loginError, setLoginError] = useState('');
 
+  const loginWithGitHub1 = async () => {
+    try {
+      const ghProvider = new GithubAuthProvider();
+      ghProvider.addScope('read:user');
+      const signInResult = await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
+      const userFib = signInResult?.user.uid ?? '';
+      const emailFib = signInResult?.user.email ?? '';
+      const displayNameFib = signInResult?.user.displayName ?? '';
+      const photoURLFib = signInResult?.user.photoURL ?? '';
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        id: userFib as UserId,
+        email: emailFib,
+        displayName: displayNameFib,
+        photoURL: photoURLFib,
+      }));
+    } catch (error) {
+      console.log('ログイン失敗');
+      throw error;
+    }
+  };
+
   const loginGithub = async () => {
     addLoading();
-    await loginWithGitHub();
+    try {
+      await loginWithGitHub1();
+      setLoginError('');
+    } catch (error) {
+      setLoginError('ログイン失敗');
+    }
     removeLoading();
   };
 
@@ -33,6 +61,7 @@ const Login = () => {
     try {
       const signInResult = await signInWithEmailAndPassword(auth, email1, password);
       const userFib = signInResult.user.uid;
+
       setUser((prevUser) => ({
         ...prevUser,
         id: userFib as UserId,
@@ -95,6 +124,11 @@ const Login = () => {
                 <GithubIcon size={18} fill="#fff" />
                 <span>GitHubでのログインはこちら</span>
               </div>
+              {loginError && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  {loginError}
+                </Typography>
+              )}
             </div>
           ) : (
             <div>
