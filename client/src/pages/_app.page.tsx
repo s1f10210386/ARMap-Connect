@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import { useEffect } from 'react';
 import { gaPageview } from 'src/utils/gtag';
 import '../styles/globals.css';
@@ -37,7 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js" />
       <Script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js" /> */}
 
-      <script src="https://aframe.io/releases/1.3.0/aframe.min.js" />
+      {/* <script src="https://aframe.io/releases/1.3.0/aframe.min.js" />
       <script
         type="text/javascript"
         src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js"
@@ -45,7 +46,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <script
         type="text/javascript"
         src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"
-      />
+      /> */}
+
+      <Script src="https://aframe.io/releases/1.0.4/aframe.min.js" />
+      <Script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js" />
+      <Script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js" />
       <SafeHydrate>
         <Component {...pageProps} />
       </SafeHydrate>

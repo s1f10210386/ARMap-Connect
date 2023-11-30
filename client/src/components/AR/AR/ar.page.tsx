@@ -80,25 +80,25 @@ const ARComponent = () => {
   //   });
   // }, []);
 
-  useEffect(() => {
-    console.log('111');
-    document.querySelectorAll('[gps-entity-place]').forEach((entity) => {
-      console.log('222');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      entity.addEventListener('gps-entity-place-update-position', (event: any) => {
-        console.log('333');
-        const distance = event.detail.distance;
-        console.log(`Distance to ${entity.id}: ${distance} meters`);
+  // useEffect(() => {
+  //   console.log('111');
+  //   document.querySelectorAll('[gps-entity-place]').forEach((entity) => {
+  //     console.log('222');
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     entity.addEventListener('gps-entity-place-update-position', (event: any) => {
+  //       console.log('333');
+  //       const distance = event.detail.distance;
+  //       console.log(`Distance to ${entity.id}: ${distance} meters`);
 
-        // 距離に応じてテキストを更新（例）
-        if (distance < 100) {
-          entity.setAttribute('text', 'value: 近いです; color: black');
-        } else {
-          entity.setAttribute('text', `value: 遠いです; color: black`);
-        }
-      });
-    });
-  }, []);
+  //       // 距離に応じてテキストを更新（例）
+  //       if (distance < 100) {
+  //         entity.setAttribute('text', 'value: 近いです; color: black');
+  //       } else {
+  //         entity.setAttribute('text', `value: 遠いです; color: black`);
+  //       }
+  //     });
+  //   });
+  // }, []);
 
   return (
     <div>
@@ -148,7 +148,7 @@ const ARComponent = () => {
           </a-entity>
         </a-entity> */}
 
-        {posts?.map((post, index) => (
+        {/* {posts?.map((post, index) => (
           <a-entity
             key={index}
             id={`post${index}`}
@@ -178,12 +178,48 @@ const ARComponent = () => {
               color="black"
             />
           </a-entity>
+        ))} */}
+        {posts?.map((post, index) => (
+          <a-entity
+            key={index}
+            id={`post${index}`}
+            gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+            position={`${index * 2} 1 -1`}
+            rotation="0 0 0"
+          >
+            {/* 投稿内容の外枠 */}
+            <a-plane color="#a4bbe5" height="1" width="1.5" position="0 0 -0.1" />
+
+            {/* 投稿内容 */}
+            <a-text
+              value={post.content}
+              position="0 0.2 0"
+              scale="0.4 0.4 0.4"
+              color="black"
+              align="center"
+            />
+
+            {/* いいねオブジェクト */}
+            <a-entity
+              position="-0.4 -0.2 0"
+              gltf-model="/models/love_heart.gltf"
+              scale="0.0005 0.0005 0.0005"
+            />
+
+            {/* いいね数 */}
+            <a-text
+              value={`Likes: ${post.likeCount}`}
+              position="0.3 -0.2 0"
+              scale="0.2 0.2 0.2"
+              color="black"
+            />
+          </a-entity>
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-camera="maxDistance: 50; gpsMinDistance: 5" />
+        <a-camera gps-camera="maxDistance: 50" rotation-reader />
 
-        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
+        {/* <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" /> */}
       </a-scene>
     </div>
   );
