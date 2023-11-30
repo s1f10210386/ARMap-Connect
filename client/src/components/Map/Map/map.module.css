@@ -27,8 +27,8 @@
   top: 50%;
   left: 50%;
   z-index: 1000;
-  width: 50vw;
-  height: 50vh;
+  width: 80vw;
+  height: 40vh;
   padding: 20px;
   background: white;
   border-radius: 8px;
@@ -38,8 +38,8 @@
 .popupContent {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* 要素を縦方向に均等に配置 */
-  height: 100%; /* ポップアップの高さを100%に設定して、ボタンが下に来るようにする */
+  justify-content: space-between;
+  height: 100%;
   color: rgb(173 187 230);
 }
 

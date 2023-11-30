@@ -1,6 +1,8 @@
 /* eslint-disable complexity */
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import SendIcon from '@mui/icons-material/Send';
 import { Button, TextField } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import { useAtom } from 'jotai';
@@ -256,21 +258,59 @@ const Map: FC = () => {
       {isPopupVisible && (
         <div className={styles.popup}>
           <div className={styles.popupContent}>
+            <div
+              style={{
+                padding: '10px 0',
+                textAlign: 'left',
+                marginBottom: '20px',
+                fontSize: '14px',
+                color: 'black',
+              }}
+            >
+              今、あなたの周りで何が起こってる？
+            </div>
             <TextField
-              label="いまなにしてる？"
+              label="なにがおきてる？"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
+              multiline
+              rows={5}
+              variant="outlined"
+              style={{ marginBottom: 'auto' }}
               InputProps={{
-                endAdornment: (
-                  <div className={styles.sendButton}>
-                    <Button onClick={postPostContent} disabled={!postContent.trim()}>
-                      投稿する
-                    </Button>
-                  </div>
-                ),
+                sx: {
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#90caf9',
+                  },
+                },
               }}
             />
-            <button onClick={handleClosePopup}>戻る</button>
+            <div
+              style={{
+                alignSelf: 'flex-end',
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Button
+                variant="contained"
+                startIcon={<KeyboardReturnIcon />}
+                onClick={handleClosePopup}
+                sx={{ backgroundColor: '#FFCC80' }}
+              >
+                戻る
+              </Button>
+              <Button
+                variant="contained"
+                onClick={postPostContent}
+                disabled={!postContent.trim()}
+                sx={{ backgroundColor: '#90caf9' }}
+                endIcon={<SendIcon />}
+              >
+                POST
+              </Button>
+            </div>
           </div>
         </div>
       )}
