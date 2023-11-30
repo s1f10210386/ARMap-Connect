@@ -18,19 +18,11 @@ import { apiClient } from 'src/utils/apiClient';
 import type { GeolocationCoordinates } from 'src/utils/coordinates';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
-// import markerIcon from 'leaflet/dist/images/marker-icon.png';
-// import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 L.Icon.Default.mergeOptions({
-  // iconUrl: myIconURL.src,
-
-  // iconUrl: markerIcon.src,
   iconRetinaUrl: myIconURL.src,
   iconSize: [48, 48],
-  // iconRetinaUrl: markerIcon2x.src,
-  // shadowUrl: markerShadow.src,
 });
-
 const myIcon = L.icon({
   iconUrl: myIconURL.src,
   iconSize: [48, 48],
@@ -50,7 +42,6 @@ interface LocationMarkerProps {
 
 const LocationMarker: FC<LocationMarkerProps> = ({ coordinates }) => {
   const map = useMap();
-
   useEffect(() => {
     if (coordinates.latitude !== null && coordinates.longitude !== null) {
       map.setView([coordinates.latitude, coordinates.longitude], map.getZoom());
@@ -139,9 +130,23 @@ const Map: FC = () => {
     console.log('likecount', likecount);
   };
 
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
   useEffect(() => {
-    getPosts();
-  }, [getPosts]);
+    if (isFirstLoad && coordinates.latitude !== null && coordinates.longitude !== null) {
+      const oneRendaringGetPosts = async () => {
+        const latitude = coordinates.latitude as number;
+        const longitude = coordinates.longitude as number;
+        const data = await apiClient.posts
+          .$get({ query: { latitude, longitude } })
+          .catch(returnNull);
+        setPosts(data);
+      };
+
+      oneRendaringGetPosts();
+      setIsFirstLoad(false); // 最初のロードが完了したらフラグを更新
+    }
+  }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
 
   const formatTime = (isoString: string): string => {
     const date = new Date(isoString);
