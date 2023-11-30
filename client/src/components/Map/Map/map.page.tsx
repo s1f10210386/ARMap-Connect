@@ -16,7 +16,7 @@ import { coordinatesAtom, userAtom } from 'src/atoms/user';
 import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
 import { apiClient } from 'src/utils/apiClient';
-import type { GeolocationCoordinates } from 'src/utils/coordinates';
+import type { GeolocationCoordinates } from 'src/utils/interface';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
 
