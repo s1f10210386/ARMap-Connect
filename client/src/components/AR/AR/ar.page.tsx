@@ -68,33 +68,34 @@ const ARComponent = () => {
   //   window.location.href = '/'; // ページのリロード
   // };
 
-  // interface PostWithDistane extends PostModel {
-  //   distance: number;
-  // }
-  // const [postWithDistance, setPostsWithDistance] = useState<PostWithDistane[]>([]);
-  // const updateDistance = (index: number, distance: number) => {
-  //   setPostsWithDistance((currentPosts) => {
-  //     const newPosts = [...currentPosts];
-  //     newPosts[index] = { ...newPosts[index], distance };
-  //     return newPosts;
-  //   });
-  // };
+  interface PostWithDistane extends PostModel {
+    distance: number;
+  }
+  const [postWithDistance, setPostsWithDistance] = useState<PostWithDistane[]>([]);
+  const updateDistance = (index: number, distance: number) => {
+    setPostsWithDistance((currentPosts) => {
+      const newPosts = [...currentPosts];
+      newPosts[index] = { ...newPosts[index], distance };
+      console.log('newPosts', newPosts);
+      return newPosts;
+    });
+  };
   // console.log('postswithdistance', postWithDistance);
 
-  // useEffect(() => {
-  //   posts?.forEach((post, index) => {
-  //     const entity = document.querySelector(`#posts${index}`);
-  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //     entity?.addEventListener('gps-entity-place-update-distance', (event: any) => {
-  //       updateDistance(index, event.detail.distance);
-  //     });
-  //   });
-  // }, [posts]);
-  // useEffect(() => {
-  //   if (posts) {
-  //     setPostsWithDistance(posts.map((post) => ({ ...post, distance: 0 })));
-  //   }
-  // }, [posts]);
+  useEffect(() => {
+    posts?.forEach((post, index) => {
+      const entity = document.querySelector(`#posts${index}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      entity?.addEventListener('gps-entity-place-update-distance', (event: any) => {
+        updateDistance(index, event.detail.distance);
+      });
+    });
+  }, [posts]);
+  useEffect(() => {
+    if (posts) {
+      setPostsWithDistance(posts.map((post) => ({ ...post, distance: 0 })));
+    }
+  }, [posts]);
   return (
     <div>
       {/* <button onClick={handleReload} className={styles.mapButton}>
@@ -175,24 +176,25 @@ const ARComponent = () => {
               value={`Likes: ${post.likeCount}`}
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               position={`1 0 0`}
-              // scale="0.2 0.2 0.2"
-              scale="10 10 10"
+              scale="0.2 0.2 0.2"
+              // scale="10 10 10"
               look-at="[gps-camra]"
               color="black"
             />
           </a-entity>
         ))}
-        {/* 
+
         {postWithDistance.map((post, index) => (
           <a-entity key={index} id={`posts${index}`}>
             <a-text
               value={`Distance: ${post.distance.toFixed(2)} m`}
               scale="1 1 1"
-              position={`1 1 1`}
+              position="0 1.6 -1"
               look-at="[gps-camera]"
+              align="center"
             />
           </a-entity>
-        ))} */}
+        ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-new-camera="gpsMinDistance: 5" />
