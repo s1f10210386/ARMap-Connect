@@ -1,15 +1,25 @@
 import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { coordinatesAtom } from 'src/atoms/user';
+import { useCallback, useEffect, useState } from 'react';
+import { coordinatesAtom, userAtom } from 'src/atoms/user';
 import { apiClient } from 'src/utils/apiClient';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './ar.module.css';
 
 const ARComponent = () => {
+  const [user] = useAtom(userAtom);
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
   const [posts, setPosts] = useState<PostModel[] | null>(null);
+
+  const getPosts = useCallback(async () => {
+    if (coordinates.latitude === null || coordinates.longitude === null) return;
+    const latitude = coordinates.latitude;
+    const longitude = coordinates.longitude;
+    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
+    setPosts(data);
+    console.log('getPosts');
+  }, [coordinates.latitude, coordinates.longitude]);
 
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
@@ -40,12 +50,39 @@ const ARComponent = () => {
     }
   }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
 
+  //いいね押したら動くイイネ追加削除する関数
+  const [likecount, setLikecount] = useState(0);
+
+  const handleLike = useCallback(
+    async (postId: string) => {
+      if (user?.id === undefined || postId === undefined) return;
+
+      const result = (await apiClient.posts.$post({
+        body: { postId, userId: user.id },
+      })) as unknown as number;
+
+      console.log('result', result);
+      setLikecount(result);
+      await getPosts();
+
+      console.log('result', result);
+      console.log('likecount', likecount);
+    },
+    [getPosts, likecount, user?.id]
+  );
+
   useEffect(() => {
     if (typeof AFRAME.components['hit-box'] === 'undefined') {
       AFRAME.registerComponent('hit-box', {
+        schema: {
+          postId: { type: 'string' },
+        },
         init() {
           this.el.addEventListener('click', () => {
-            alert('clickしました');
+            // alert('clickしました');
+            const postId = this.postId;
+            console.log('postId', postId);
+            handleLike(postId);
             console.log('オブジェクトがクリックされました');
           });
         },
@@ -61,7 +98,7 @@ const ARComponent = () => {
         },
       });
     }
-  }, []);
+  }, [handleLike]);
 
   return (
     <div>
@@ -138,7 +175,7 @@ const ARComponent = () => {
               scale="0.0005 0.0005 0.0005"
             />
 
-            <a-entity position="-0.4, -0.15 0" hit-box>
+            <a-entity position="-0.4, -0.15 0" data-post-id={post.id} hit-box>
               <a-entity
                 class="raycastable"
                 geometry="primitive:box"
