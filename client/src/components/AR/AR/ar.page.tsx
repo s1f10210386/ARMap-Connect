@@ -1,5 +1,6 @@
 import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
 import { apiClient } from 'src/utils/apiClient';
@@ -96,9 +97,14 @@ const ARComponent = () => {
   // }, [posts]);
   return (
     <div>
-      <button onClick={handleReload} className={styles.mapButton}>
+      {/* <button onClick={handleReload} className={styles.mapButton}>
         MAP
-      </button>
+      </button> */}
+      <Link href="/">
+        <button onClick={handleReload} className={styles.mapButton}>
+          MAP
+        </button>
+      </Link>
 
       {coordinates.latitude !== null && coordinates.longitude !== null && (
         <div className={styles.coordinatesInfo}>
@@ -142,16 +148,6 @@ const ARComponent = () => {
           </a-entity>
         </a-entity> */}
 
-        {/* <a-text
-          ref={textRef}
-          id="text"
-          value=""
-          look-at="[gps-camera]"
-          scale="30 30 30"
-          position="0 55 0"
-          gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
-        /> */}
-
         {posts?.map((post, index) => (
           <a-entity
             key={index}
@@ -173,15 +169,16 @@ const ARComponent = () => {
             <a-entity
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               position={`0.5 0 0`}
-              // scale="0.0005 0.0005 0.0005"
-              scale="1 1 1"
+              scale="0.0005 0.0005 0.0005"
+              // scale="1 1 1"
               gltf-model="/models/love_heart.gltf"
             />
             <a-text
               value={`Likes: ${post.likeCount}`}
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               position={`1 0 0`}
-              scale="0.2 0.2 0.2"
+              // scale="0.2 0.2 0.2"
+              scale="10 10 10"
               look-at="[gps-camra]"
               color="black"
             />

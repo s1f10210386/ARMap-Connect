@@ -1,8 +1,6 @@
 import ThreeDRotationTwoToneIcon from '@mui/icons-material/ThreeDRotationTwoTone';
 import type { UserModel } from 'commonTypesWithClient/models';
-import { useAtom } from 'jotai';
-import { useRouter } from 'next/router';
-import { isMapViewAtomAtom } from 'src/atoms/user';
+import Link from 'next/link';
 import { HumanIcon } from 'src/components/icons/HumanIcon';
 import { logout } from 'src/utils/login';
 import styles from './BasicHeader.module.css';
@@ -10,18 +8,6 @@ import styles from './BasicHeader.module.css';
 export const BasicHeader = ({ user }: { user: UserModel }) => {
   const onLogout = async () => {
     if (confirm('Logout?')) await logout();
-  };
-
-  const router = useRouter();
-  const [isMapView, setIsMapView] = useAtom(isMapViewAtomAtom);
-
-  const handleChenge = async () => {
-    if (isMapView) {
-      await router.push('/');
-    } else {
-      await router.push('/AR');
-    }
-    setIsMapView(!isMapView);
   };
 
   return (
@@ -42,8 +28,9 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
           )}
           <span className={styles.userName}>{user.displayName}</span>
         </div>
-
-        <ThreeDRotationTwoToneIcon onClick={handleChenge} fontSize="large" />
+        <Link href="/AR">
+          <ThreeDRotationTwoToneIcon fontSize="large" />
+        </Link>
       </div>
     </div>
   );
