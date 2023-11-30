@@ -119,7 +119,7 @@ const ARComponent = () => {
       <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
-        // renderer="antialias: true; alpha: true"
+        renderer="antialias: true; alpha: true"
       >
         {/* <a-scene log="Hello, Scene!"> */}
 
