@@ -64,9 +64,9 @@ const ARComponent = () => {
     }
   }, []);
 
-  const handleReload = () => {
-    window.location.href = '/'; // ページのリロード
-  };
+  // const handleReload = () => {
+  //   window.location.href = '/'; // ページのリロード
+  // };
 
   // interface PostWithDistane extends PostModel {
   //   distance: number;
@@ -101,9 +101,7 @@ const ARComponent = () => {
         MAP
       </button> */}
       <Link href="/">
-        <button onClick={handleReload} className={styles.mapButton}>
-          MAP
-        </button>
+        <button className={styles.mapButton}>MAP</button>
       </Link>
 
       {coordinates.latitude !== null && coordinates.longitude !== null && (
