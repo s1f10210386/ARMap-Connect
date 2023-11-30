@@ -64,3 +64,7 @@
   font-size: 35px;
   color: red;
 }
+
+.likeCount {
+  color: #ff6961; /* 好きな色 */
+}
