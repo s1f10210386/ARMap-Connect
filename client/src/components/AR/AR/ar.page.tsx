@@ -1,7 +1,7 @@
 import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
-import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { coordinatesAtom } from 'src/atoms/user';
 import { apiClient } from 'src/utils/apiClient';
 import { returnNull } from 'src/utils/returnNull';
@@ -9,11 +9,8 @@ import styles from './ar.module.css';
 
 const ARComponent = () => {
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
+  const [posts, setPosts] = useState<PostModel[] | null>(null);
 
-  const router = useRouter();
-  const handleMAP = async () => {
-    await router.push('/');
-  };
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
       navigator.geolocation.watchPosition((posithon) => {
@@ -24,17 +21,6 @@ const ARComponent = () => {
       });
     }
   }, [setCoordinates]);
-
-  const [posts, setPosts] = useState<PostModel[] | null>(null);
-
-  // const getPosts = useCallback(async () => {
-  //   if (coordinates.latitude === null || coordinates.longitude === null) return;
-  //   const latitude = coordinates.latitude;
-  //   const longitude = coordinates.longitude;
-  //   const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
-  //   setPosts(data);
-  //   console.log('getPosts');
-  // }, [coordinates.latitude, coordinates.longitude]);
 
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
@@ -54,14 +40,10 @@ const ARComponent = () => {
     }
   }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
 
-  const textRef = useRef<HTMLElement | null>(null);
-  const debugRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     if (typeof AFRAME.components['hit-box'] === 'undefined') {
       AFRAME.registerComponent('hit-box', {
         init() {
-          // console.log('c');
           this.el.addEventListener('click', () => {
             alert('clickしました');
             console.log('オブジェクトがクリックされました');
@@ -79,41 +61,51 @@ const ARComponent = () => {
         },
       });
     }
+  }, []);
 
-    const textElement = textRef.current;
-    console.log('textElement', textElement);
-    if (textElement) {
-      textElement.addEventListener('gps-entity-place-update-positon', (event: Event) => {
-        const customEvent = event as CustomEvent;
-        const debugElement = debugRef.current;
-        console.log('debugElement', debugElement);
-        if (debugElement) {
-          debugElement.textContent = `${customEvent.detail.distance}m`;
-          console.log(debugElement);
-          textElement.setAttribute('value', `${textElement.getAttribute('distanceMsg')}left`);
+  // useEffect(() => {
+  //   document.querySelectorAll(`[gps-entity-place]`).forEach((entity) => {
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     entity.addEventListener('gps-entity-place-update-position', (event: any) => {
+  //       const distance = event.detail.distance;
+  //       console.log(`Distance to ${entity.id}: ${distance} meters`);
+  //       // 距離に応じてテキストを更新（例）
+
+  //       if (distance < 100) {
+  //         entity.setAttribute('text', 'value: 近いです; color: black');
+  //       } else {
+  //         entity.setAttribute('text', `value: 遠いです; color: black`);
+  //       }
+  //     });
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    console.log('111');
+    document.querySelectorAll('[gps-entity-place]').forEach((entity) => {
+      console.log('222');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      entity.addEventListener('gps-entity-place-update-position', (event: any) => {
+        console.log('333');
+        const distance = event.detail.distance;
+        console.log(`Distance to ${entity.id}: ${distance} meters`);
+
+        // 距離に応じてテキストを更新（例）
+        if (distance < 100) {
+          entity.setAttribute('text', 'value: 近いです; color: black');
+        } else {
+          entity.setAttribute('text', `value: 遠いです; color: black`);
         }
       });
-    }
+    });
   }, []);
 
   return (
     <div>
-      {/* <div
-        id="debug"
-        ref={debugRef}
-        style={{
-          position: 'fixed',
-          zIndex: 10000,
-          backgroundColor: '#fff',
-          padding: '10px',
-          top: 0,
-          left: 0,
-          display: 'block',
-        }}
-      /> */}
-      <button onClick={handleMAP} className={styles.mapButton}>
-        MAP
-      </button>
+      <Link href="/">
+        <button className={styles.mapButton}>MAP</button>
+      </Link>
+
       {coordinates.latitude !== null && coordinates.longitude !== null && (
         <div className={styles.coordinatesInfo}>
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
@@ -156,16 +148,6 @@ const ARComponent = () => {
           </a-entity>
         </a-entity> */}
 
-        {/* <a-text
-          ref={textRef}
-          id="text"
-          value=""
-          look-at="[gps-camera]"
-          scale="30 30 30"
-          position="0 55 0"
-          gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
-        /> */}
-
         {posts?.map((post, index) => (
           <a-entity
             key={index}
@@ -180,16 +162,12 @@ const ARComponent = () => {
               looc-at="camera"
               color="black"
               // align="center"
-              // animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000"
-              // animation__slide="property: position; from: 0 ${1.5 + index * 0.5} -1; to: 0 ${1.6 + index * 0.5} -1; dur: 2000; dir: alternate; repeat: indefinite"
-              // animation__scale="property: scale; from: 0.5 0.5 0.5; to: 1 1 1; dur: 1500"
             />
             <a-entity
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               position={`0.5 0 0`}
               scale="0.0005 0.0005 0.0005"
               gltf-model="/models/love_heart.gltf"
-              material="color: #c63131"
             />
             <a-text
               value={`Likes: ${post.likeCount}`}
@@ -203,7 +181,7 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-new-camera="gpsMinDistance: 5" gps-camera="minDistance:30; maxDistance:100" />
+        <a-camera gps-camera="maxDistance: 50; gpsMinDistance: 5" />
 
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
