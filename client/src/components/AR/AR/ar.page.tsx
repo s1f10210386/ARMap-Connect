@@ -184,7 +184,7 @@ const ARComponent = () => {
             key={index}
             id={`post${index}`}
             gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-            position={`0 ${1.6 + index * 0.5} -1`}
+            position={`${index * 2} 1 -1`}
             rotation="0 0 0"
           >
             {/* 投稿内容の外枠 */}
@@ -201,7 +201,7 @@ const ARComponent = () => {
 
             {/* いいねオブジェクト */}
             <a-entity
-              position="-0.4 -0.4 0"
+              position="-0.4 -0.2 0"
               gltf-model="/models/love_heart.gltf"
               scale="0.0005 0.0005 0.0005"
             />
@@ -209,7 +209,7 @@ const ARComponent = () => {
             {/* いいね数 */}
             <a-text
               value={`Likes: ${post.likeCount}`}
-              position="0.4 -0.4 0"
+              position="0.3 -0.2 0"
               scale="0.2 0.2 0.2"
               color="black"
             />
