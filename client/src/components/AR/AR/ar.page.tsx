@@ -188,7 +188,7 @@ const ARComponent = () => {
             rotation="0 0 0"
           >
             {/* 投稿内容の外枠 */}
-            <a-plane color="#a4bbe5" height="1" width="1.5" position="0 0 -0.1" />
+            <a-box color="#a4bbe5" height="1" width="1.5" position="0 0 -0.7" />
 
             {/* 投稿内容 */}
             <a-text
@@ -217,7 +217,7 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-camera="maxDistance: 50" rotation-reader />
+        <a-camera gps-camera rotation-reader />
 
         {/* <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" /> */}
       </a-scene>
