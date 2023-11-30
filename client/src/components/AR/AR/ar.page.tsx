@@ -98,7 +98,7 @@ const ARComponent = () => {
 
   return (
     <div>
-      <div
+      {/* <div
         id="debug"
         ref={debugRef}
         style={{
@@ -110,7 +110,7 @@ const ARComponent = () => {
           left: 0,
           display: 'block',
         }}
-      />
+      /> */}
       <button onClick={handleMAP} className={styles.mapButton}>
         MAP
       </button>
@@ -180,10 +180,9 @@ const ARComponent = () => {
               looc-at="camera"
               align="center"
               animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000"
-              animation__fadeout="property: material.opacity; from: 1; to: 0; startEvents: fadeout; dur: 1000"
+              // animation__fadeout="property: material.opacity; from: 1; to: 0; startEvents: fadeout; dur: 1000"
               animation__slide="property: position; from: 0 ${1.5 + index * 0.5} -1; to: 0 ${1.6 + index * 0.5} -1; dur: 2000; dir: alternate; repeat: indefinite"
               animation__scale="property: scale; from: 0.5 0.5 0.5; to: 1 1 1; dur: 1500"
-              // animation__pos="property: position; to: 0 ${1.6 + index * 0.5 + 0.1} -1; dur: 2000; dir: alternate; repeat: indefinite"
             />
           </a-entity>
         ))}
