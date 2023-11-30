@@ -190,18 +190,37 @@ const Map: FC = () => {
                   position={[post.latitude, post.longitude]}
                 >
                   <Popup>
-                    <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
-                    <div style={{ fontSize: '18px' }}>{post.content}</div>
-                    <Fab
-                      size="small"
-                      color="secondary"
-                      aria-label="like"
-                      onClick={() => handleLike(post.id)}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '200px',
+                        width: '300px',
+                      }}
                     >
-                      <FavoriteIcon />
-                    </Fab>
-                    <br />
-                    {post.likeCount}いいね
+                      <div style={{ fontSize: '18px', marginBottom: 'auto', overflow: 'auto' }}>
+                        {post.content}
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'end',
+                        }}
+                      >
+                        <Fab
+                          size="small"
+                          color="secondary"
+                          aria-label="like"
+                          onClick={() => handleLike(post.id)}
+                          style={{ flexGrow: 0 }}
+                        >
+                          <FavoriteIcon />
+                        </Fab>
+                        <span>{post.likeCount}いいね</span>
+                        <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
+                      </div>
+                    </div>
                   </Popup>
                 </Marker>
               ))}
