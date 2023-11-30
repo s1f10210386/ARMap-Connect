@@ -71,10 +71,10 @@ const Login = () => {
 
   const [dev, setDev] = useState(true);
   const checkdev = useCallback(() => {
-    if (process.env.NEXT_PUBLIC_AUTH_EMULATOR === undefined) {
-      setDev(false);
-    } else {
+    if (process.env.NEXT_PUBLIC_AUTH_EMULATOR_URL !== undefined) {
       setDev(true);
+    } else {
+      setDev(false);
     }
   }, []);
 
@@ -91,6 +91,13 @@ const Login = () => {
             {APP_TITLE}
           </Typography>
           {dev ? (
+            <div style={{ marginTop: '16px' }} onClick={loginGithub}>
+              <div className={styles.btn}>
+                <GithubIcon size={18} fill="#fff" />
+                <span>GitHubでのログインはこちら</span>
+              </div>
+            </div>
+          ) : (
             <div>
               <TextField
                 label="Email"
@@ -118,13 +125,6 @@ const Login = () => {
                   {loginError}
                 </Typography>
               )}
-            </div>
-          ) : (
-            <div style={{ marginTop: '16px' }} onClick={loginGithub}>
-              <div className={styles.btn}>
-                <GithubIcon size={18} fill="#fff" />
-                <span>GitHubでのログインはこちら</span>
-              </div>
             </div>
           )}
         </Box>
