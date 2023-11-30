@@ -6,7 +6,6 @@ import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { userAtom } from 'src/atoms/user';
-import { GithubIcon } from 'src/components/icons/GithubIcon';
 import { createAuth } from 'src/utils/firebase';
 import { loginWithGitHub } from 'src/utils/login';
 import { useLoading } from '../@hooks/useLoading';
@@ -71,7 +70,7 @@ const Login = () => {
 
   const [dev, setDev] = useState(true);
   const checkdev = useCallback(() => {
-    if (process.env.NEXT_PUBLIC_AUTH_EMULATOR_URL !== undefined) {
+    if (process.env.NEXT_PUBLIC_AUTH_EMULATORURL !== undefined) {
       setDev(true);
     } else {
       setDev(false);
@@ -86,57 +85,56 @@ const Login = () => {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3 }}>
-          <Typography variant="h4" gutterBottom>
-            {APP_TITLE}
-          </Typography>
-          {dev ? (
-            <div style={{ marginTop: '16px' }} onClick={loginGithub}>
-              <div className={styles.btn}>
-                <GithubIcon size={18} fill="#fff" />
-                <span>GitHubでのログインはこちら</span>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <TextField
-                label="Email"
-                type="email"
-                variant="outlined"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                fullWidth
-                sx={{ mt: 2 }}
-              />
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                fullWidth
-                sx={{ mt: 2 }}
-              />
-              <Button variant="contained" sx={{ mt: 2 }} onClick={loginEmail}>
-                Login with Email
-              </Button>
-              {loginError && (
-                <Typography color="error" sx={{ mt: 2 }}>
-                  {loginError}
-                </Typography>
-              )}
-            </div>
+        <Typography variant="h4" gutterBottom className={styles.appname}>
+          {APP_TITLE}
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            p: 3,
+            width: '100%',
+            maxWidth: 400, // レスポンシブ対応のための最大幅
+          }}
+        >
+          <TextField
+            label="Email"
+            type="email"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            sx={{ mt: 2 }}
+          />
+          <Button variant="contained" sx={{ mt: 2 }} onClick={loginEmail}>
+            Login
+          </Button>
+          {loginError && (
+            <Typography color="error" sx={{ mt: 2 }}>
+              {loginError}
+            </Typography>
           )}
         </Box>
-
-        <button style={{ marginTop: '16px' }} onClick={handleChange}>
-          新規登録
-        </button>
+        <Typography className={styles.register}>
+          アカウントをお持ちでない場合は、
+          <span className={styles.registerLink} onClick={handleChange}>
+            こちら
+          </span>
+          から新規登録してください
+        </Typography>
       </div>
-
       {loadingElm}
     </div>
   );
 };
-
 export default Login;

@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import { Button, TextField } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import { useAtom } from 'jotai';
@@ -131,7 +132,6 @@ const Map: FC = () => {
   };
 
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-
   useEffect(() => {
     if (isFirstLoad && coordinates.latitude !== null && coordinates.longitude !== null) {
       const oneRendaringGetPosts = async () => {
@@ -142,7 +142,6 @@ const Map: FC = () => {
           .catch(returnNull);
         setPosts(data);
       };
-
       oneRendaringGetPosts();
       setIsFirstLoad(false); // 最初のロードが完了したらフラグを更新
     }
@@ -212,15 +211,28 @@ const Map: FC = () => {
       </div>
 
       {!isPopupVisible && (
-        <button onClick={handleButtonClick} className={styles.postButton}>
-          POST
-        </button>
-      )}
-      {!isPopupVisible && (
         <div className={styles.nearInfo}>
           近くに<span className={styles.infoNumber}>{posts ? posts.length : 0}</span>
           件の投稿があります
         </div>
+      )}
+      {!isPopupVisible && (
+        <Fab
+          className={styles.postButton}
+          onClick={handleButtonClick}
+          style={{
+            backgroundColor: '#90caf9',
+            width: '80px',
+            height: '80px',
+            position: 'absolute',
+            top: '90vh',
+            left: '50vw',
+            transform: 'translate(-50%, -50%)',
+          }}
+          color="primary"
+        >
+          <PostAddIcon sx={{ fontSize: 50, color: 'black' }} />
+        </Fab>
       )}
       {isPopupVisible && (
         <div className={styles.popup}>
