@@ -175,14 +175,29 @@ const ARComponent = () => {
           >
             <a-text
               value={post.content}
-              // gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.5 0.5 0.5"
               looc-at="camera"
-              align="center"
-              animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000"
-              // animation__fadeout="property: material.opacity; from: 1; to: 0; startEvents: fadeout; dur: 1000"
-              animation__slide="property: position; from: 0 ${1.5 + index * 0.5} -1; to: 0 ${1.6 + index * 0.5} -1; dur: 2000; dir: alternate; repeat: indefinite"
-              animation__scale="property: scale; from: 0.5 0.5 0.5; to: 1 1 1; dur: 1500"
+              color="black"
+              // align="center"
+              // animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000"
+              // animation__slide="property: position; from: 0 ${1.5 + index * 0.5} -1; to: 0 ${1.6 + index * 0.5} -1; dur: 2000; dir: alternate; repeat: indefinite"
+              // animation__scale="property: scale; from: 0.5 0.5 0.5; to: 1 1 1; dur: 1500"
+            />
+            <a-entity
+              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              position={`0.5 0 0`}
+              scale="0.0005 0.0005 0.0005"
+              gltf-model="/models/love_heart.gltf"
+              material="color: #c63131"
+            />
+            <a-text
+              value={`Likes: ${post.likeCount}`}
+              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              position={`1 0 0`}
+              scale="0.2 0.2 0.2"
+              look-at="[gps-camra]"
+              color="black"
             />
           </a-entity>
         ))}
