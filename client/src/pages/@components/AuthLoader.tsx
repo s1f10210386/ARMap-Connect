@@ -37,15 +37,15 @@ export const AuthLoader = () => {
     if (!isInitedAuth) return;
 
     const redirectToHome = async () => {
-      console.log('Home');
+      // console.log('Home');
       router.pathname === pagesPath.login.$url().pathname && (await router.push(pagesPath.$url()));
     };
     const redirectToLogin = async () => {
-      console.log('Login');
+      // console.log('Login');
       router.pathname === pagesPath.$url().pathname && (await router.push(pagesPath.login.$url()));
     };
 
-    console.log('user', user);
+    // console.log('user', user);
     user ? redirectToHome() : redirectToLogin();
   }, [router, isInitedAuth, user]);
 

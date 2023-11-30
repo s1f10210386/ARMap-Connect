@@ -144,12 +144,12 @@ const ARComponent = () => {
           </a-entity>
         </a-entity>
 
-        <a-box
+        {/* <a-box
           // id="haiti"
           material="color: #00fa0c"
           gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
           scale="15 15 15"
-        />
+        /> */}
 
         <a-text
           ref={textRef}
@@ -160,6 +160,7 @@ const ARComponent = () => {
           position="0 55 0"
           gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
         />
+
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-new-camera="gpsMinDistance: 5" gps-camera="minDistance:30; maxDistance:100">
           {/* <a-cursor /> */}
@@ -177,11 +178,6 @@ const ARComponent = () => {
           align="center"
         />
       ))} */}
-      {/* <a-box click-handler id="1" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" />
-        <a-box click-handler id="2" position="-2 1 -6" rotation="0 45 0" color="#4CC3D9" />
-        <a-box click-handler id="3" position="-3 2 -9" rotation="0 45 0" color="#35474a" /> */}
-      {/* <a-entity ball-spawner /> */}
-      {/* <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" foo /> */}
     </div>
   );
 };
