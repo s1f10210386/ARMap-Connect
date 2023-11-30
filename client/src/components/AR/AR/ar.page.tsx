@@ -204,6 +204,7 @@ const ARComponent = () => {
               position="-0.4 -0.2 0"
               gltf-model="/models/love_heart.gltf"
               scale="0.0005 0.0005 0.0005"
+              hit-box
             />
 
             {/* いいね数 */}
@@ -219,7 +220,7 @@ const ARComponent = () => {
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-camera="maxDistance: 50" rotation-reader />
 
-        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
+        {/* <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" /> */}
       </a-scene>
     </div>
   );
