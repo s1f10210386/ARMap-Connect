@@ -156,13 +156,6 @@ const ARComponent = () => {
           </a-entity>
         </a-entity> */}
 
-        {/* <a-box
-          // id="haiti"
-          material="color: #00fa0c"
-          gps-entity-place="latitude: 35.7792549; longitude:139.7072826;"
-          scale="15 15 15"
-        /> */}
-
         {/* <a-text
           ref={textRef}
           id="text"
@@ -174,24 +167,30 @@ const ARComponent = () => {
         /> */}
 
         {posts?.map((post, index) => (
-          <a-entity key={index} id={'post${index}'} position="0 1.6 -1">
+          <a-entity
+            key={index}
+            id={`post${index}`}
+            position={`0 ${1.6 + index * 0.5} -1`}
+            rotation="0 0 0"
+          >
             <a-text
               value={post.content}
-              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-              scale="10 10 10"
+              // gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              scale="0.5 0.5 0.5"
               looc-at="camera"
               align="center"
-              // rotation="0 0 0"
-              // animation="property: position; to:0.3, 1.6 -1; loop: true; dur: 2000"
-              // animation__2="property: rotation; to: 360 360 0; loop: true; dur: 2000"
+              animation__fadein="property: material.opacity; from: 0; to: 1; dur: 1000"
+              animation__fadeout="property: material.opacity; from: 1; to: 0; startEvents: fadeout; dur: 1000"
+              animation__slide="property: position; from: 0 ${1.5 + index * 0.5} -1; to: 0 ${1.6 + index * 0.5} -1; dur: 2000; dir: alternate; repeat: indefinite"
+              animation__scale="property: scale; from: 0.5 0.5 0.5; to: 1 1 1; dur: 1500"
+              // animation__pos="property: position; to: 0 ${1.6 + index * 0.5 + 0.1} -1; dur: 2000; dir: alternate; repeat: indefinite"
             />
           </a-entity>
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-new-camera="gpsMinDistance: 5" gps-camera="minDistance:30; maxDistance:100">
-          {/* <a-cursor /> */}
-        </a-camera>
+        <a-camera gps-new-camera="gpsMinDistance: 5" gps-camera="minDistance:30; maxDistance:100" />
+
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
     </div>
