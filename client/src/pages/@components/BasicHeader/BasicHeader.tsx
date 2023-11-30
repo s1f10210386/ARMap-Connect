@@ -43,7 +43,7 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
           <span className={styles.userName}>{user.displayName}</span>
         </div>
 
-        <ThreeDRotationTwoToneIcon onClick={handleChenge} />
+        <ThreeDRotationTwoToneIcon onClick={handleChenge} fontSize="large" />
       </div>
     </div>
   );
