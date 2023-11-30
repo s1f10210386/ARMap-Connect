@@ -218,16 +218,25 @@ const Map: FC = () => {
                           alignItems: 'end',
                         }}
                       >
-                        <Fab
+                        {/* <Fab
                           size="small"
-                          color="secondary"
                           aria-label="like"
                           onClick={() => handleLike(post.id)}
                           style={{ flexGrow: 0 }}
+                          sx={{
+                            backgroundColor: 'red',
+                          }}
                         >
                           <FavoriteIcon />
-                        </Fab>
-                        <span>{post.likeCount}いいね</span>
+                        </Fab> */}
+                        <Button
+                          variant="outlined"
+                          startIcon={<FavoriteIcon style={{ color: '#FF6961' }} />}
+                          onClick={() => handleLike(post.id)}
+                          sx={{ border: '1px solid #FF6961' }}
+                        >
+                          <span className="likeCount">{post.likeCount}</span>
+                        </Button>
                         <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
                       </div>
                     </div>
@@ -258,11 +267,12 @@ const Map: FC = () => {
             left: '50vw',
             transform: 'translate(-50%, -50%)',
           }}
-          color="primary"
         >
           <PostAddIcon sx={{ fontSize: 50, color: 'black' }} />
         </Fab>
       )}
+
+      {/* 投稿コンポーネント */}
       {isPopupVisible && (
         <div className={styles.popup}>
           <div className={styles.popupContent}>
@@ -270,7 +280,7 @@ const Map: FC = () => {
               style={{
                 padding: '10px 0',
                 textAlign: 'left',
-                marginBottom: '20px',
+                marginBottom: '40px',
                 fontSize: '14px',
                 color: 'black',
               }}
