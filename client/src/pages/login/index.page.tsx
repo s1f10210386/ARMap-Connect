@@ -4,7 +4,7 @@ import type { UserId } from 'commonTypesWithClient/ids';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { userAtom } from 'src/atoms/user';
 import { GithubIcon } from 'src/components/icons/GithubIcon';
 import { createAuth } from 'src/utils/firebase';
@@ -69,6 +69,20 @@ const Login = () => {
     await router.push('/register');
   };
 
+  const [dev, setDev] = useState(true);
+  const checkdev = useCallback(() => {
+    if (process.env.NEXT_PUBLIC_AUTH_EMULATOR === undefined) {
+      setDev(false);
+    } else {
+      setDev(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('checkdev起動');
+    checkdev();
+  }, [checkdev]);
+
   return (
     <div className={styles.container}>
       <div className={styles.main}>
@@ -76,41 +90,44 @@ const Login = () => {
           <Typography variant="h4" gutterBottom>
             {APP_TITLE}
           </Typography>
-
-          <TextField
-            label="Email"
-            type="email"
-            variant="outlined"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            fullWidth
-            sx={{ mt: 2 }}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            fullWidth
-            sx={{ mt: 2 }}
-          />
-          <Button variant="contained" sx={{ mt: 2 }} onClick={loginEmail}>
-            Login with Email
-          </Button>
+          {dev ? (
+            <div>
+              <TextField
+                label="Email"
+                type="email"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+                sx={{ mt: 2 }}
+              />
+              <TextField
+                label="Password"
+                type="password"
+                variant="outlined"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                fullWidth
+                sx={{ mt: 2 }}
+              />
+              <Button variant="contained" sx={{ mt: 2 }} onClick={loginEmail}>
+                Login with Email
+              </Button>
+              {loginError && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  {loginError}
+                </Typography>
+              )}
+            </div>
+          ) : (
+            <div style={{ marginTop: '16px' }} onClick={loginGithub}>
+              <div className={styles.btn}>
+                <GithubIcon size={18} fill="#fff" />
+                <span>GitHubでのログインはこちら</span>
+              </div>
+            </div>
+          )}
         </Box>
-        {loginError && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            {loginError}
-          </Typography>
-        )}
-
-        <div style={{ marginTop: '16px' }} onClick={loginGithub}>
-          <div className={styles.btn}>
-            <GithubIcon size={18} fill="#fff" />
-            <span>GitHubでのログインはこちら</span>
-          </div>
-        </div>
 
         <button style={{ marginTop: '16px' }} onClick={handleChange}>
           新規登録
