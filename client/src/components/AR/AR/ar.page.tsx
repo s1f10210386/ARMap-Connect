@@ -53,24 +53,20 @@ const ARComponent = () => {
   //いいね押したら動くイイネ追加削除する関数
   const [likecount, setLikecount] = useState(0);
 
-  const handleLike = useCallback(
-    async (postId: string) => {
-      if (user?.id === undefined || postId === undefined) return;
+  window.handleLike = async (postId: string) => {
+    if (user?.id === undefined || postId === undefined) return;
 
-      const result = (await apiClient.posts.$post({
-        body: { postId, userId: user.id },
-      })) as unknown as number;
+    const result = (await apiClient.posts.$post({
+      body: { postId, userId: user.id },
+    })) as unknown as number;
 
-      console.log('result', result);
-      setLikecount(result);
-      await getPosts();
+    console.log('result', result);
+    setLikecount(result);
+    await getPosts();
 
-      console.log('result', result);
-      console.log('likecount', likecount);
-    },
-    [getPosts, likecount, user?.id]
-  );
-
+    console.log('result', result);
+    console.log('likecount', likecount);
+  };
   useEffect(() => {
     if (typeof AFRAME.components['hit-box'] === 'undefined') {
       AFRAME.registerComponent('hit-box', {
@@ -79,11 +75,10 @@ const ARComponent = () => {
         },
         init() {
           this.el.addEventListener('click', () => {
-            alert('clickしました');
-            // const postId = this.postId;
-            // console.log('postId', postId);
-            // handleLike(postId);
-            // console.log('オブジェクトがクリックされました');
+            // alert('clickしました');
+            const postId = this.data.postId;
+            console.log('postID', postId);
+            window.handleLike(postId);
           });
         },
       });
@@ -98,7 +93,7 @@ const ARComponent = () => {
         },
       });
     }
-  }, [handleLike]);
+  }, []);
 
   // const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   //   const R = 6371e3;
@@ -195,7 +190,7 @@ const ARComponent = () => {
               scale="0.0008 0.0007 0.0005"
             />
 
-            <a-entity position="-0.4, -0.225 0" data-post-id={post.id} hit-box>
+            <a-entity position="-0.4, -0.225 0" hit-box={`postId: ${post.id}`}>
               <a-entity
                 class="raycastable"
                 gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
