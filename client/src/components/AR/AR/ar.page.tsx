@@ -144,7 +144,7 @@ const ARComponent = () => {
   return (
     <div>
       <Link href="/">
-        <button className={styles.mapButton}>MAP</button>
+        <button className={styles.mapButton}>MAPに戻る</button>
       </Link>
 
       {/* {coordinates.latitude !== null && coordinates.longitude !== null && (
