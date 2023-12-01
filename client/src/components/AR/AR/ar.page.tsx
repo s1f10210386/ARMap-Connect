@@ -119,17 +119,39 @@ const ARComponent = () => {
     return formattedContent;
   };
 
+  const radius = 5;
+  const numPosts = posts?.length;
+  // X座標を計算する関数
+  const xValue = (index: number) => {
+    if (numPosts === undefined) return;
+    const angle = (index / numPosts) * Math.PI * 2;
+    return radius * Math.cos(angle);
+  };
+
+  // Y座標を計算する関数（例では一定の高さを返します）
+  const yValue = () => {
+    if (numPosts === undefined) return;
+    return 1; // 高さは1に固定
+  };
+
+  // Z座標を計算する関数
+  const zValue = (index: number) => {
+    if (numPosts === undefined) return;
+    const angle = (index / numPosts) * Math.PI * 2;
+    return radius * Math.sin(angle);
+  };
+
   return (
     <div>
       <Link href="/">
         <button className={styles.mapButton}>MAP</button>
       </Link>
 
-      {coordinates.latitude !== null && coordinates.longitude !== null && (
+      {/* {coordinates.latitude !== null && coordinates.longitude !== null && (
         <div className={styles.coordinatesInfo}>
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
         </div>
-      )}
+      )} */}
       <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
@@ -139,8 +161,9 @@ const ARComponent = () => {
           <a-entity
             key={index}
             id={`post${index}`}
-            position={`${index * 2} 1 -1`}
-            rotation="-10 0 0"
+            position={`${xValue(index)} ${yValue()} ${zValue(index)}`}
+            rotation={`-10 0 0`}
+            look-at="[camera]"
           >
             {/* 投稿内容の外枠 */}
             {post.userID === user?.id ? (
