@@ -226,7 +226,7 @@ const ARComponent = () => {
               font-image="/png/mplus-msdf.png"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.25 0.25 0.25"
-              color="#000000"
+              color="#413f3f"
               negate="false"
             />
           </a-entity>
