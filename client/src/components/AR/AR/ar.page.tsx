@@ -193,7 +193,7 @@ const ARComponent = () => {
             <a-text
               value={post.content}
               position="0 0.2 0"
-              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.4 0.4 0.4"
               color="black"
               align="center"
@@ -202,7 +202,7 @@ const ARComponent = () => {
             {/* いいねオブジェクト */}
             <a-entity
               position="-0.4 -0.2 0"
-              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               gltf-model="/models/love_heart.gltf"
               scale="0.0005 0.0005 0.0005"
             />
@@ -210,7 +210,7 @@ const ARComponent = () => {
             <a-entity position="-0.4, -0.15 0" data-post-id={post.id} hit-box>
               <a-entity
                 class="raycastable"
-                gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+                gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
                 geometry="primitive:box"
                 material="color:blue; opacity: 0.5"
                 scale="0.1 0.2 0.1"
@@ -223,7 +223,7 @@ const ARComponent = () => {
             <a-text
               value={`Likes: ${post.likeCount}`}
               position="0.3 -0.2 0"
-              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.2 0.2 0.2"
               color="black"
             />
@@ -231,7 +231,7 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-new-camera="maxDistance:20" rotation-reader />
+        <a-camera gps-camera="maxDistance:20" rotation-reader />
 
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
