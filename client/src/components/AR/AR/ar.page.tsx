@@ -159,9 +159,6 @@ const ARComponent = () => {
               <a-plane color="#e3e69a" height="1" width="1.5" position="0 0 -0.1" />
             )}
 
-            {/* <a-circle color="#e3e69a" radius="0.9" position="0 0 -0.1" /> */}
-            {/* <!-- aframe-roundedコンポーネントを使用 --> */}
-
             <a-plane
               color="#ffffff"
               height="0.5"
@@ -221,7 +218,7 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-camera="maxDistance:20" rotation-reader />
+        <a-camera gps-camera="maxDistance:50" rotation-reader />
 
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
