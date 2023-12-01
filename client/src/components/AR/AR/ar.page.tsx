@@ -131,7 +131,7 @@ const ARComponent = () => {
   // Y座標を計算する関数（例では一定の高さを返します）
   const yValue = () => {
     if (numPosts === undefined) return;
-    return 1; // 高さは1に固定
+    return 0; // 高さは1に固定
   };
 
   // Z座標を計算する関数
