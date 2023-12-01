@@ -96,6 +96,18 @@ const ARComponent = () => {
     }
   }, []);
 
+  const formatTime = (isoString: string): string => {
+    const date = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('ja-JP', options).format(date);
+  };
   // const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   //   const R = 6371e3;
   //   const φ1 = (lat1 * Math.PI) / 180;
@@ -213,11 +225,14 @@ const ARComponent = () => {
               color="black"
             />
             <a-text
-              value={`${post.postTime}`}
+              value={`${formatTime(post.postTime)}`}
               position="0.1 -0.3 0"
+              font="/fonts/mplus-msdf.json"
+              font-image="/png/mplus-msdf.png"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.15 0.15 0.15"
-              color="#373535"
+              color="#000000"
+              negate="false"
             />
           </a-entity>
         ))}
