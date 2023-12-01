@@ -145,10 +145,15 @@ const ARComponent = () => {
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
         </div>
       )}
-      <a-scene
+      {/* <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
+      > */}
+      <a-scene
+        vr-mode-ui="enabled: false"
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false;"
       >
         {posts?.map((post, index) => (
           <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
@@ -158,9 +163,6 @@ const ARComponent = () => {
             ) : (
               <a-plane color="#e3e69a" height="1" width="1.5" position="0 0 -0.1" />
             )}
-
-            {/* <a-circle color="#e3e69a" radius="0.9" position="0 0 -0.1" /> */}
-            {/* <!-- aframe-roundedコンポーネントを使用 --> */}
 
             <a-plane
               color="#ffffff"
@@ -221,7 +223,7 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-camera="maxDistance:20" rotation-reader />
+        <a-camera gps-camera rotation-reader />
 
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>

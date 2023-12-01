@@ -24,10 +24,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      {/* <Script src="https://aframe.io/releases/1.0.4/aframe.min.js" />
-      <Script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js" />
-      <Script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js" /> */}
-
+      <SafeHydrate>
+        <Component {...pageProps} />
+      </SafeHydrate>
+      <AuthLoader />
       <Script src="https://aframe.io/releases/1.0.4/aframe.min.js" strategy="beforeInteractive" />
       <Script
         src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"
@@ -37,11 +37,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"
         strategy="afterInteractive"
       />
-
-      <SafeHydrate>
-        <Component {...pageProps} />
-      </SafeHydrate>
-      <AuthLoader />
     </>
   );
 }
