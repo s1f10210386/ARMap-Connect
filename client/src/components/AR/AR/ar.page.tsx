@@ -79,11 +79,11 @@ const ARComponent = () => {
         },
         init() {
           this.el.addEventListener('click', () => {
-            // alert('clickしました');
-            const postId = this.postId;
-            console.log('postId', postId);
-            handleLike(postId);
-            console.log('オブジェクトがクリックされました');
+            alert('clickしました');
+            // const postId = this.postId;
+            // console.log('postId', postId);
+            // handleLike(postId);
+            // console.log('オブジェクトがクリックされました');
           });
         },
       });
@@ -155,42 +155,15 @@ const ARComponent = () => {
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
       >
-        {/* <a-scene log="Hello, Scene!"> */}
-
-        {/* クリックしたいentityグループ */}
-        {/* <a-entity
-          id="click"
-          position="0 1.6 -1"
-          rotation="0 0 0"
-          animation="property: position; to:0.3, 1.6 -1; loop: true; dur: 2000"
-          animation__2="property: rotation; to: 360 360 0; loop: true; dur: 2000"
-        >
-          <a-box color="#4CC3D9" scale="0.2 0.2 0.2" />
-
-          <a-entity position="0 -0.05 0" hit-box visible="true">
-            <a-entity
-              class="raycastable"
-              geometry="primitive:cylinder"
-              material="color:red; opacity: 0.5"
-              scale="0.2 0.2 0.2"
-              position="0 0.1 0"
-              visible="true"
-            />
-            <a-entity
-              class="raycastable"
-              geometry="primitive:box"
-              material="color:blue; opacity: 0.5"
-              scale="0.2 0.25 0.1"
-              position="0 0 0.1"
-              visible="true"
-            />
-          </a-entity>
-        </a-entity> */}
-
         {posts?.map((post, index) => (
           <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
             {/* 投稿内容の外枠 */}
-            <a-plane color="#e3e69a" height="1" width="1.5" position="0 0 -0.1" />
+            {post.id === user?.id ? (
+              <a-plane color="#b4b9de" height="1" width="1.5" position="0 0 -0.1" />
+            ) : (
+              <a-plane color="#e3e69a" height="1" width="1.5" position="0 0 -0.1" />
+            )}
+
             {/* <a-circle color="#e3e69a" radius="0.9" position="0 0 -0.1" /> */}
             {/* <!-- aframe-roundedコンポーネントを使用 --> */}
 
@@ -199,6 +172,7 @@ const ARComponent = () => {
               height="0.5"
               width="1"
               position="0 0.2 -0.099"
+              // radius="0.3"
               align="center"
             />
 
