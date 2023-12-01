@@ -190,7 +190,17 @@ const ARComponent = () => {
         {posts?.map((post, index) => (
           <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
             {/* 投稿内容の外枠 */}
-            <a-plane color="#a4bbe5" height="1" width="1.5" position="0 0 -0.1" />
+            <a-plane color="#e3e69a" height="1" width="1.5" position="0 0 -0.1" />
+            {/* <a-circle color="#e3e69a" radius="0.9" position="0 0 -0.1" /> */}
+            {/* <!-- aframe-roundedコンポーネントを使用 --> */}
+
+            <a-plane
+              color="#ffffff"
+              height="0.5"
+              width="1"
+              position="0 0.2 -0.099"
+              align="center"
+            />
 
             {/* 投稿内容 */}
             <a-text
@@ -204,19 +214,20 @@ const ARComponent = () => {
 
             {/* いいねオブジェクト */}
             <a-entity
-              position="-0.4 -0.2 0"
+              position="-0.4 -0.3 0"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               gltf-model="/models/love_heart.gltf"
-              scale="0.0005 0.0005 0.0005"
+              // gltf-model="/models/AnyConv.com__love_heart (1).gltf"
+              scale="0.0008 0.0007 0.0005"
             />
 
-            <a-entity position="-0.4, -0.15 0" data-post-id={post.id} hit-box>
+            <a-entity position="-0.4, -0.225 0" data-post-id={post.id} hit-box>
               <a-entity
                 class="raycastable"
                 gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
                 geometry="primitive:box"
                 material="color:blue; opacity: 0.5"
-                scale="0.1 0.2 0.1"
+                scale="0.2 0.2 0.1"
                 position="0 0 0"
                 visible="false"
               />
@@ -225,10 +236,17 @@ const ARComponent = () => {
             {/* いいね数 */}
             <a-text
               value={`Likes: ${post.likeCount}`}
-              position="0.3 -0.2 0"
+              position="-0.48 -0.1 0"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.2 0.2 0.2"
               color="black"
+            />
+            <a-text
+              value={`${post.postTime}`}
+              position="0.1 -0.3 0"
+              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              scale="0.15 0.15 0.15"
+              color="#373535"
             />
           </a-entity>
         ))}
