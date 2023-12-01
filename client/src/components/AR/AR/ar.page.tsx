@@ -83,6 +83,7 @@ const ARComponent = () => {
         },
       });
     }
+
     if (typeof AFRAME.components['log'] === 'undefined') {
       AFRAME.registerComponent('log', {
         schema: { type: 'string' },
@@ -95,6 +96,18 @@ const ARComponent = () => {
     }
   }, []);
 
+  const formatTime = (isoString: string): string => {
+    const date = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('ja-JP', options).format(date);
+  };
   // const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   //   const R = 6371e3;
   //   const φ1 = (lat1 * Math.PI) / 180;
@@ -150,22 +163,17 @@ const ARComponent = () => {
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
       >
-        {/* <a-scene
-        vr-mode-ui="enabled: false"
-        embedded
-        arjs="sourceType: webcam; debugUIEnabled: false;"
-      > */}
         {posts?.map((post, index) => (
           <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
             {/* 投稿内容の外枠 */}
             {post.id === user?.id ? (
-              <a-plane color="#b4b9de" height="1" width="1.5" position="0 0 -0.1" />
+              <a-plane color="#c2c7ee" height="1" width="1.5" position="0 0 -0.1" />
             ) : (
-              <a-plane color="#e3e69a" height="1" width="1.5" position="0 0 -0.1" />
+              <a-plane color="#f6a985" height="1" width="1.5" position="0 0 -0.1" />
             )}
 
             <a-plane
-              color="#ffffff"
+              color="#fffbfb"
               height="0.5"
               width="1"
               position="0 0.2 -0.099"
@@ -174,13 +182,17 @@ const ARComponent = () => {
             />
 
             {/* 投稿内容 */}
+
             <a-text
               value={post.content}
-              position="0 0.2 0"
+              font="/fonts/mplus-msdf.json"
+              font-image="/png/mplus-msdf.png"
+              position="0 0.2 0.001"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.4 0.4 0.4"
-              color="black"
+              color="#000000"
               align="center"
+              negate="false"
             />
 
             {/* いいねオブジェクト */}
@@ -213,11 +225,14 @@ const ARComponent = () => {
               color="black"
             />
             <a-text
-              value={`${post.postTime}`}
+              value={`${formatTime(post.postTime)}`}
               position="0.1 -0.3 0"
+              font="/fonts/mplus-msdf.json"
+              font-image="/png/mplus-msdf.png"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.15 0.15 0.15"
-              color="#373535"
+              color="#000000"
+              negate="false"
             />
           </a-entity>
         ))}
