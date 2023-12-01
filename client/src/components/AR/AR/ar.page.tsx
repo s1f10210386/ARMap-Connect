@@ -162,8 +162,9 @@ const ARComponent = () => {
             key={index}
             id={`post${index}`}
             position={`${xValue(index)} ${yValue()} ${zValue(index)}`}
-            rotation={`-10 0 0`}
+            rotation={`0 0 0`}
             look-at="[camera]"
+            scale="2 2 2"
           >
             {/* 投稿内容の外枠 */}
             {post.userID === user?.id ? (
