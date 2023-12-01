@@ -151,10 +151,6 @@ const ARComponent = () => {
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
       >
-        <a-assets>
-          <a-asset-item id="noto-sans-json" src="/fonts/noto-sans-cjk-jp-msdf.json" />
-          <img id="noto-sans-img" src="/png/noto-sans-cjk-jp-msdf.png" />
-        </a-assets>
         {posts?.map((post, index) => (
           <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
             {/* 投稿内容の外枠 */}
@@ -165,7 +161,7 @@ const ARComponent = () => {
             )}
 
             <a-plane
-              color="#ffffff"
+              color="#fffbfb"
               height="0.5"
               width="1"
               position="0 0.2 -0.099"
@@ -177,14 +173,16 @@ const ARComponent = () => {
 
             <a-text
               value={post.content}
-              font="noto-sans-json"
-              font-image="noto-sans-img"
-              position="0 0.2 0"
+              font="/fonts/mplus-msdf.json"
+              font-image="/png/mplus-msdf.png"
+              position="0 0.2 0.001"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.4 0.4 0.4"
-              color="black"
+              color="#000000"
               align="center"
+              negate="false"
             />
+
             {/* いいねオブジェクト */}
             <a-entity
               position="-0.4 -0.3 0"
