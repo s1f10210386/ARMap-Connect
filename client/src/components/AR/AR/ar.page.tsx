@@ -145,10 +145,15 @@ const ARComponent = () => {
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
         </div>
       )}
-      <a-scene
+      {/* <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
+      > */}
+      <a-scene
+        vr-mode-ui="enabled: false"
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false;"
       >
         {posts?.map((post, index) => (
           <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
