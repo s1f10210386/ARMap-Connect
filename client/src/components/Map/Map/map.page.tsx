@@ -1,7 +1,9 @@
 /* eslint-disable complexity */
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import PostAddIcon from '@mui/icons-material/PostAdd';
+
+import CampaignIcon from '@mui/icons-material/Campaign';
+import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { Button, TextField } from '@mui/material';
 import Fab from '@mui/material/Fab';
@@ -117,6 +119,12 @@ const Map: FC = () => {
     getPosts();
   };
 
+  //自分の投稿をdeleteする関数
+  const deletePostContent = async (postID: string) => {
+    await apiClient.myPost.$delete({ query: { postID } }).catch(returnNull);
+    await getPosts();
+  };
+
   //いいね押したら動くイイネ追加削除する関数
   const [likecount, setLikecount] = useState(0);
 
@@ -130,7 +138,7 @@ const Map: FC = () => {
     await getPosts();
 
     console.log('result', result);
-    console.log('likecount', likecount);
+    console.log('likeCount', likecount);
   };
 
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -161,14 +169,6 @@ const Map: FC = () => {
     };
     return new Intl.DateTimeFormat('ja-JP', options).format(date);
   };
-
-  const setViewportHeight = (): void => {
-    const vh: number = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  };
-
-  window.addEventListener('resize', setViewportHeight);
-  setViewportHeight();
 
   if (!user) return <Loading visible />;
 
@@ -208,27 +208,17 @@ const Map: FC = () => {
                         width: '300px',
                       }}
                     >
-                      <div style={{ fontSize: '18px', marginBottom: 'auto', overflow: 'auto' }}>
-                        {post.content}
-                      </div>
+                      {/* メッセージエリア */}
+                      <div style={{ fontSize: '18px', overflow: 'auto' }}>{post.content}</div>
+
+                      {/* いいねボタン*/}
                       <div
                         style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'end',
+                          position: 'absolute',
+                          bottom: '30px',
+                          left: '20px',
                         }}
                       >
-                        {/* <Fab
-                          size="small"
-                          aria-label="like"
-                          onClick={() => handleLike(post.id)}
-                          style={{ flexGrow: 0 }}
-                          sx={{
-                            backgroundColor: 'red',
-                          }}
-                        >
-                          <FavoriteIcon />
-                        </Fab> */}
                         <Button
                           variant="outlined"
                           startIcon={<FavoriteIcon style={{ color: '#FF6961' }} />}
@@ -237,7 +227,31 @@ const Map: FC = () => {
                         >
                           <span className="likeCount">{post.likeCount}</span>
                         </Button>
-                        <div style={{ fontSize: '10px' }}>{formatTime(post.postTime)}</div>
+                      </div>
+
+                      <div
+                        style={{
+                          position: 'absolute', // 絶対位置を設定
+                          bottom: '10px', // 下から10pxの位置に配置
+                          width: '100%', // 幅を親要素に合わせる
+                          display: 'flex',
+                          justifyContent: 'space-between',
+
+                          paddingRight: '10px', // 右の余白
+                        }}
+                      >
+                        {/* 投稿日とDELETEボタン */}
+                        <div style={{ fontSize: '10px' }}>
+                          {formatTime(post.postTime)}
+                          {user.id === post.userID && (
+                            <DeleteIcon
+                              onClick={() => deletePostContent(post.id)}
+                              sx={{ alignSelf: 'flex-end', marginLeft: '130px' }}
+                            >
+                              delete
+                            </DeleteIcon>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </Popup>
@@ -254,6 +268,8 @@ const Map: FC = () => {
           件の投稿があります
         </div>
       )} */}
+
+      {/*POSTボタン*/}
       {!isPopupVisible && (
         <Fab
           className={styles.postButton}
@@ -266,9 +282,10 @@ const Map: FC = () => {
             top: '80vh',
             left: '50vw',
             transform: 'translate(-50%, -50%)',
+            // border: '2px solid #1DA1F2',
           }}
         >
-          <PostAddIcon sx={{ fontSize: 50, color: 'black' }} />
+          <CampaignIcon sx={{ fontSize: 50, color: 'black' }} />
         </Fab>
       )}
 
