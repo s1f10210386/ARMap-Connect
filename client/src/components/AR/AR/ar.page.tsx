@@ -108,44 +108,38 @@ const ARComponent = () => {
     };
     return new Intl.DateTimeFormat('ja-JP', options).format(date);
   };
-  // const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-  //   const R = 6371e3;
-  //   const φ1 = (lat1 * Math.PI) / 180;
-  //   const φ2 = (lat2 * Math.PI) / 180;
-  //   const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-  //   const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-  //   const a =
-  //     Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-  //     Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-  //   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  //   return R * c; // 総距離をメートル単位で返す
-  // };
+  const formatContent = (content: string): string => {
+    const maxLength = 12;
+    let formattedContent = '';
+    for (let i = 0; i < content.length; i += maxLength) {
+      const line = content.substring(i, i + maxLength);
+      formattedContent += line + (i + maxLength < content.length ? '\n' : '');
+    }
+    return formattedContent;
+  };
 
-  // const [visiblePosts, setVisiblePosts] = useState<PostModel[]>([]);
-  // const updateVisiblePosts = useCallback(() => {
-  //   const currentLat = coordinates.latitude;
-  //   const currentLon = coordinates.longitude;
-  //   if (currentLat === null || currentLon === null) return;
+  const radius = 5;
+  const numPosts = posts?.length;
+  // X座標を計算する関数
+  const xValue = (index: number) => {
+    if (numPosts === undefined) return;
+    const angle = (index / numPosts) * Math.PI * 2;
+    return radius * Math.cos(angle);
+  };
 
-  //   const newVisiblePosts =
-  //     posts?.filter((post) => {
-  //       const distance = calculateDistance(currentLat, currentLon, post.latitude, post.longitude);
-  //       return distance < 1000;
-  //     }) ?? [];
-  //   setVisiblePosts(newVisiblePosts);
-  //   console.log('呼び出し');
-  // }, [coordinates.latitude, coordinates.longitude, posts]);
+  // Y座標を計算する関数（例では一定の高さを返します）
+  const yValue = () => {
+    if (numPosts === undefined) return;
+    return 1; // 高さは1に固定
+  };
 
-  // useEffect(() => {
-  //   // updateVisiblePosts();
-  //   const id = navigator.geolocation.watchPosition(() => {
-  //     updateVisiblePosts();
-  //   });
-
-  //   // クリーンアップ関数;
-  //   return () => navigator.geolocation.clearWatch(id);
-  // }, [updateVisiblePosts]);
+  // Z座標を計算する関数
+  const zValue = (index: number) => {
+    if (numPosts === undefined) return;
+    const angle = (index / numPosts) * Math.PI * 2;
+    return radius * Math.sin(angle);
+  };
 
   return (
     <div>
@@ -153,38 +147,38 @@ const ARComponent = () => {
         <button className={styles.mapButton}>MAP</button>
       </Link>
 
-      {coordinates.latitude !== null && coordinates.longitude !== null && (
+      {/* {coordinates.latitude !== null && coordinates.longitude !== null && (
         <div className={styles.coordinatesInfo}>
           Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
         </div>
-      )}
+      )} */}
       <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
       >
         {posts?.map((post, index) => (
-          <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
+          <a-entity
+            key={index}
+            id={`post${index}`}
+            position={`${xValue(index)} ${yValue()} ${zValue(index)}`}
+            rotation={`-10 0 0`}
+            look-at="[camera]"
+          >
             {/* 投稿内容の外枠 */}
-            {post.id === user?.id ? (
-              <a-plane color="#c2c7ee" height="1" width="1.5" position="0 0 -0.1" />
+            {post.userID === user?.id ? (
+              <a-box color="#c2c7ee" height="1" width="1.5" depth="0.1" position="0 0 -0.1" />
             ) : (
-              <a-plane color="#f6a985" height="1" width="1.5" position="0 0 -0.1" />
+              // <a-plane color="#f6a985" height="1" width="1.5" position="0 0 -0.1" />
+              <a-box color="#f6a985" height="1" width="1.5" depth="0.1" position="0 0 -0.1" />
             )}
 
-            <a-plane
-              color="#fffbfb"
-              height="0.5"
-              width="1"
-              position="0 0.2 -0.099"
-              // radius="0.3"
-              align="center"
-            />
+            <a-plane color="#fffbfb" height="0.5" width="1" position="0 0.2 0" align="center" />
 
             {/* 投稿内容 */}
 
             <a-text
-              value={post.content}
+              value={formatContent(post.content)}
               font="/fonts/mplus-msdf.json"
               font-image="/png/mplus-msdf.png"
               position="0 0.2 0.001"
