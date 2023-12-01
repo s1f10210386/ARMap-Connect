@@ -15,6 +15,8 @@ declare namespace JSX {
     'a-cursor': any;
     'a-plane': any;
     'a-circle': any;
+    'a-assets': any;
+    'a-asset-item': any;
     // 他のA-FrameまたはAR.jsの要素に必要な型定義をここに追加
   }
 }

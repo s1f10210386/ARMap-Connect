@@ -83,6 +83,7 @@ const ARComponent = () => {
         },
       });
     }
+
     if (typeof AFRAME.components['log'] === 'undefined') {
       AFRAME.registerComponent('log', {
         schema: { type: 'string' },
@@ -150,18 +151,17 @@ const ARComponent = () => {
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
       >
-        {/* <a-scene
-        vr-mode-ui="enabled: false"
-        embedded
-        arjs="sourceType: webcam; debugUIEnabled: false;"
-      > */}
+        <a-assets>
+          <a-asset-item id="noto-sans-json" src="/fonts/noto-sans-cjk-jp-msdf.json" />
+          <img id="noto-sans-img" src="/png/noto-sans-cjk-jp-msdf.png" />
+        </a-assets>
         {posts?.map((post, index) => (
           <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
             {/* 投稿内容の外枠 */}
             {post.id === user?.id ? (
-              <a-plane color="#b4b9de" height="1" width="1.5" position="0 0 -0.1" />
+              <a-plane color="#c2c7ee" height="1" width="1.5" position="0 0 -0.1" />
             ) : (
-              <a-plane color="#e3e69a" height="1" width="1.5" position="0 0 -0.1" />
+              <a-plane color="#f6a985" height="1" width="1.5" position="0 0 -0.1" />
             )}
 
             <a-plane
@@ -174,15 +174,17 @@ const ARComponent = () => {
             />
 
             {/* 投稿内容 */}
+
             <a-text
               value={post.content}
+              font="noto-sans-json"
+              font-image="noto-sans-img"
               position="0 0.2 0"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.4 0.4 0.4"
               color="black"
               align="center"
             />
-
             {/* いいねオブジェクト */}
             <a-entity
               position="-0.4 -0.3 0"
