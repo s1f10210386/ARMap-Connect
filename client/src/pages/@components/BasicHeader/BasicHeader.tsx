@@ -40,7 +40,7 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
           <span className={styles.userName}>{user.displayName}</span>
         </div>
 
-        <h3>ARMapSNS</h3>
+        <img className={styles.logoImage} src="/images/logo.png" alt="ARMapConnect Logo" />
         <Link href="/AR">
           <ThreeDRotationTwoToneIcon fontSize="large" />
         </Link>
