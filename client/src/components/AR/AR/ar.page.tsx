@@ -75,7 +75,7 @@ const ARComponent = () => {
         },
         init() {
           this.el.addEventListener('click', () => {
-            alert('clickしました');
+            // alert('clickしました');
             const postId = this.data.postId;
             console.log('postID', postId);
             window.handleLike(postId);
