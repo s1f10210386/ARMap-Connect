@@ -2,17 +2,33 @@
   position: fixed;
   top: 0;
   left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
+  backdrop-filter: blur(4px);
+  background-color: #f4f4fb;
 }
 
 .main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  backdrop-filter: blur(4px);
+  width: 100%;
+  text-align: center;
+}
+
+.appname {
+  margin-bottom: 20px;
+  color: red;
+}
+
+.register {
+  margin-top: 20px;
+}
+
+.registerLink {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .title {
@@ -37,4 +53,14 @@
 
 .btn:hover {
   background: #444;
+}
+
+.logoImage {
+  width: 280px; /* 幅を100pxに設定 */
+  height: auto; /* 高さを自動調整 */
+}
+
+.appImage {
+  width: 100px;
+  height: auto;
 }

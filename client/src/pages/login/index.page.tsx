@@ -1,14 +1,17 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import type { UserId } from 'commonTypesWithClient/ids';
-import { GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { userAtom } from 'src/atoms/user';
 import { createAuth } from 'src/utils/firebase';
-import { returnNull } from 'src/utils/returnNull';
 import { useLoading } from '../@hooks/useLoading';
 import styles from './index.module.css';
+
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import IconButton from '@mui/material/IconButton';
 
 const Login = () => {
   const [, setUser] = useAtom(userAtom);
@@ -16,43 +19,49 @@ const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const router = useRouter();
 
   const [loginError, setLoginError] = useState('');
 
-  const loginWithGitHub1 = async () => {
-    try {
-      const ghProvider = new GithubAuthProvider();
-      ghProvider.addScope('read:user');
-      const signInResult = await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
-      const userFib = signInResult?.user.uid ?? '';
-      const emailFib = signInResult?.user.email ?? '';
-      const displayNameFib = signInResult?.user.displayName ?? '';
-      const photoURLFib = signInResult?.user.photoURL ?? '';
+  // const loginWithGitHub1 = async () => {
+  //   try {
+  //     const ghProvider = new GithubAuthProvider();
+  //     ghProvider.addScope('read:user');
+  //     const signInResult = await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
+  //     const userFib = signInResult?.user.uid ?? '';
+  //     const emailFib = signInResult?.user.email ?? '';
+  //     const displayNameFib = signInResult?.user.displayName ?? '';
+  //     const photoURLFib = signInResult?.user.photoURL ?? '';
 
-      setUser((prevUser) => ({
-        ...prevUser,
-        id: userFib as UserId,
-        email: emailFib,
-        displayName: displayNameFib,
-        photoURL: photoURLFib,
-      }));
-    } catch (error) {
-      console.log('ログイン失敗');
-      throw error;
-    }
-  };
+  //     setUser((prevUser) => ({
+  //       ...prevUser,
+  //       id: userFib as UserId,
+  //       email: emailFib,
+  //       displayName: displayNameFib,
+  //       photoURL: photoURLFib,
+  //     }));
+  //   } catch (error) {
+  //     console.log('ログイン失敗');
+  //     throw error;
+  //   }
+  // };
 
-  const loginGithub = async () => {
-    addLoading();
-    try {
-      await loginWithGitHub1();
-      setLoginError('');
-    } catch (error) {
-      setLoginError('ログイン失敗');
-    }
-    removeLoading();
-  };
+  // const loginGithub = async () => {
+  //   addLoading();
+  //   try {
+  //     await loginWithGitHub1();
+  //     setLoginError('');
+  //   } catch (error) {
+  //     setLoginError('ログイン失敗');
+  //   }
+  //   removeLoading();
+  // };
 
   const signInWithEmail1 = async (email1: string, password: string) => {
     const auth = createAuth();
@@ -95,19 +104,19 @@ const Login = () => {
     await router.push('/register');
   };
 
-  const [dev, setDev] = useState(true);
-  const checkdev = useCallback(() => {
-    if (process.env.NEXT_PUBLIC_AUTH_EMULATORURL !== undefined) {
-      setDev(true);
-    } else {
-      setDev(false);
-    }
-  }, []);
+  // const [dev, setDev] = useState(true);
+  // const checkdev = useCallback(() => {
+  //   if (process.env.NEXT_PUBLIC_AUTH_EMULATORURL !== undefined) {
+  //     setDev(true);
+  //   } else {
+  //     setDev(false);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    console.log('checkdev起動');
-    checkdev();
-  }, [checkdev]);
+  // useEffect(() => {
+  //   console.log('checkdev起動');
+  //   checkdev();
+  // }, [checkdev]);
 
   return (
     <div className={styles.container}>
@@ -144,12 +153,22 @@ const Login = () => {
           />
           <TextField
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
             sx={{ mt: 2 }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handlePasswordVisibility}
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              ),
+            }}
           />
           <Button variant="contained" sx={{ mt: 2 }} onClick={loginEmail}>
             Login
