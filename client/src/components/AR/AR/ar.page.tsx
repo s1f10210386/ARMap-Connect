@@ -100,6 +100,42 @@ const ARComponent = () => {
     }
   }, [handleLike]);
 
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371e3;
+    const φ1 = (lat1 * Math.PI) / 180;
+    const φ2 = (lat2 * Math.PI) / 180;
+    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // 総距離をメートル単位で返す
+  };
+
+  const [visiblePosts, setVisiblePosts] = useState<PostModel[]>([]);
+  useEffect(() => {
+    const updateVisiblePosts = () => {
+      const currentLat = coordinates.latitude;
+      const currentLon = coordinates.longitude;
+      if (currentLat === null || currentLon === null) return;
+
+      const newVisiblePosts =
+        posts?.filter((post) => {
+          const distance = calculateDistance(currentLat, currentLon, post.latitude, post.longitude);
+          return distance < 1000;
+        }) ?? [];
+      setVisiblePosts(newVisiblePosts);
+    };
+    const id = navigator.geolocation.watchPosition(() => {
+      updateVisiblePosts();
+    });
+
+    // クリーンアップ関数
+    return () => navigator.geolocation.clearWatch(id);
+  }, [posts, coordinates.latitude, coordinates.longitude]);
+
   return (
     <div>
       <Link href="/">
@@ -148,14 +184,8 @@ const ARComponent = () => {
           </a-entity>
         </a-entity> */}
 
-        {posts?.map((post, index) => (
-          <a-entity
-            key={index}
-            id={`post${index}`}
-            gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-            position={`${index * 2} 1 -1`}
-            rotation="0 0 0"
-          >
+        {visiblePosts?.map((post, index) => (
+          <a-entity key={index} id={`post${index}`} position={`${index * 2} 1 -1`} rotation="0 0 0">
             {/* 投稿内容の外枠 */}
             <a-plane color="#a4bbe5" height="1" width="1.5" position="0 0 -0.1" />
 
@@ -163,6 +193,7 @@ const ARComponent = () => {
             <a-text
               value={post.content}
               position="0 0.2 0"
+              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.4 0.4 0.4"
               color="black"
               align="center"
@@ -171,6 +202,7 @@ const ARComponent = () => {
             {/* いいねオブジェクト */}
             <a-entity
               position="-0.4 -0.2 0"
+              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               gltf-model="/models/love_heart.gltf"
               scale="0.0005 0.0005 0.0005"
             />
@@ -178,6 +210,7 @@ const ARComponent = () => {
             <a-entity position="-0.4, -0.15 0" data-post-id={post.id} hit-box>
               <a-entity
                 class="raycastable"
+                gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
                 geometry="primitive:box"
                 material="color:blue; opacity: 0.5"
                 scale="0.1 0.2 0.1"
@@ -190,6 +223,7 @@ const ARComponent = () => {
             <a-text
               value={`Likes: ${post.likeCount}`}
               position="0.3 -0.2 0"
+              gps-new-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.2 0.2 0.2"
               color="black"
             />
@@ -197,7 +231,7 @@ const ARComponent = () => {
         ))}
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
-        <a-camera gps-camera="maxDistance:20" rotation-reader />
+        <a-camera gps-new-camera="maxDistance:20" rotation-reader />
 
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
