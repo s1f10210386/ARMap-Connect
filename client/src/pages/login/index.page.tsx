@@ -1,5 +1,4 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { APP_TITLE } from 'commonConstantsWithClient';
 import type { UserId } from 'commonTypesWithClient/ids';
 import { GithubAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useAtom } from 'jotai';
@@ -113,9 +112,17 @@ const Login = () => {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
-        <Typography variant="h4" gutterBottom className={styles.appname}>
-          {APP_TITLE}
-        </Typography>
+        <img
+          className={styles.appImage}
+          src="/images/applogo1.png"
+          alt="APP logo"
+          style={{
+            position: 'relative',
+            right: '-5px',
+            top: '-15px',
+          }}
+        />
+        <img className={styles.logoImage} src="/images/logo.png" alt="ARMapConnect Logo" />
         <Box
           sx={{
             display: 'flex',
