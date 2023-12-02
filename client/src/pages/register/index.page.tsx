@@ -54,8 +54,8 @@ const Register = () => {
 
     try {
       // await authWithEmail(email, password);
+      setLoginError('');
       await signUpWithEmail1(email, password);
-      setLoginError(''); // アカウント作成
 
       await router.push('/');
     } catch (error) {

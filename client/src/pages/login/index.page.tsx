@@ -89,10 +89,10 @@ const Login = () => {
 
     try {
       // await authWithEmail(email, password);
+      setLoginError(''); // ログインが成功したらエラーメッセージをクリア
       await signInWithEmail1(email, password);
 
-      setLoginError(''); // ログインが成功したらエラーメッセージをクリア
-      // await router.push('/');
+      await router.push('/');
     } catch (error) {
       setLoginError('ログインに失敗しました'); // ログイン失敗時のメッセージを設定
     }

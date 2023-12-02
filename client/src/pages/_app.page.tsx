@@ -5,7 +5,6 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import { gaPageview } from 'src/utils/gtag';
 import '../styles/globals.css';
-import { AuthLoader } from './@components/AuthLoader';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const SafeHydrate = dynamic(() => import('../components/SafeHydrate'), { ssr: false });
@@ -27,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <SafeHydrate>
         <Component {...pageProps} />
       </SafeHydrate>
-      <AuthLoader />
+      {/* <AuthLoader /> */}
       <Script src="https://aframe.io/releases/1.0.4/aframe.min.js" strategy="beforeInteractive" />
       <Script
         src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"

@@ -149,7 +149,7 @@ const ARComponent = () => {
   const numPosts = posts?.length;
   // X座標を計算する関数
   const xValue = (index: number) => {
-    if (numPosts === undefined) return;
+    if (numPosts === undefined) return 0;
     const angle = (index / numPosts) * Math.PI * 2;
     return radius * Math.cos(angle);
     // return 0;
@@ -163,9 +163,9 @@ const ARComponent = () => {
 
   // Z座標を計算する関数
   const zValue = (index: number) => {
-    if (numPosts === undefined) return;
+    if (numPosts === undefined) return 0;
     const angle = (index / numPosts) * Math.PI * 2;
-    return radius * Math.sin(angle);
+    return -radius * Math.sin(angle);
     // return 0;
   };
 
