@@ -1,21 +1,21 @@
 .container {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   display: flex;
-
-  /* justify-content: center; */
-
   align-items: center;
+  justify-content: center;
   width: 100vw;
   height: 100vh;
-  backdrop-filter: blur(4px);
+
+  /* backdrop-filter: blur(4px); */
   background-color: #f4f4fb;
 }
 
 .main {
   /* width: 100%; */
-  width: 100vw;
+
+  /* width: 100vw; */
   text-align: center;
 }
 

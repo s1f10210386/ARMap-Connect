@@ -175,11 +175,6 @@ const ARComponent = () => {
         <button className={styles.mapButton}>MAPに戻る</button>
       </Link>
 
-      {/* {coordinates.latitude !== null && coordinates.longitude !== null && (
-        <div className={styles.coordinatesInfo}>
-          Latitude: {coordinates.latitude}, Longitude: {coordinates.longitude}
-        </div>
-      )} */}
       <a-scene
         vr-mode-ui="enabled: false"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
@@ -225,12 +220,6 @@ const ARComponent = () => {
             />
 
             {/* いいねオブジェクト */}
-            {/* <a-entity
-              position="-0.4 -0.3 0"
-              gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-              gltf-model="/models/love_heart.gltf"
-              scale="0.0008 0.0007 0.0005"
-            /> */}
             {isliked ? (
               <a-plane
                 material="src : #heart ;transparent: true; color:red;"

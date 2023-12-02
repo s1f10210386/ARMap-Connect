@@ -15,19 +15,6 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
       await router.push('/login');
     }
   };
-
-  // const router = useRouter();
-  // const [isMapView, setIsMapView] = useAtom(isMapViewAtomAtom);
-
-  // const handleChenge = async () => {
-  //   if (isMapView) {
-  //     await router.push('/');
-  //   } else {
-  //     await router.push('/AR');
-  //   }
-  //   setIsMapView(!isMapView);
-  // };
-
   return (
     <div className={styles.container}>
       <div className={styles.main}>
