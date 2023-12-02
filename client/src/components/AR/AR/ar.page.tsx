@@ -1,16 +1,29 @@
 import type { PostModel } from 'commonTypesWithClient/models';
 import { useAtom } from 'jotai';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { coordinatesAtom, userAtom } from 'src/atoms/user';
+import { Loading } from 'src/components/Loading/Loading';
 import { apiClient } from 'src/utils/apiClient';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './ar.module.css';
 
 const ARComponent = () => {
-  const [user] = useAtom(userAtom);
+  const [user, setUser] = useAtom(userAtom);
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
   const [posts, setPosts] = useState<PostModel[] | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser !== null) {
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+    } else {
+      router.push('/login');
+    }
+  }, [setUser, router]);
 
   const getPosts = useCallback(async () => {
     if (coordinates.latitude === null || coordinates.longitude === null) return;
@@ -170,6 +183,14 @@ const ARComponent = () => {
     return -radius * Math.sin(angle);
     // return 0;
   };
+
+  if (!user) {
+    return (
+      <div>
+        <Loading visible />
+      </div>
+    );
+  }
 
   return (
     <div>
