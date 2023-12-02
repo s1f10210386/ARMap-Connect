@@ -96,6 +96,10 @@ const ARComponent = () => {
       body: { postId, userId: user.id },
     });
 
+    setLikesStatus((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }));
     setPosts((prevPosts) => {
       if (!prevPosts) return prevPosts;
 
@@ -109,10 +113,6 @@ const ARComponent = () => {
         }
       });
     });
-    setLikesStatus((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
   };
 
   window.deletePostContent = async (postID: string) => {
