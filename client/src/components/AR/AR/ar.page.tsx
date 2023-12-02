@@ -149,9 +149,10 @@ const ARComponent = () => {
   const numPosts = posts?.length;
   // X座標を計算する関数
   const xValue = (index: number) => {
-    if (numPosts === undefined) return;
-    const angle = (index / numPosts) * Math.PI * 2;
-    return radius * Math.cos(angle);
+    // if (numPosts === undefined) return;
+    // const angle = (index / numPosts) * Math.PI * 2;
+    // return radius * Math.cos(angle);
+    return 0;
   };
 
   // Y座標を計算する関数（例では一定の高さを返します）
@@ -162,9 +163,10 @@ const ARComponent = () => {
 
   // Z座標を計算する関数
   const zValue = (index: number) => {
-    if (numPosts === undefined) return;
-    const angle = (index / numPosts) * Math.PI * 2;
-    return radius * Math.sin(angle);
+    // if (numPosts === undefined) return;
+    // const angle = (index / numPosts) * Math.PI * 2;
+    // return radius * Math.sin(angle);
+    return 0;
   };
 
   return (
