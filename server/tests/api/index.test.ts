@@ -1,5 +1,4 @@
 import controller from '$/api/tasks/di/controller';
-import type { UserId } from '$/commonTypesWithClient/ids';
 import type { UserModel } from '$/commonTypesWithClient/models';
 import { taskIdParser } from '$/service/idParsers';
 import type { Task } from '@prisma/client';
@@ -27,7 +26,7 @@ test('依存性注入', async () => {
 
   expect(res1.body).toHaveLength(2);
 
-  const mockedFindManyTask = async (userId: UserId): Promise<Task[]> => [
+  const mockedFindManyTask = async (userId: string): Promise<Task[]> => [
     {
       id: taskIdParser.parse('foo'),
       userId,
