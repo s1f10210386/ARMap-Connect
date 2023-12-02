@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Button, IconButton, TextField, Typography } from '@mui/material';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
@@ -12,7 +12,7 @@ import styles from './index.module.css';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import IconButton from '@mui/material/IconButton';
+
 const Register = () => {
   const [, setUser] = useAtom(userAtom);
   const { loadingElm, addLoading, removeLoading } = useLoading();
@@ -48,7 +48,6 @@ const Register = () => {
     addLoading();
 
     try {
-      // await authWithEmail(email, password);
       setLoginError('');
       await signUpWithEmail1(email, password);
 
@@ -86,35 +85,45 @@ const Register = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.main}>
-        <div>
+      <div
+        id="icon"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          paddingTop: '100px',
+        }}
+      >
+        <div style={{ paddingTop: '30px' }}>
           <img
-            className={styles.appImage}
             src="/images/applogo1.png"
             alt="APP logo"
             style={{
               position: 'relative',
               right: '-5px',
               top: '-15px',
+              width: '100px',
+              height: 'auto',
             }}
           />
-          <img className={styles.logoImage} src="/images/logo.png" alt="ARMapConnect Logo" />
         </div>
+        <div>
+          <img
+            style={{ width: '280px', height: 'auto' }}
+            src="/images/logo.png"
+            alt="ARMapConnect Logo"
+          />
+        </div>
+      </div>
 
-        <div />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            justifyContent: 'center',
-            p: 3,
-            width: '100%',
-            maxWidth: 400, // レスポンシブ対応のための最大幅
-          }}
-        >
+      <div id="input" style={{ paddingTop: '80px' }}>
+        <div style={{ textAlign: 'center', paddingLeft: '30%' }}>
+          <Button onClick={randomAccount}>ランダム生成</Button>
+        </div>
+        <div style={{ textAlign: 'center' }}>
           <TextField
+            style={{ width: '70%', minWidth: '250px', maxWidth: '700px' }}
             label="Email"
             type="email"
             variant="outlined"
@@ -123,8 +132,11 @@ const Register = () => {
             fullWidth
             sx={{ mt: 2 }}
           />
+        </div>
+        <div style={{ textAlign: 'center' }}>
           <TextField
             label="Password"
+            style={{ width: '70%', minWidth: '250px', maxWidth: '700px' }}
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
             value={password}
@@ -142,37 +154,21 @@ const Register = () => {
               ),
             }}
           />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row', // 横並びに変更
-              alignItems: 'center',
-              justifyContent: 'center', // 中央揃えに設定
-              p: 3,
-              width: '100%',
-              maxWidth: 400, // レスポンシブ対応のための最大幅
-            }}
-          >
-            <Button variant="contained" sx={{ mt: 2, mr: 2 }} onClick={createAccount}>
-              新規登録
-            </Button>
-            <Button variant="contained" sx={{ mt: 2 }} onClick={randomAccount}>
-              ランダム生成
-            </Button>
-          </Box>
+        </div>
+      </div>
+      <div style={{ paddingTop: '20px' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Button variant="contained" sx={{ mt: 3 }} onClick={createAccount}>
+            新規登録
+          </Button>
           {loginError && (
-            <Typography color="error" sx={{ mt: 2 }}>
+            <Typography color="error" sx={{ mt: 3 }}>
               {loginError}
             </Typography>
           )}
-        </Box>
-
-        {loginError && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            {loginError}
-          </Typography>
-        )}
-
+        </div>
+      </div>
+      <div style={{ textAlign: 'center' }}>
         <Button
           variant="outlined" // もしくは 'contained' など、他のバリアントを選択
           color="primary" // カラーテーマに応じて変更可能
