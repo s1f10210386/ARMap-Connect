@@ -243,13 +243,13 @@ const Map: FC = () => {
                         {/* 投稿日とDELETEボタン */}
                         <div style={{ fontSize: '10px' }}>
                           {formatTime(post.postTime)}
-                          {user.id === post.userID && (
+                          {user.id === post.userID ? (
                             <DeleteIcon
                               onClick={() => deletePostContent(post.id)}
                               sx={{ alignSelf: 'flex-end', marginLeft: '130px' }}
-                            >
-                              delete
-                            </DeleteIcon>
+                            />
+                          ) : (
+                            <div />
                           )}
                         </div>
                       </div>
