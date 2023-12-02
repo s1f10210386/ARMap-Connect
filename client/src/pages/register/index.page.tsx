@@ -56,7 +56,6 @@ const Register = () => {
       // await authWithEmail(email, password);
       setLoginError('');
       await signUpWithEmail1(email, password);
-      setLoginError('');
 
       // await router.push('/');
     } catch (error) {
