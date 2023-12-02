@@ -1,1 +1,1 @@
-export const APP_TITLE = 'AR-Map-SNS';
+export const APP_TITLE = 'Armap-Conncet';
