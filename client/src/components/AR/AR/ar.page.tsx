@@ -193,7 +193,8 @@ const ARComponent = () => {
           <a-entity
             key={index}
             id={`post${index}`}
-            position={`${xValue(index)} ${yValue()} ${zValue(index)}`}
+            // position={`${xValue(index)} ${yValue()} ${zValue(index)}`}
+            position={`0 1.6 -1`}
             rotation={`0 0 0`}
             look-at="[camera]"
             scale="3 3 3"
