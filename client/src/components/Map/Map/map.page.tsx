@@ -12,7 +12,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import myIconURL from 'public/images/me.png';
 import otherIconURL from 'public/images/other.png';
-import pingIconURL from 'public/images/pingu.png';
+import pingIconURL from 'public/images/pinn.png';
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
