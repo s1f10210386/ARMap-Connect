@@ -2,10 +2,8 @@ import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {
-    query: { postId: string };
-    resBody: {
-      likeCount: number;
-    };
+    query: { postId: string; userId: string };
+    resBody: boolean;
   };
   post: {
     reqBody: {

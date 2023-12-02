@@ -14,7 +14,15 @@ async function removeLike(likeId: string): Promise<void> {
     where: { id: likeId },
   });
 }
-async function findLike(postId: string, userId: string) {
+
+const getLikeCount = async (postId: string) => {
+  return await prismaClient.like.count({
+    where: {
+      postId,
+    },
+  });
+};
+export async function findLike(postId: string, userId: string) {
   return await prismaClient.like.findUnique({
     where: {
       postId_userId: {
@@ -24,15 +32,6 @@ async function findLike(postId: string, userId: string) {
     },
   });
 }
-
-export const getLikeCount = async (postId: string) => {
-  return await prismaClient.like.count({
-    where: {
-      postId,
-    },
-  });
-};
-
 export const addLike = async (postId: string, userId: string): Promise<number> => {
   await createLike(postId, userId);
   return getLikeCount(postId);
