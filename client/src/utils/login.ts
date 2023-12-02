@@ -22,6 +22,7 @@ export const loginWithGitHub = async () => {
 
 export const logout = async () => {
   await createAuth().signOut();
+  localStorage.removeItem('user');
 };
 
 //新規ユーザだった場合DBにユーザ登録

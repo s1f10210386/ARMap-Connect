@@ -19,7 +19,7 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
     <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.userBtn} onClick={onLogout}>
-          {user.photoURL !== undefined ? (
+          {/* {user.photoURL !== undefined ? (
             <img
               className={styles.userIcon}
               src={user.photoURL}
@@ -27,9 +27,9 @@ export const BasicHeader = ({ user }: { user: UserModel }) => {
               alt={user.displayName}
               style={{ paddingRight: 10 }}
             />
-          ) : (
-            <HumanIcon size={30} />
-          )}
+          ) : ( */}
+          <HumanIcon size={30} />
+          {/* )} */}
           <span className={styles.userName}>{user.displayName}</span>
         </div>
 

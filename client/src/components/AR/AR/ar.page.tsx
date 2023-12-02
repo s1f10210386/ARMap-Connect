@@ -151,13 +151,15 @@ const ARComponent = () => {
   const xValue = (index: number) => {
     if (numPosts === undefined) return 0;
     const angle = (index / numPosts) * Math.PI * 2;
-    return radius * Math.cos(angle);
+    return -radius * Math.cos(angle);
     // return 0;
   };
 
   // Y座標を計算する関数（例では一定の高さを返します）
   const yValue = () => {
-    if (numPosts === undefined) return;
+    // if (numPosts === undefined) return;
+    // const angle = Math.PI * 2;
+    // return -radius * Math.cos(angle);
     return 0; // 高さは1に固定
   };
 
@@ -293,7 +295,6 @@ const ARComponent = () => {
           </a-entity>
         ))}
 
-        {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-camera rotation-reader />
         <a-light type="ambient" color="#FFFFFF" />
 
