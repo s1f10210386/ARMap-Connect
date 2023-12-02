@@ -1,5 +1,4 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
-import type { UserId } from 'commonTypesWithClient/ids';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
@@ -35,14 +34,10 @@ const Register = () => {
     try {
       const signUpResult = await createUserWithEmailAndPassword(auth, email, password);
       const newUser = signUpResult.user.uid;
-      setUser((prevUser) => ({
-        ...prevUser,
-        id: newUser as UserId,
-        email: email1,
-        displayName: prevUser?.displayName,
-        photoURL: prevUser?.photoURL,
-      }));
+      const userInfo = { id: newUser, email: '', displayName: '', photoURL: '' };
+      setUser(userInfo);
       await apiClient.user.post({ body: { userID: newUser } }).catch(returnNull);
+      localStorage.setItem('user', JSON.stringify(userInfo));
       console.log('新規登録成功');
     } catch (error) {
       console.error('新規登録失敗', error);

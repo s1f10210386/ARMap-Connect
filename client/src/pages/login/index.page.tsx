@@ -1,5 +1,4 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
-import type { UserId } from 'commonTypesWithClient/ids';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
@@ -69,14 +68,11 @@ const Login = () => {
       const signInResult = await signInWithEmailAndPassword(auth, email1, password);
       const userFib = signInResult.user.uid;
 
-      setUser((prevUser) => ({
-        ...prevUser,
-        id: userFib as UserId,
-        email: email1,
-        displayName: prevUser?.displayName,
-        photoURL: prevUser?.photoURL, // 既存の photoURL を保持
-      }));
+      const userInfo = { id: userFib, email: '', displayName: '', photoURL: '' };
 
+      setUser(userInfo);
+
+      localStorage.setItem('user', JSON.stringify(userInfo));
       console.log('ログイン成功');
     } catch (error) {
       console.error('ログイン失敗', error);

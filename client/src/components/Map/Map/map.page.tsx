@@ -58,14 +58,21 @@ const LocationMarker: FC<LocationMarkerProps> = ({ coordinates }) => {
 };
 const Map: FC = () => {
   // console.log('my', myIconURL);
-  const [user] = useAtom(userAtom);
+  const [user, setUser] = useAtom(userAtom);
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 
   const router = useRouter();
-  if (!user) {
-    router.push('/login');
-  }
-  // console.log(user?.id);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser !== null) {
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+    } else {
+      router.push('/login');
+    }
+  }, [setUser, router]);
+
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
       navigator.geolocation.watchPosition((posithon) => {
@@ -175,198 +182,193 @@ const Map: FC = () => {
     return new Intl.DateTimeFormat('ja-JP', options).format(date);
   };
 
-  // if (!user) return <Loading visible />;
+  if (!user) {
+    return (
+      <div>
+        <Loading visible />
+      </div>
+    );
+  }
 
   return (
     <div>
-      {user ? (
-        <div>
-          <div className={styles.container}>
-            <BasicHeader user={user} />
-            {coordinates.latitude !== null && coordinates.longitude !== null && (
-              <div className={`${styles.mapWrapper} ${isPopupVisible ? styles.blurred : ``}`}>
-                <MapContainer
-                  center={[coordinates.latitude, coordinates.longitude]}
-                  zoom={17}
-                  scrollWheelZoom={false}
-                  style={{ height: '93vh', width: '100%' }}
+      <div className={styles.container}>
+        <BasicHeader user={user} />
+        {coordinates.latitude !== null && coordinates.longitude !== null && (
+          <div className={`${styles.mapWrapper} ${isPopupVisible ? styles.blurred : ``}`}>
+            <MapContainer
+              center={[coordinates.latitude, coordinates.longitude]}
+              zoom={17}
+              scrollWheelZoom={false}
+              style={{ height: '93vh', width: '100%' }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <LocationMarker coordinates={coordinates} />
+
+              <Marker position={[coordinates.latitude, coordinates.longitude]} icon={pingIcon} />
+
+              {/*ユーザーIDと"誰が投稿したか"という情報のpostのuserIDが一致するなら本人*/}
+              {posts?.map((post) => (
+                <Marker
+                  key={post.id}
+                  icon={user.id === post.userID ? myIcon : otherIcon}
+                  position={[post.latitude, post.longitude]}
                 >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <LocationMarker coordinates={coordinates} />
-
-                  <Marker
-                    position={[coordinates.latitude, coordinates.longitude]}
-                    icon={pingIcon}
-                  />
-
-                  {/*ユーザーIDと"誰が投稿したか"という情報のpostのuserIDが一致するなら本人*/}
-                  {posts?.map((post) => (
-                    <Marker
-                      key={post.id}
-                      icon={user.id === post.userID ? myIcon : otherIcon}
-                      position={[post.latitude, post.longitude]}
+                  <Popup>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '200px',
+                        width: '300px',
+                      }}
                     >
-                      <Popup>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            height: '200px',
-                            width: '300px',
-                          }}
+                      {/* メッセージエリア */}
+                      <div style={{ fontSize: '18px', overflow: 'auto' }}>{post.content}</div>
+
+                      {/* いいねボタン*/}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '30px',
+                          left: '20px',
+                        }}
+                      >
+                        <Button
+                          variant="outlined"
+                          startIcon={<FavoriteIcon style={{ color: '#FF6961' }} />}
+                          onClick={() => handleLike(post.id)}
+                          sx={{ border: '1px solid #FF6961' }}
                         >
-                          {/* メッセージエリア */}
-                          <div style={{ fontSize: '18px', overflow: 'auto' }}>{post.content}</div>
+                          <span className="likeCount">{post.likeCount}</span>
+                        </Button>
+                      </div>
 
-                          {/* いいねボタン*/}
-                          <div
-                            style={{
-                              position: 'absolute',
-                              bottom: '30px',
-                              left: '20px',
-                            }}
-                          >
-                            <Button
-                              variant="outlined"
-                              startIcon={<FavoriteIcon style={{ color: '#FF6961' }} />}
-                              onClick={() => handleLike(post.id)}
-                              sx={{ border: '1px solid #FF6961' }}
-                            >
-                              <span className="likeCount">{post.likeCount}</span>
-                            </Button>
-                          </div>
+                      <div
+                        style={{
+                          position: 'absolute', // 絶対位置を設定
+                          bottom: '10px', // 下から10pxの位置に配置
+                          width: '100%', // 幅を親要素に合わせる
+                          display: 'flex',
+                          justifyContent: 'space-between',
 
-                          <div
-                            style={{
-                              position: 'absolute', // 絶対位置を設定
-                              bottom: '10px', // 下から10pxの位置に配置
-                              width: '100%', // 幅を親要素に合わせる
-                              display: 'flex',
-                              justifyContent: 'space-between',
-
-                              paddingRight: '10px', // 右の余白
-                            }}
-                          >
-                            {/* 投稿日とDELETEボタン */}
-                            <div style={{ fontSize: '10px' }}>
-                              {formatTime(post.postTime)}
-                              {user.id === post.userID ? (
-                                <DeleteIcon
-                                  onClick={() => {
-                                    if (confirm('削除しますか？')) {
-                                      deletePostContent(post.id);
-                                    }
-                                  }}
-                                  sx={{ alignSelf: 'flex-end', marginLeft: '130px' }}
-                                />
-                              ) : (
-                                <div />
-                              )}
-                            </div>
-                          </div>
+                          paddingRight: '10px', // 右の余白
+                        }}
+                      >
+                        {/* 投稿日とDELETEボタン */}
+                        <div style={{ fontSize: '10px' }}>
+                          {formatTime(post.postTime)}
+                          {user.id === post.userID ? (
+                            <DeleteIcon
+                              onClick={() => {
+                                if (confirm('削除しますか？')) {
+                                  deletePostContent(post.id);
+                                }
+                              }}
+                              sx={{ alignSelf: 'flex-end', marginLeft: '130px' }}
+                            />
+                          ) : (
+                            <div />
+                          )}
                         </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
-              </div>
-            )}
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
           </div>
+        )}
+      </div>
 
-          {/* {!isPopupVisible && (
+      {/* {!isPopupVisible && (
         <div className={styles.nearInfo}>
           近くに<span className={styles.infoNumber}>{posts ? posts.length : 0}</span>
           件の投稿があります
         </div>
       )} */}
 
-          {/*POSTボタン*/}
-          {!isPopupVisible && (
-            <Fab
-              className={styles.postButton}
-              onClick={handleButtonClick}
+      {/*POSTボタン*/}
+      {!isPopupVisible && (
+        <Fab
+          className={styles.postButton}
+          onClick={handleButtonClick}
+          style={{
+            backgroundColor: '#90caf9',
+            width: '80px',
+            height: '80px',
+            position: 'absolute',
+            top: '80vh',
+            left: '50vw',
+            transform: 'translate(-50%, -50%)',
+            // border: '2px solid #1DA1F2',
+          }}
+        >
+          <CampaignIcon sx={{ fontSize: 50, color: 'black' }} />
+        </Fab>
+      )}
+
+      {/* 投稿コンポーネント */}
+      {isPopupVisible && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent}>
+            <div
               style={{
-                backgroundColor: '#90caf9',
-                width: '80px',
-                height: '80px',
-                position: 'absolute',
-                top: '80vh',
-                left: '50vw',
-                transform: 'translate(-50%, -50%)',
-                // border: '2px solid #1DA1F2',
+                padding: '10px 0',
+                textAlign: 'left',
+                marginBottom: '40px',
+                fontSize: '14px',
+                color: 'black',
               }}
             >
-              <CampaignIcon sx={{ fontSize: 50, color: 'black' }} />
-            </Fab>
-          )}
-
-          {/* 投稿コンポーネント */}
-          {isPopupVisible && (
-            <div className={styles.popup}>
-              <div className={styles.popupContent}>
-                <div
-                  style={{
-                    padding: '10px 0',
-                    textAlign: 'left',
-                    marginBottom: '40px',
-                    fontSize: '14px',
-                    color: 'black',
-                  }}
-                >
-                  今、あなたの周りで何が起こってる？
-                </div>
-                <TextField
-                  label="なにがおきてる？"
-                  value={postContent}
-                  onChange={(e) => setPostContent(e.target.value)}
-                  multiline
-                  rows={5}
-                  variant="outlined"
-                  style={{ marginBottom: 'auto' }}
-                  InputProps={{
-                    sx: {
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#90caf9',
-                      },
-                    },
-                  }}
-                />
-                <div
-                  style={{
-                    alignSelf: 'flex-end',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    startIcon={<KeyboardReturnIcon />}
-                    onClick={handleClosePopup}
-                    sx={{ backgroundColor: '#FFCC80' }}
-                  >
-                    戻る
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={postPostContent}
-                    disabled={!postContent.trim()}
-                    sx={{ backgroundColor: '#90caf9' }}
-                    endIcon={<SendIcon />}
-                  >
-                    POST
-                  </Button>
-                </div>
-              </div>
+              今、あなたの周りで何が起こってる？
             </div>
-          )}
-        </div>
-      ) : (
-        <div>
-          <Loading visible />
+            <TextField
+              label="なにがおきてる？"
+              value={postContent}
+              onChange={(e) => setPostContent(e.target.value)}
+              multiline
+              rows={5}
+              variant="outlined"
+              style={{ marginBottom: 'auto' }}
+              InputProps={{
+                sx: {
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#90caf9',
+                  },
+                },
+              }}
+            />
+            <div
+              style={{
+                alignSelf: 'flex-end',
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Button
+                variant="contained"
+                startIcon={<KeyboardReturnIcon />}
+                onClick={handleClosePopup}
+                sx={{ backgroundColor: '#FFCC80' }}
+              >
+                戻る
+              </Button>
+              <Button
+                variant="contained"
+                onClick={postPostContent}
+                disabled={!postContent.trim()}
+                sx={{ backgroundColor: '#90caf9' }}
+                endIcon={<SendIcon />}
+              >
+                POST
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
