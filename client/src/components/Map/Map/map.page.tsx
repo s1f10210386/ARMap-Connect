@@ -10,6 +10,7 @@ import Fab from '@mui/material/Fab';
 import { useAtom } from 'jotai';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useRouter } from 'next/router';
 import myIconURL from 'public/images/me.png';
 import otherIconURL from 'public/images/other.png';
 import pingIconURL from 'public/images/pingu.png';
@@ -17,7 +18,6 @@ import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { coordinatesAtom, userAtom } from 'src/atoms/user';
-import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
 import { apiClient } from 'src/utils/apiClient';
 import type { GeolocationCoordinates } from 'src/utils/interface';
@@ -170,7 +170,11 @@ const Map: FC = () => {
     return new Intl.DateTimeFormat('ja-JP', options).format(date);
   };
 
-  if (!user) return <Loading visible />;
+  // if (!user) return <Loading visible />;
+  const router = useRouter();
+  if (!user) {
+    return router.push('/login');
+  }
 
   return (
     <div>
