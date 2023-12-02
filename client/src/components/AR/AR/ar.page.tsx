@@ -131,7 +131,7 @@ const ARComponent = () => {
   // Y座標を計算する関数（例では一定の高さを返します）
   const yValue = () => {
     if (numPosts === undefined) return;
-    return 1; // 高さは1に固定
+    return 0; // 高さは1に固定
   };
 
   // Z座標を計算する関数
@@ -144,7 +144,7 @@ const ARComponent = () => {
   return (
     <div>
       <Link href="/">
-        <button className={styles.mapButton}>MAP</button>
+        <button className={styles.mapButton}>MAPに戻る</button>
       </Link>
 
       {/* {coordinates.latitude !== null && coordinates.longitude !== null && (
@@ -164,7 +164,7 @@ const ARComponent = () => {
             position={`${xValue(index)} ${yValue()} ${zValue(index)}`}
             rotation={`0 0 0`}
             look-at="[camera]"
-            scale="2 2 2"
+            scale="3 3 3"
           >
             {/* 投稿内容の外枠 */}
             {post.userID === user?.id ? (
@@ -225,8 +225,8 @@ const ARComponent = () => {
               font="/fonts/mplus-msdf.json"
               font-image="/png/mplus-msdf.png"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-              scale="0.15 0.15 0.15"
-              color="#000000"
+              scale="0.25 0.25 0.25"
+              color="#413f3f"
               negate="false"
             />
           </a-entity>
