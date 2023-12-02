@@ -57,7 +57,7 @@ const Register = () => {
       await signUpWithEmail1(email, password);
       setLoginError(''); // アカウント作成
 
-      // await router.push('/');
+      await router.push('/');
     } catch (error) {
       setLoginError('サインアップに失敗しました'); // ログイン失敗時のメッセージを設定
     }
