@@ -245,7 +245,11 @@ const Map: FC = () => {
                           {formatTime(post.postTime)}
                           {user.id === post.userID ? (
                             <DeleteIcon
-                              onClick={() => deletePostContent(post.id)}
+                              onClick={() => {
+                                if (confirm('削除しますか？')) {
+                                  deletePostContent(post.id);
+                                }
+                              }}
                               sx={{ alignSelf: 'flex-end', marginLeft: '130px' }}
                             />
                           ) : (
