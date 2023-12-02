@@ -140,23 +140,32 @@ const Map: FC = () => {
   };
 
   //いいね押したら動くイイネ追加削除する関数
-  const [likecount, setLikecount] = useState(0);
+  // const [likecount, setLikecount] = useState(0);
 
   const handleLike = async (postId: string) => {
     if (user?.id === undefined || postId === undefined) return;
 
-    // const result = (await apiClient.posts.$post({
-    //   body: { postId, userId: user.id },
-    // })) as unknown as number;
-
     const result = await apiClient.likes.$patch({
       body: { postId, userId: user.id },
     });
-    setLikecount(result);
-    await getPosts();
+    // setLikecount(result);
+    // await getPosts();
 
-    console.log('result', result);
-    console.log('likeCount', likecount);
+    // console.log('result', result);
+    // console.log('likeCount', likecount);
+    setPosts((prevPosts) => {
+      if (!prevPosts) return prevPosts;
+
+      return prevPosts.map((post) => {
+        if (post.id === postId) {
+          // 更新されたlikeCountを持つ投稿を返す
+          return { ...post, likeCount: result };
+        } else {
+          // 他の投稿はそのまま返す
+          return post;
+        }
+      });
+    });
   };
 
   const [isFirstLoad, setIsFirstLoad] = useState(true);
