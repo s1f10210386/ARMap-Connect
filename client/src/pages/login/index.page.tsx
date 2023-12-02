@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
@@ -28,44 +28,10 @@ const Login = () => {
 
   const [loginError, setLoginError] = useState('');
 
-  // const loginWithGitHub1 = async () => {
-  //   try {
-  //     const ghProvider = new GithubAuthProvider();
-  //     ghProvider.addScope('read:user');
-  //     const signInResult = await signInWithPopup(createAuth(), ghProvider).catch(returnNull);
-  //     const userFib = signInResult?.user.uid ?? '';
-  //     const emailFib = signInResult?.user.email ?? '';
-  //     const displayNameFib = signInResult?.user.displayName ?? '';
-  //     const photoURLFib = signInResult?.user.photoURL ?? '';
-
-  //     setUser((prevUser) => ({
-  //       ...prevUser,
-  //       id: userFib as UserId,
-  //       email: emailFib,
-  //       displayName: displayNameFib,
-  //       photoURL: photoURLFib,
-  //     }));
-  //   } catch (error) {
-  //     console.log('ログイン失敗');
-  //     throw error;
-  //   }
-  // };
-
-  // const loginGithub = async () => {
-  //   addLoading();
-  //   try {
-  //     await loginWithGitHub1();
-  //     setLoginError('');
-  //   } catch (error) {
-  //     setLoginError('ログイン失敗');
-  //   }
-  //   removeLoading();
-  // };
-
-  const signInWithEmail1 = async (email1: string, password: string) => {
+  const signInWithEmail1 = async (email: string, password: string) => {
     const auth = createAuth();
     try {
-      const signInResult = await signInWithEmailAndPassword(auth, email1, password);
+      const signInResult = await signInWithEmailAndPassword(auth, email, password);
       const userFib = signInResult.user.uid;
 
       const userInfo = { id: userFib, email: '', displayName: '', photoURL: '' };
@@ -100,45 +66,45 @@ const Login = () => {
     await router.push('/register');
   };
 
-  // const [dev, setDev] = useState(true);
-  // const checkdev = useCallback(() => {
-  //   if (process.env.NEXT_PUBLIC_AUTH_EMULATORURL !== undefined) {
-  //     setDev(true);
-  //   } else {
-  //     setDev(false);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log('checkdev起動');
-  //   checkdev();
-  // }, [checkdev]);
-
   return (
     <div className={styles.container}>
-      <div className={styles.main}>
-        <img
-          className={styles.appImage}
-          src="/images/applogo1.png"
-          alt="APP logo"
-          style={{
-            position: 'relative',
-            right: '-5px',
-            top: '-15px',
-          }}
-        />
-        <img className={styles.logoImage} src="/images/logo.png" alt="ARMapConnect Logo" />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            p: 3,
-            width: '100%',
-            maxWidth: 400, // レスポンシブ対応のための最大幅
-          }}
-        >
+      <div
+        id="icon"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          paddingTop: '100px',
+        }}
+      >
+        <div style={{ paddingTop: '30px' }}>
+          <img
+            // className={styles.appImage}
+
+            src="/images/applogo1.png"
+            alt="APP logo"
+            style={{
+              position: 'relative',
+              right: '-5px',
+              top: '-15px',
+              width: '100px',
+              height: 'auto',
+            }}
+          />
+        </div>
+        <div>
+          <img
+            style={{ width: '280px', height: 'auto' }}
+            src="/images/logo.png"
+            alt="ARMapConnect Logo"
+          />
+        </div>
+      </div>
+      <div id="input" style={{ paddingTop: '80px' }}>
+        <div style={{ textAlign: 'center' }}>
           <TextField
+            style={{ width: '70%', minWidth: '250px', maxWidth: '700px' }}
             label="Email"
             type="email"
             variant="outlined"
@@ -147,8 +113,11 @@ const Login = () => {
             fullWidth
             sx={{ mt: 2 }}
           />
+        </div>
+        <div style={{ textAlign: 'center' }}>
           <TextField
             label="Password"
+            style={{ width: '70%', minWidth: '250px', maxWidth: '700px' }}
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
             value={password}
@@ -166,23 +135,34 @@ const Login = () => {
               ),
             }}
           />
-          <Button variant="contained" sx={{ mt: 2 }} onClick={loginEmail}>
+        </div>
+      </div>
+      <div style={{ paddingTop: '20px' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Button variant="contained" sx={{ mt: 3 }} onClick={loginEmail}>
             Login
           </Button>
           {loginError && (
-            <Typography color="error" sx={{ mt: 2 }}>
+            <Typography color="error" sx={{ mt: 3 }}>
               {loginError}
             </Typography>
           )}
-        </Box>
-        <Typography className={styles.register}>
-          アカウントをお持ちでない場合は、
-          <span className={styles.registerLink} onClick={handleChange}>
-            こちら
-          </span>
-          から新規登録してください
-        </Typography>
+        </div>
       </div>
+      <div>
+        <div style={{ textAlign: 'center', paddingTop: '30px' }}>
+          <Typography>
+            <h3>
+              アカウントをお持ちでない場合は、
+              <span className={styles.registerLink} onClick={handleChange}>
+                こちら
+              </span>
+              から新規登録してください
+            </h3>
+          </Typography>
+        </div>
+      </div>
+
       {loadingElm}
     </div>
   );
