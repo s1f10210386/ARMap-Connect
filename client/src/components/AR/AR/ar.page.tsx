@@ -202,14 +202,7 @@ const ARComponent = () => {
               <a-box color="#c2c7ee" height="1" width="1.5" depth="0.1" position="0 0 -0.1" />
             ) : (
               // <a-plane color="#f6a985" height="1" width="1.5" position="0 0 -0.1" />
-              <a-box
-                color="#f6a985"
-                height="1"
-                width="1.5"
-                depth="0.1"
-                position="0 0 -0.1"
-                animation="property: position; to: 0 0.1 -0.1; dir: alternate; dur: 2000; loop: true"
-              />
+              <a-box color="#f6a985" height="1" width="1.5" depth="0.1" position="0 0 -0.1" />
             )}
 
             <a-plane color="#fffbfb" height="0.9" width="1.4" position="0 0 0" align="center" />
