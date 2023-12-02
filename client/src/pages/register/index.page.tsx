@@ -54,10 +54,11 @@ const Register = () => {
 
     try {
       // await authWithEmail(email, password);
+      setLoginError('');
       await signUpWithEmail1(email, password);
-      setLoginError(''); // アカウント作成
+      setLoginError('');
 
-      await router.push('/');
+      // await router.push('/');
     } catch (error) {
       setLoginError('サインアップに失敗しました'); // ログイン失敗時のメッセージを設定
     }
