@@ -21,6 +21,7 @@ import { coordinatesAtom, userAtom } from 'src/atoms/user';
 import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
 import { apiClient } from 'src/utils/apiClient';
+import { formatTime } from 'src/utils/format';
 import type { GeolocationCoordinates } from 'src/utils/interface';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
@@ -133,24 +134,38 @@ const Map: FC = () => {
 
   //自分の投稿をdeleteする関数
   const deletePostContent = async (postID: string) => {
+    await apiClient.likes.$delete({ body: { postId: postID } }).catch(returnNull);
     await apiClient.myPost.$delete({ query: { postID } }).catch(returnNull);
     await getPosts();
   };
 
   //いいね押したら動くイイネ追加削除する関数
-  const [likecount, setLikecount] = useState(0);
+  // const [likecount, setLikecount] = useState(0);
 
   const handleLike = async (postId: string) => {
     if (user?.id === undefined || postId === undefined) return;
 
-    const result = (await apiClient.posts.$post({
+    const result = await apiClient.likes.$patch({
       body: { postId, userId: user.id },
-    })) as unknown as number;
-    setLikecount(result);
-    await getPosts();
+    });
+    // setLikecount(result);
+    // await getPosts();
 
-    console.log('result', result);
-    console.log('likeCount', likecount);
+    // console.log('result', result);
+    // console.log('likeCount', likecount);
+    setPosts((prevPosts) => {
+      if (!prevPosts) return prevPosts;
+
+      return prevPosts.map((post) => {
+        if (post.id === postId) {
+          // 更新されたlikeCountを持つ投稿を返す
+          return { ...post, likeCount: result };
+        } else {
+          // 他の投稿はそのまま返す
+          return post;
+        }
+      });
+    });
   };
 
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -168,19 +183,6 @@ const Map: FC = () => {
       setIsFirstLoad(false); // 最初のロードが完了したらフラグを更新
     }
   }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
-
-  const formatTime = (isoString: string): string => {
-    const date = new Date(isoString);
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    };
-    return new Intl.DateTimeFormat('ja-JP', options).format(date);
-  };
 
   if (!user) {
     return (
