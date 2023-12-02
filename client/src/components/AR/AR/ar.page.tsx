@@ -53,6 +53,7 @@ const ARComponent = () => {
   //いいね押したら動くイイネ追加削除する関数
   const [likecount, setLikecount] = useState(0);
 
+  const [isliked, setIsliked] = useState(false);
   window.handleLike = async (postId: string) => {
     if (user?.id === undefined || postId === undefined) return;
 
@@ -62,11 +63,18 @@ const ARComponent = () => {
 
     console.log('result', result);
     setLikecount(result);
+    setIsliked(!isliked);
     await getPosts();
 
     console.log('result', result);
     console.log('likecount', likecount);
   };
+
+  window.deletePostContent = async (postID: string) => {
+    await apiClient.myPost.$delete({ query: { postID } }).catch(returnNull);
+    await getPosts();
+  };
+
   useEffect(() => {
     if (typeof AFRAME.components['hit-box'] === 'undefined') {
       AFRAME.registerComponent('hit-box', {
@@ -83,6 +91,22 @@ const ARComponent = () => {
         },
       });
     }
+
+    // if (typeof AFRAME.components['delete'] === 'undefined') {
+    //   AFRAME.registerComponent('delete', {
+    //     schema: {
+    //       postId: { type: 'string' },
+    //     },
+    //     init() {
+    //       this.el.addEventListener('click', () => {
+    //         // alert('clickしました');
+    //         const postId = this.data.postId;
+    //         console.log('postID', postId);
+    //         if (confirm('削除しますか？')) window.handleLike(postId);
+    //       });
+    //     },
+    //   });
+    // }
 
     if (typeof AFRAME.components['log'] === 'undefined') {
       AFRAME.registerComponent('log', {
@@ -110,7 +134,7 @@ const ARComponent = () => {
   };
 
   const formatContent = (content: string): string => {
-    const maxLength = 12;
+    const maxLength = 17;
     let formattedContent = '';
     for (let i = 0; i < content.length; i += maxLength) {
       const line = content.substring(i, i + maxLength);
@@ -157,6 +181,10 @@ const ARComponent = () => {
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false"
         renderer="antialias: true; alpha: true"
       >
+        <a-assets>
+          <img id="delete" src="/icons/delete.png" />
+          <img id="heart" src="/icons/likes.png" />
+        </a-assets>
         {posts?.map((post, index) => (
           <a-entity
             key={index}
@@ -174,7 +202,7 @@ const ARComponent = () => {
               <a-box color="#f6a985" height="1" width="1.5" depth="0.1" position="0 0 -0.1" />
             )}
 
-            <a-plane color="#fffbfb" height="0.5" width="1" position="0 0.2 0" align="center" />
+            <a-plane color="#fffbfb" height="0.8" width="1.4" position="0 0.01 0" align="center" />
 
             {/* 投稿内容 */}
 
@@ -182,24 +210,38 @@ const ARComponent = () => {
               value={formatContent(post.content)}
               font="/fonts/mplus-msdf.json"
               font-image="/png/mplus-msdf.png"
-              position="0 0.2 0.001"
+              position="-0.65 0.2 0.001"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.4 0.4 0.4"
               color="#000000"
-              align="center"
+              // align="center"
               negate="false"
             />
 
             {/* いいねオブジェクト */}
-            <a-entity
+            {/* <a-entity
               position="-0.4 -0.3 0"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               gltf-model="/models/love_heart.gltf"
-              // gltf-model="/models/AnyConv.com__love_heart (1).gltf"
               scale="0.0008 0.0007 0.0005"
-            />
+            /> */}
+            {isliked ? (
+              <a-plane
+                material="src : #heart ;transparent: true; color:red;"
+                position="-0.4 -0.3 0.09"
+                scale="0.2 0.2 0.2"
+                gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              />
+            ) : (
+              <a-plane
+                material="src : #heart ;transparent: true; color:white;"
+                position="-0.4 -0.3 0.09"
+                scale="0.2 0.2 0.2"
+                gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              />
+            )}
 
-            <a-entity position="-0.4, -0.225 0" hit-box={`postId: ${post.id}`}>
+            <a-entity position="-0.4, -0.3 0.1" hit-box={`postId: ${post.id}`}>
               <a-entity
                 class="raycastable"
                 gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
@@ -214,7 +256,7 @@ const ARComponent = () => {
             {/* いいね数 */}
             <a-text
               value={`Likes: ${post.likeCount}`}
-              position="-0.48 -0.1 0"
+              position="-0.5 -0.2 0.1"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
               scale="0.2 0.2 0.2"
               color="black"
@@ -229,6 +271,14 @@ const ARComponent = () => {
               color="#413f3f"
               negate="false"
             />
+            {user?.id === post.userID && (
+              <a-plane
+                material="src : #delete ;transparent: true;"
+                position="0.3 -0.18 0.1"
+                scale="0.1 0.1 0.1"
+                gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+              />
+            )}
           </a-entity>
         ))}
 
