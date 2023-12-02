@@ -71,7 +71,9 @@ const ARComponent = () => {
   };
 
   window.deletePostContent = async (postID: string) => {
+    console.log('postID', postID);
     await apiClient.myPost.$delete({ query: { postID } }).catch(returnNull);
+
     await getPosts();
   };
 
@@ -92,21 +94,21 @@ const ARComponent = () => {
       });
     }
 
-    // if (typeof AFRAME.components['delete'] === 'undefined') {
-    //   AFRAME.registerComponent('delete', {
-    //     schema: {
-    //       postId: { type: 'string' },
-    //     },
-    //     init() {
-    //       this.el.addEventListener('click', () => {
-    //         // alert('clickしました');
-    //         const postId = this.data.postId;
-    //         console.log('postID', postId);
-    //         if (confirm('削除しますか？')) window.handleLike(postId);
-    //       });
-    //     },
-    //   });
-    // }
+    if (typeof AFRAME.components['delete'] === 'undefined') {
+      AFRAME.registerComponent('delete', {
+        schema: {
+          postId: { type: 'string' },
+        },
+        init() {
+          this.el.addEventListener('click', () => {
+            // alert('clickしました');
+            const postId = this.data.postId;
+            // console.log('postID', postId);
+            if (confirm('削除しますか？')) window.deletePostContent(postId);
+          });
+        },
+      });
+    }
 
     if (typeof AFRAME.components['log'] === 'undefined') {
       AFRAME.registerComponent('log', {
@@ -202,7 +204,7 @@ const ARComponent = () => {
               <a-box color="#f6a985" height="1" width="1.5" depth="0.1" position="0 0 -0.1" />
             )}
 
-            <a-plane color="#fffbfb" height="0.8" width="1.4" position="0 0.01 0" align="center" />
+            <a-plane color="#fffbfb" height="0.9" width="1.4" position="0 0 0" align="center" />
 
             {/* 投稿内容 */}
 
@@ -261,9 +263,10 @@ const ARComponent = () => {
               scale="0.2 0.2 0.2"
               color="black"
             />
+            {/*投稿時間 */}
             <a-text
               value={`${formatTime(post.postTime)}`}
-              position="0.1 -0.3 0"
+              position="0.01 -0.4 0"
               font="/fonts/mplus-msdf.json"
               font-image="/png/mplus-msdf.png"
               gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
@@ -272,12 +275,25 @@ const ARComponent = () => {
               negate="false"
             />
             {user?.id === post.userID && (
-              <a-plane
-                material="src : #delete ;transparent: true;"
-                position="0.3 -0.18 0.1"
-                scale="0.1 0.1 0.1"
-                gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
-              />
+              <>
+                <a-plane
+                  material="src : #delete ;transparent: true;"
+                  position="0.3 -0.25 0.1"
+                  scale="0.1 0.1 0.1"
+                  gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+                />
+                <a-entity position="0.3, -0.25 0.1" delete={`postId: ${post.id}`}>
+                  <a-entity
+                    class="raycastable"
+                    gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
+                    geometry="primitive:box"
+                    material="color:blue; opacity: 0.5"
+                    scale="0.2 0.2 0.1"
+                    position="0 0 0"
+                    visible="false"
+                  />
+                </a-entity>
+              </>
             )}
           </a-entity>
         ))}
