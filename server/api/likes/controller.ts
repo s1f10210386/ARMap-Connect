@@ -1,10 +1,11 @@
-import { addLike, deleteLikeByPost, getLikeCount, toggleLike } from '$/repository/likeRepository';
+import { addLike, deleteLikeByPost, findLike, toggleLike } from '$/repository/likeRepository';
 import { defineController } from './$relay';
 
 export default defineController(() => ({
   get: async ({ query }) => {
-    const likeCount = await getLikeCount(query.postId);
-    return { status: 200, body: { likeCount } };
+    const like = await findLike(query.postId, query.userId);
+    const isLiked = like !== null;
+    return { status: 200, body: isLiked };
   },
   post: async ({ body }) => {
     const likeCount = await addLike(body.postId, body.userId);
