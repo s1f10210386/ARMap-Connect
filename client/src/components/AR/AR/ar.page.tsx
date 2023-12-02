@@ -78,8 +78,8 @@ const ARComponent = () => {
   };
 
   useEffect(() => {
-    if (typeof AFRAME.components['hit-box'] === 'undefined') {
-      AFRAME.registerComponent('hit-box', {
+    if (typeof AFRAME.components['likes'] === 'undefined') {
+      AFRAME.registerComponent('likes', {
         schema: {
           postId: { type: 'string' },
         },
@@ -243,7 +243,7 @@ const ARComponent = () => {
               />
             )}
 
-            <a-entity position="-0.4, -0.3 0.1" hit-box={`postId: ${post.id}`}>
+            <a-entity position="-0.4, -0.3 0.1" likes={`postId: ${post.id}`}>
               <a-entity
                 class="raycastable"
                 gps-entity-place={`latitude: ${post.latitude}; longitude: ${post.longitude}`}
@@ -274,6 +274,8 @@ const ARComponent = () => {
               color="#413f3f"
               negate="false"
             />
+
+            {/*削除機能 */}
             {user?.id === post.userID && (
               <>
                 <a-plane
@@ -300,6 +302,7 @@ const ARComponent = () => {
 
         {/* ユーザーが５メートル以上移動した場合のみカメラの位置が更新 */}
         <a-camera gps-camera rotation-reader />
+        <a-light type="ambient" color="#FFFFFF" />
 
         <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .raycastable" />
       </a-scene>
