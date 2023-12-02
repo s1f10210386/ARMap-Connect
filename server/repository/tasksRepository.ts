@@ -1,4 +1,4 @@
-import type { Maybe, TaskId, UserId } from '$/commonTypesWithClient/ids';
+import type { Maybe, TaskId } from '$/commonTypesWithClient/ids';
 import type { Prisma, Task } from '@prisma/client';
 import type { TaskModel } from 'commonTypesWithClient/models';
 import { randomUUID } from 'crypto';
@@ -13,7 +13,7 @@ const toModel = (prismaTask: Task): TaskModel => ({
   created: prismaTask.createdAt.getTime(),
 });
 
-export const getTasks = async (userId: UserId, limit?: number): Promise<TaskModel[]> => {
+export const getTasks = async (userId: string, limit?: number): Promise<TaskModel[]> => {
   const prismaTasks = await prismaClient.task.findMany({
     where: { userId },
     take: limit,
@@ -23,7 +23,7 @@ export const getTasks = async (userId: UserId, limit?: number): Promise<TaskMode
   return prismaTasks.map(toModel);
 };
 
-export const createTask = async (userId: UserId, label: TaskModel['label']): Promise<TaskModel> => {
+export const createTask = async (userId: string, label: TaskModel['label']): Promise<TaskModel> => {
   const prismaTask = await prismaClient.task.create({
     data: {
       id: randomUUID(),
@@ -38,7 +38,7 @@ export const createTask = async (userId: UserId, label: TaskModel['label']): Pro
 };
 
 export const updateTaskByStringId = async (params: {
-  userId: UserId;
+  userId: string;
   taskId: string;
   partialTask: Prisma.TaskUpdateInput;
 }): Promise<TaskModel> => {
@@ -50,7 +50,7 @@ export const updateTaskByStringId = async (params: {
   return toModel(prismaTask);
 };
 
-export const deleteTaskByStringId = async (userId: UserId, taskId: string): Promise<TaskModel> => {
+export const deleteTaskByStringId = async (userId: string, taskId: string): Promise<TaskModel> => {
   const prismaTask = await prismaClient.task.delete({
     where: { id: taskId, userId },
   });
@@ -59,7 +59,7 @@ export const deleteTaskByStringId = async (userId: UserId, taskId: string): Prom
 };
 
 export const updateTaskByBrandedId = async (params: {
-  userId: UserId;
+  userId: string;
   taskId: Maybe<TaskId>;
   partialTask: Prisma.TaskUpdateInput;
 }): Promise<TaskModel> => {
@@ -72,7 +72,7 @@ export const updateTaskByBrandedId = async (params: {
 };
 
 export const deleteTaskByBrandedId = async (
-  userId: UserId,
+  userId: string,
   taskId: Maybe<TaskId>
 ): Promise<TaskModel> => {
   const prismaTask = await prismaClient.task.delete({
@@ -82,13 +82,13 @@ export const deleteTaskByBrandedId = async (
   return toModel(prismaTask);
 };
 
-export const findManyTask = async (userId: UserId) => {
+export const findManyTask = async (userId: string) => {
   return await prismaClient.task.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } });
 };
 
 export const getTasksWithDI = depend(
   { findManyTask },
-  async ({ findManyTask }, userId: UserId): Promise<TaskModel[]> => {
+  async ({ findManyTask }, userId: string): Promise<TaskModel[]> => {
     const prismaTasks = await findManyTask(userId);
 
     return prismaTasks.map(toModel);
