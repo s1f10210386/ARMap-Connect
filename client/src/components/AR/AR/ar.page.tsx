@@ -156,16 +156,16 @@ const ARComponent = () => {
       });
     }
 
-    if (typeof AFRAME.components['log'] === 'undefined') {
-      AFRAME.registerComponent('log', {
-        schema: { type: 'string' },
+    // if (typeof AFRAME.components['log'] === 'undefined') {
+    //   AFRAME.registerComponent('log', {
+    //     schema: { type: 'string' },
 
-        init() {
-          const stringToLog = this.data;
-          // console.log('log内容', stringToLog);
-        },
-      });
-    }
+    //     init() {
+    //       const stringToLog = this.data;
+    //       // console.log('log内容', stringToLog);
+    //     },
+    //   });
+    // }
   }, []);
 
   const radius = 5;
