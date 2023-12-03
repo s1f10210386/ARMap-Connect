@@ -10,6 +10,7 @@ import Fab from '@mui/material/Fab';
 import { useAtom } from 'jotai';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useRouter } from 'next/router';
 import myIconURL from 'public/images/me.png';
 import otherIconURL from 'public/images/other.png';
 import pingIconURL from 'public/images/pinn.png';
@@ -20,6 +21,7 @@ import { coordinatesAtom, userAtom } from 'src/atoms/user';
 import { Loading } from 'src/components/Loading/Loading';
 import { BasicHeader } from 'src/pages/@components/BasicHeader/BasicHeader';
 import { apiClient } from 'src/utils/apiClient';
+import { formatTime } from 'src/utils/format';
 import type { GeolocationCoordinates } from 'src/utils/interface';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
@@ -57,10 +59,21 @@ const LocationMarker: FC<LocationMarkerProps> = ({ coordinates }) => {
 };
 const Map: FC = () => {
   // console.log('my', myIconURL);
-  const [user] = useAtom(userAtom);
+  const [user, setUser] = useAtom(userAtom);
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 
-  // console.log(user?.id);
+  const router = useRouter();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser !== null) {
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+    } else {
+      router.push('/login');
+    }
+  }, [setUser, router]);
+
   useEffect(() => {
     if (typeof navigator !== 'undefined' && navigator.geolocation !== null) {
       navigator.geolocation.watchPosition((posithon) => {
@@ -99,7 +112,7 @@ const Map: FC = () => {
     const longitude = coordinates.longitude;
     const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
     setPosts(data);
-    console.log('getPosts');
+    // console.log('getPosts');
   }, [coordinates.latitude, coordinates.longitude]);
 
   const [postContent, setPostContent] = useState('');
@@ -121,24 +134,34 @@ const Map: FC = () => {
 
   //自分の投稿をdeleteする関数
   const deletePostContent = async (postID: string) => {
+    await apiClient.likes.$delete({ body: { postId: postID } }).catch(returnNull);
     await apiClient.myPost.$delete({ query: { postID } }).catch(returnNull);
     await getPosts();
   };
 
   //いいね押したら動くイイネ追加削除する関数
-  const [likecount, setLikecount] = useState(0);
+  // const [likecount, setLikecount] = useState(0);
 
   const handleLike = async (postId: string) => {
     if (user?.id === undefined || postId === undefined) return;
 
-    const result = (await apiClient.posts.$post({
+    const result = await apiClient.likes.$patch({
       body: { postId, userId: user.id },
-    })) as unknown as number;
-    setLikecount(result);
+    });
     await getPosts();
+    setPosts((prevPosts) => {
+      if (!prevPosts) return prevPosts;
 
-    console.log('result', result);
-    console.log('likeCount', likecount);
+      return prevPosts.map((post) => {
+        if (post.id === postId) {
+          // 更新されたlikeCountを持つ投稿を返す
+          return { ...post, likeCount: result };
+        } else {
+          // 他の投稿はそのまま返す
+          return post;
+        }
+      });
+    });
   };
 
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -157,20 +180,13 @@ const Map: FC = () => {
     }
   }, [coordinates.latitude, coordinates.longitude, isFirstLoad]);
 
-  const formatTime = (isoString: string): string => {
-    const date = new Date(isoString);
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    };
-    return new Intl.DateTimeFormat('ja-JP', options).format(date);
-  };
-
-  if (!user) return <Loading visible />;
+  if (!user) {
+    return (
+      <div>
+        <Loading visible />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -209,7 +225,16 @@ const Map: FC = () => {
                       }}
                     >
                       {/* メッセージエリア */}
-                      <div style={{ fontSize: '18px', overflow: 'auto' }}>{post.content}</div>
+                      <div
+                        style={{
+                          fontSize: '18px',
+                          overflow: 'auto',
+                          paddingTop: '50px',
+                          textAlign: 'center',
+                        }}
+                      >
+                        {post.content}
+                      </div>
 
                       {/* いいねボタン*/}
                       <div
@@ -301,7 +326,7 @@ const Map: FC = () => {
               style={{
                 padding: '10px 0',
                 textAlign: 'left',
-                marginBottom: '40px',
+                marginBottom: '30px',
                 fontSize: '14px',
                 color: 'black',
               }}

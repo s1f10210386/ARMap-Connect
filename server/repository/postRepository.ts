@@ -19,7 +19,7 @@ export const postPost = async (
   postlongitude: number,
   userID: string
 ) => {
-  console.log('userID', userID);
+  // console.log('userID', userID);
   const jstOffset = 9 * 60; // 日本はUTC+9
   const now = new Date();
   const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000);
@@ -36,7 +36,7 @@ export const postPost = async (
         likeCount: 0,
       },
     });
-    console.log('post', post);
+    // console.log('post', post);
     return post;
   } catch (error) {
     console.error('Error creating post:', error);
@@ -51,13 +51,13 @@ export const deletePost = async (postID: string) => {
 
 //２４時間以内の投稿かつ半径1km以内を引っ張ってくる
 export const NearAndRecentRecords = async (currentLatitude: number, currentLongitude: number) => {
-  console.log('kita');
+  // console.log('kita');
 
   const twentyFourHoursAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   const latitudeRange = 0.09; // 約10kmの緯度範囲
   const longitudeRange = 0.118; // 約10kmの経度範囲
 
-  console.log({ currentLatitude, currentLongitude });
+  // console.log({ currentLatitude, currentLongitude });
   const records = await prismaClient.post.findMany({
     where: {
       postTime: {

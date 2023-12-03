@@ -1,10 +1,9 @@
 import { z } from 'zod';
 import { taskIdParser } from '../service/idParsers';
-import type { UserId } from './ids';
 
 export type UserModel = {
-  id: UserId;
-  email: string;
+  id: string;
+  email: string | undefined;
   displayName: string | undefined;
   photoURL: string | undefined;
 };

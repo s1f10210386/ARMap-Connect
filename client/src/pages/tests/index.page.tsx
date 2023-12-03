@@ -83,13 +83,13 @@ const Home = () => {
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
 
-    const result = await apiClient.myPost.$post({
+    await apiClient.myPost.$post({
       body: { username: postUserName, content: postContent, latitude, longitude, userID: user.id },
     });
 
     setPostContent('');
     await getMyPostContent();
-    console.log('result', result);
+    // console.log('result', result);
   };
 
   const deletePostContent = async (postID: string) => {
@@ -98,19 +98,16 @@ const Home = () => {
   };
 
   //いいね押したら動くイイネ追加削除する関数
-  const [likecount, setLikecount] = useState(0);
+  // const [likecount, setLikecount] = useState(0);
 
   const handleLike = async (postId: string) => {
     if (user?.id === undefined || postId === undefined) return;
 
-    const result = (await apiClient.posts.$post({
+    (await apiClient.posts.$post({
       body: { postId, userId: user.id },
     })) as unknown as number;
-    setLikecount(result);
+    // setLikecount(result);
     await getPosts();
-
-    console.log('result', result);
-    console.log('likecount', likecount);
   };
 
   useEffect(() => {
