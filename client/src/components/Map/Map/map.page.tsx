@@ -148,11 +148,7 @@ const Map: FC = () => {
     const result = await apiClient.likes.$patch({
       body: { postId, userId: user.id },
     });
-    // setLikecount(result);
-    // await getPosts();
-
-    // console.log('result', result);
-    // console.log('likeCount', likecount);
+    await getPosts();
     setPosts((prevPosts) => {
       if (!prevPosts) return prevPosts;
 
