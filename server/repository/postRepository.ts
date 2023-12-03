@@ -85,7 +85,7 @@ export const NearAndRecentRecords = async (currentLatitude: number, currentLongi
 
   return transformedRecords;
 };
-
+//汚いからあとで治す
 //とあるuserが投稿をイイネしたときにレコードの存在をチェック(イイネを追加、削除する関数)
 //最後にlikeテーブルに含まれる投稿IDを数える(その投稿のイイネ数を更新)
 export const togglelike = async (postId: string, userId: string) => {
@@ -133,7 +133,7 @@ export const togglelike = async (postId: string, userId: string) => {
     select: { likeCount: true },
   });
   console.log('updatePost', updatedPost);
-  if (updatedPost === null) return console.log('ほげげですよ');
+  if (updatedPost === null) return;
   else {
     return updatedPost.likeCount;
   }
