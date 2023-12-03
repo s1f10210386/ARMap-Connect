@@ -39,7 +39,7 @@ export const authWithEmail = async (email: string, password: string) => {
     const signInResult = await signInWithEmailAndPassword(auth, email, password);
     const user = signInResult.user.uid;
     await checkIfNewUser(user);
-    console.log('ログイン成功');
+    // console.log('ログイン成功');
   } catch (error) {
     const firebaseError = error as FirebaseError;
     if (firebaseError.code === 'auth/user-not-found') {
@@ -48,9 +48,9 @@ export const authWithEmail = async (email: string, password: string) => {
         const newUser = signUpResult.user.uid;
         await checkIfNewUser(newUser);
 
-        console.log('新規登録成功');
+        // console.log('新規登録成功');
       } catch (signUpError) {
-        console.log('新規登録失敗', signUpError);
+        // console.log('新規登録失敗', signUpError);
         return null;
       }
     } else {
@@ -66,7 +66,7 @@ export const signInWithEmail = async (email: string, password: string) => {
     const signInResult = await signInWithEmailAndPassword(auth, email, password);
     const user = signInResult.user.uid;
     await checkIfNewUser(user); // 既存ユーザの確認
-    console.log('ログイン成功');
+    // console.log('ログイン成功');
   } catch (error) {
     console.error('ログイン失敗', error);
     throw error; // エラーを再スローして、呼び出し元でハンドリングできるようにする
@@ -77,10 +77,10 @@ export const signUpWithEmail = async (email: string, password: string) => {
   const auth = createAuth();
   try {
     const signUpResult = await createUserWithEmailAndPassword(auth, email, password);
-    console.log('aaa');
+    // console.log('aaa');
     const newUser = signUpResult.user.uid;
     await checkIfNewUser(newUser); // ユーザデータベースへの登録
-    console.log('新規登録成功');
+    // console.log('新規登録成功');
   } catch (error) {
     console.error('新規登録失敗', error);
     throw error; // エラーを再スローして、呼び出し元でハンドリングできるようにする
