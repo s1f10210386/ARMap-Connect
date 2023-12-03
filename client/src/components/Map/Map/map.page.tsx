@@ -229,7 +229,16 @@ const Map: FC = () => {
                       }}
                     >
                       {/* メッセージエリア */}
-                      <div style={{ fontSize: '18px', overflow: 'auto' }}>{post.content}</div>
+                      <div
+                        style={{
+                          fontSize: '18px',
+                          overflow: 'auto',
+                          paddingTop: '50px',
+                          textAlign: 'center',
+                        }}
+                      >
+                        {post.content}
+                      </div>
 
                       {/* いいねボタン*/}
                       <div
@@ -321,7 +330,7 @@ const Map: FC = () => {
               style={{
                 padding: '10px 0',
                 textAlign: 'left',
-                marginBottom: '40px',
+                marginBottom: '30px',
                 fontSize: '14px',
                 color: 'black',
               }}
