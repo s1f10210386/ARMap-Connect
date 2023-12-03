@@ -32,7 +32,7 @@ const ARComponent = () => {
     const longitude = coordinates.longitude;
     const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
     setPosts(data);
-    console.log('getPosts');
+    // console.log('getPosts');
   }, [coordinates.latitude, coordinates.longitude]);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const ARComponent = () => {
   };
 
   window.deletePostContent = async (postID: string) => {
-    console.log('postID', postID);
+    // console.log('postID', postID);
     await apiClient.likes.$delete({ body: { postId: postID } }).catch(returnNull);
     await apiClient.myPost.$delete({ query: { postID } }).catch(returnNull);
 
@@ -133,7 +133,7 @@ const ARComponent = () => {
           this.el.addEventListener('click', () => {
             // alert('clickしました');
             const postId = this.data.postId;
-            console.log('postID', postId);
+            // console.log('postID', postId);
             window.handleLike(postId);
           });
         },
@@ -162,7 +162,7 @@ const ARComponent = () => {
 
         init() {
           const stringToLog = this.data;
-          console.log('log内容', stringToLog);
+          // console.log('log内容', stringToLog);
         },
       });
     }

@@ -89,7 +89,7 @@ const Home = () => {
 
     setPostContent('');
     await getMyPostContent();
-    console.log('result', result);
+    // console.log('result', result);
   };
 
   const deletePostContent = async (postID: string) => {
@@ -108,9 +108,6 @@ const Home = () => {
     })) as unknown as number;
     setLikecount(result);
     await getPosts();
-
-    console.log('result', result);
-    console.log('likecount', likecount);
   };
 
   useEffect(() => {

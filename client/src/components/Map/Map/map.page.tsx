@@ -112,7 +112,7 @@ const Map: FC = () => {
     const longitude = coordinates.longitude;
     const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
     setPosts(data);
-    console.log('getPosts');
+    // console.log('getPosts');
   }, [coordinates.latitude, coordinates.longitude]);
 
   const [postContent, setPostContent] = useState('');
