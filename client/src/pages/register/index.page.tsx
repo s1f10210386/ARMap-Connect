@@ -92,7 +92,7 @@ const Register = () => {
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
-          paddingTop: '100px',
+          paddingTop: '80px',
         }}
       >
         <div style={{ paddingTop: '30px' }}>
@@ -117,7 +117,7 @@ const Register = () => {
         </div>
       </div>
 
-      <div id="input" style={{ paddingTop: '80px' }}>
+      <div id="input" style={{ paddingTop: '60px' }}>
         <div style={{ textAlign: 'center', paddingLeft: '30%' }}>
           <Button onClick={randomAccount}>ランダム生成</Button>
         </div>

@@ -75,7 +75,7 @@ const Login = () => {
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
-          paddingTop: '100px',
+          paddingTop: '80px',
         }}
       >
         <div style={{ paddingTop: '30px' }}>
@@ -101,7 +101,7 @@ const Login = () => {
           />
         </div>
       </div>
-      <div id="input" style={{ paddingTop: '80px' }}>
+      <div id="input" style={{ paddingTop: '60px' }}>
         <div style={{ textAlign: 'center' }}>
           <TextField
             style={{ width: '70%', minWidth: '250px', maxWidth: '700px' }}
