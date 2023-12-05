@@ -8,6 +8,7 @@
     "dev:server": "node-dev --respawn index.js",
     "dev:frourio": "frourio --watch",
     "dev:prisma": "prisma generate --watch",
+    "dev:prismastudio": "npx prisma studio --browser none",
     "prebuild": "npm run generate && npm run migrate:deploy",
     "build": "node ./scripts/build.prod.js",
     "generate": "run-s generate:prisma generate:frourio",

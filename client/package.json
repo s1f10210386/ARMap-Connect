@@ -22,6 +22,9 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.18",
+    "@types/aframe": "^1.2.5",
+    "aframe": "^1.5.0",
+    "aframe-react": "^4.4.0",
     "api": "file:../server/api",
     "aspida": "^1.14.0",
     "axios": "^1.4.0",
@@ -33,14 +36,12 @@
     "next": "^13.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-leaflet": "^4.2.1",
-    "three": "^0.158.0"
+    "react-leaflet": "^4.2.1"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.8",
     "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
-    "@types/three": "^0.158.3",
     "dotenv": "^16.3.1",
     "happy-css-modules": "^2.1.2",
     "notios": "^0.4.1",

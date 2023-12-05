@@ -2,6 +2,7 @@ import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {
+    query: { latitude: number; longitude: number };
     resBody: {
       id: string;
       userName: string;
@@ -9,14 +10,14 @@ export type Methods = DefineMethods<{
       content: string;
       latitude: number;
       longitude: number;
-      likes: number;
       userID: string;
+      likeCount: number;
     }[];
   };
-  patch: {
+  post: {
     reqBody: {
-      postID: string;
-      increment: boolean;
+      postId: string;
+      userId: string;
     };
   };
 }>;

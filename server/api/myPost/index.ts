@@ -10,8 +10,8 @@ export type Methods = DefineMethods<{
       content: string;
       latitude: number;
       longitude: number;
-      likes: number;
       userID: string;
+      likeCount: number;
     }[];
   };
 

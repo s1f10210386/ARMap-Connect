@@ -1,0 +1,28 @@
+.mapButton {
+  position: absolute;
+  top: 5vh; /* 画面上部からの位置 */
+  left: 50vw;
+  z-index: 1000; /* マップの上に表示されるようにz-indexを設定 */
+  padding: 10px 20px;
+  font-size: 30px;
+  color: rgb(255 255 255);
+  text-align: center;
+  cursor: pointer;
+  background-color: #b76262;
+  border: none;
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
+}
+
+.coordinatesInfo {
+  position: absolute;
+  top: 20px; /* 例えば画面の上部から20pxの位置 */
+  right: 20px; /* 右側から20pxの位置 */
+  z-index: 1000;
+  padding: 10px;
+  color: #000;
+  background-color: rgb(255 255 255 / 80%);
+  border-radius: 5px;
+
+  /* その他のスタイル */
+}

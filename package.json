@@ -6,6 +6,7 @@
     "dev": "run-p dev:*",
     "dev:client": "npm run dev --prefix client",
     "dev:server": "npm run dev --prefix server",
+    "vercel-build": "prisma generate && next build && prisma migrate deploy",
     "generate": "run-p generate:*",
     "generate:client": "npm run generate --prefix client",
     "generate:server": "npm run generate --prefix server",

@@ -1,10 +1,9 @@
 import { Button, TextField } from '@mui/material';
 import { useAtom } from 'jotai';
 import L from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
+import myIconURL from 'public/images/me.png';
+import otherIconURL from 'public/images/other.png';
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
@@ -15,11 +14,26 @@ import { apiClient } from 'src/utils/apiClient';
 import type { GeolocationCoordinates } from 'src/utils/coordinates';
 import { returnNull } from 'src/utils/returnNull';
 import styles from './map.module.css';
+// import markerIcon from 'leaflet/dist/images/marker-icon.png';
+// import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: markerIcon2x.src,
-  shadowUrl: markerShadow.src,
+  // iconUrl: myIconURL.src,
+
+  // iconUrl: markerIcon.src,
+  iconRetinaUrl: myIconURL.src,
+  iconSize: [48, 48],
+  // iconRetinaUrl: markerIcon2x.src,
+  // shadowUrl: markerShadow.src,
+});
+
+const myIcon = L.icon({
+  iconUrl: myIconURL.src,
+  iconSize: [48, 48],
+});
+const otherIcon = L.icon({
+  iconUrl: otherIconURL.src,
+  iconSize: [48, 48],
 });
 
 interface LocationMarkerProps {
@@ -38,6 +52,7 @@ const LocationMarker: FC<LocationMarkerProps> = ({ coordinates }) => {
   return null; // このコンポーネントはビジュアルをレンダリングしません。
 };
 const Map: FC = () => {
+  console.log('my', myIconURL);
   const [user] = useAtom(userAtom);
   const [coordinates, setCoordinates] = useAtom(coordinatesAtom);
 
@@ -67,16 +82,21 @@ const Map: FC = () => {
         content: string;
         latitude: number;
         longitude: number;
-        likes: number;
         userID: string;
+        likeCount: number;
       }[]
     | null
   >(null);
 
+  //24時間以内かつ半径10km以内のものをget! useEffectで呼び出される、、
   const getPosts = useCallback(async () => {
-    const data = await apiClient.posts.$get().catch(returnNull);
+    if (coordinates.latitude === null || coordinates.longitude === null) return;
+    const latitude = coordinates.latitude;
+    const longitude = coordinates.longitude;
+    const data = await apiClient.posts.$get({ query: { latitude, longitude } }).catch(returnNull);
     setPosts(data);
-  }, []);
+    console.log('getPosts');
+  }, [coordinates.latitude, coordinates.longitude]);
 
   const [postContent, setPostContent] = useState('');
   const postPostContent = async () => {
@@ -124,8 +144,13 @@ const Map: FC = () => {
                 fillOpacity={0.1}
               />
 
+              {/*ユーザーIDと"誰が投稿したか"という情報のpostのuserIDが一致するなら本人*/}
               {posts?.map((post) => (
-                <Marker key={post.id} position={[post.latitude, post.longitude]}>
+                <Marker
+                  key={post.id}
+                  icon={user.id === post.userID ? myIcon : otherIcon}
+                  position={[post.latitude, post.longitude]}
+                >
                   <Popup>
                     {post.postTime}
                     <br />
